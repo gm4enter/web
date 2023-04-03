@@ -2,7 +2,6 @@ import {makeStyles} from '@material-ui/styles'
 import React from 'react'
 import SortDown from '../../asset/icons/sort_down'
 import SortUp from '../../asset/icons/sort_up'
-import DialogChart from './dialog'
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined'
 
 const useStyles = makeStyles({
@@ -105,7 +104,6 @@ const TableCustom = (props: {
           ))}
         </tbody>
       </table>
-      <DialogChart anchorEl={anchorEl} open={open} close={handleClose} />
     </div>
   )
 }

@@ -1676,11 +1676,6 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@kurkle/color@^0.3.0":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz#5acd38242e8bde4f9986e7913c8fdf49d3aa199f"
-  integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
-
 "@leichtgewicht/ip-codec@^2.0.1":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
@@ -1912,21 +1907,7 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/x-data-grid-pro@^6.0.3":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-pro/-/x-data-grid-pro-6.0.3.tgz#bc332cc7d5d77a08934076f64a55c3349bfbb472"
-  integrity sha512-rgZmFlvnrKl7Zt9xKbProDfdT6S9F/xIS5d66v78UHANZjY5F1ADWqXGdZHOZM0zAERXhT78ojGMU3mX8+fGeg==
-  dependencies:
-    "@babel/runtime" "^7.21.0"
-    "@mui/utils" "^5.11.13"
-    "@mui/x-data-grid" "6.0.3"
-    "@mui/x-license-pro" "6.0.3"
-    "@types/format-util" "^1.0.2"
-    clsx "^1.2.1"
-    prop-types "^15.8.1"
-    reselect "^4.1.7"
-
-"@mui/x-data-grid@6.0.3", "@mui/x-data-grid@^6.0.3":
+"@mui/x-data-grid@^6.0.3":
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.0.3.tgz#ff780a83c7f298ada6c1c02149e4269e7eece4d3"
   integrity sha512-wcv5O+p25ouvB100FwVPLTLBAmvoP1SaTtOxpCYbfVSLMKkP4bbynA9a+enWtnuvcC8k5qvI75Tx5nRVbFUykA==
@@ -1936,14 +1917,6 @@
     clsx "^1.2.1"
     prop-types "^15.8.1"
     reselect "^4.1.7"
-
-"@mui/x-license-pro@6.0.3":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@mui/x-license-pro/-/x-license-pro-6.0.3.tgz#162a3ddf7e8676aa0a43490df7fc386dd4918ae2"
-  integrity sha512-4SLR4KKYNU53H1RRwM4Pw0Lwneivsqrng2GSD8aoozCP4qWL+PxEIw67q91FvYSvWJr3LMFS90hQE6TI0xXv4Q==
-  dependencies:
-    "@babel/runtime" "^7.21.0"
-    "@mui/utils" "^5.11.13"
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
@@ -2379,13 +2352,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/chart.js@^2.9.37":
-  version "2.9.37"
-  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.9.37.tgz#8af70862b154fedf938b5b87debdb3a70f6e3208"
-  integrity sha512-9bosRfHhkXxKYfrw94EmyDQcdjMaQPkU1fH2tDxu8DWXxf1mjzWQAV4laJF51ZbC2ycYwNDvIm1rGez8Bug0vg==
-  dependencies:
-    moment "^2.10.2"
-
 "@types/connect-history-api-fallback@^1.3.5":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/connect-history-api-fallback/-/connect-history-api-fallback-1.3.5.tgz#d1f7a8a09d0ed5a57aee5ae9c18ab9b803205dae"
@@ -2450,11 +2416,6 @@
     "@types/express-serve-static-core" "^4.17.33"
     "@types/qs" "*"
     "@types/serve-static" "*"
-
-"@types/format-util@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@types/format-util/-/format-util-1.0.2.tgz#7d19feb1caf59b6ea99c83dfe795ffa3f06b87d7"
-  integrity sha512-9SrLCpgzWo2yHHhiMOX0WwgDh37nSbDbWUsRc1ss++o8O97E3tB6SJiyUQM21UeUsKvZNuhDCmkRaINZ4uJAfg==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.6"
@@ -3765,13 +3726,6 @@ char-regex@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/char-regex/-/char-regex-2.0.1.tgz#6dafdb25f9d3349914079f010ba8d0e6ff9cd01e"
   integrity sha512-oSvEeo6ZUD7NepqAat3RqoucZ5SeqLJgOvVIwkafu6IP3V0pO38s/ypdVUmDDK6qIIHNlYHJAKX9E7R7HoKElw==
-
-chart.js@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.2.1.tgz#d2bd5c98e9a0ae35408975b638f40513b067ba1d"
-  integrity sha512-6YbpQ0nt3NovAgOzbkSSeeAQu/3za1319dPUQTXn9WcOpywM8rGKxJHrhS8V8xEkAlk8YhEfjbuAPfUyp6jIsw==
-  dependencies:
-    "@kurkle/color" "^0.3.0"
 
 check-types@^11.1.1:
   version "11.2.2"
@@ -7552,7 +7506,7 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-moment@^2.10.2, moment@^2.29.4:
+moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -8829,11 +8783,6 @@ react-app-polyfill@^3.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
-
-react-chartjs-2@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-5.2.0.tgz#43c1e3549071c00a1a083ecbd26c1ad34d385f5d"
-  integrity sha512-98iN5aguJyVSxp5U3CblRLH67J8gkfyGNbiK3c+l1QI/G4irHMPQw44aEPmjVag+YKTyQ260NcF82GTQ3bdscA==
 
 react-dev-utils@^12.0.1:
   version "12.0.1"
