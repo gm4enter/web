@@ -50,7 +50,6 @@ const Home = () => {
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
               <p style={{ textTransform: "uppercase", fontSize: '61px', fontWeight: 500, padding: 0, margin: 0, textAlign: 'center' }}>Solution</p>
               <img
-                onClick={() => navigate(ROUTE.DEPOSITANDHISTORY)}
                 style={{ width: '180px', height: '64px' }} src={arowIconLandingPage} alt='' />
             </div>
           </div>

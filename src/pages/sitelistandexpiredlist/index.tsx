@@ -1,60 +1,150 @@
+import { makeStyles } from '@material-ui/styles';
 import InputAdornment from '@mui/material/InputAdornment';
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { SelectChangeEvent } from "@mui/material/Select";
 import TextField from '@mui/material/TextField';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import AppleIcon from '../../asset/images/AppleLogo.png';
+import CHPlay from '../../asset/images/CHPlayIcon.png';
 import plusIcon from '../../asset/images/plusIcon.png';
 import searchIcon from '../../asset/images/searchIcon.png';
+import MenuDots from '../../asset/images/MenuDots.png';
 import { ROUTE } from '../../router/routes';
 
+const useStyles = makeStyles({
+  cell_action: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'flex-end',
+    '&>button': {
+      backgroundColor: '#fff',
+      padding: '10px 12px',
+      border: '.5px solid #D0D5DD',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      cursor: 'pointer',
+      '&>img': {
+        height: '20px',
+        width: '20px',
+      },
+      '&>p': {
+        textAlign: 'center',
+        padding: '0',
+        margin: '0',
+      },
+    },
+    '&>button:nth-of-type(6)': {
+      backgroundColor: 'transparent',
+      padding: '10px 12px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      border: 'none',
+      '&>img': {
+        height: '20px',
+        width: '20px',
+      },
+    }
+  },
+})
 
-const columns: GridColDef[] = [
-  { field: '사이트', headerName: '사이트', sortable: false, minWidth: 155 },
-  { field: '만료일', headerName: '만료일', sortable: false, minWidth: 100 },
-  { field: '개설일', headerName: '개설일', type: 'Date', minWidth: 100 },
-  {
-    field: '관리자',
-    headerName: '관리자',
-    type: 'email',
-    minWidth: 200,
-  },
-  {
-    field: 'function', headerName: '', sortable: false, minWidth: 100, renderCell: (params) => (
-      <div style={{ display: 'flex', gap: '12px' }}>
-      </div>
-    )
-  },
-];
+
 
 const rows = [
-  { id: 1, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 2, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 3, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 4, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 5, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 6, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 7, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 8, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 9, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 10, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 11, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 12, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 13, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 14, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 15, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 16, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'redjword@naver.com', },
-  { id: 17, 사이트: 'VN추가', 만료일: '130일 남음', 개설일: '2023.01.01', 관리자: 'abc@123.com', },
+  { id: 1, address: 'VN추가 \n도메인 미정', endDate: '130일 남음', startDate: '2023.01.01', director: 'tiendatnguyenitnguyen@123.com', },
+  { id: 2, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.02', director: 'redjword@naver.com', },
+  { id: 3, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.12', director: 'redjword@naver.com', },
+  { id: 4, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.03', director: 'redjword@naver.com', },
+  { id: 5, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.04', director: 'redjword@naver.com', },
+  { id: 6, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.05', director: 'redjword@naver.com', },
+  { id: 7, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.06', director: 'redjword@naver.com', },
+  { id: 8, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.07', director: 'redjword@naver.com', },
+  { id: 9, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.08', director: 'redjword@naver.com', },
+  { id: 10, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.09', director: 'redjword@naver.com', },
+  { id: 11, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.10', director: 'redjword@naver.com', },
+  { id: 12, address: 'VN추가 \n onjob (world1.shop)', endDate: '130일 남음', startDate: '2023.01.11', director: 'redjword@naver.com', },
 ];
 
 const SiteListAndExpiredList = () => {
   const navigate = useNavigate();
+  const classes = useStyles()
 
   const [age, setAge] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
+  };
+
+  const columns = [
+    {
+      field: 'address', headerName: '사이트', disableColumnMenu: true, sortable: false, flex: .5, minWidth: 150,
+      renderCell: (params: any) => (
+        <div style={{ whiteSpace: 'pre-line' }}>
+          {params.value.split('\n').map((line: string, i: number) => (
+            <React.Fragment key={i}>
+              {line}
+              <br />
+            </React.Fragment>
+          ))}
+        </div>
+      ),
+    },
+    { field: 'endDate', headerName: '만료일', disableColumnMenu: true, sortable: false, minWidth: 100 },
+    { field: 'startDate', headerName: '개설일', disableColumnMenu: true, type: 'Date', minWidth: 100 },
+    {
+      field: 'director',
+      headerName: '관리자',
+      disableColumnMenu: true,
+      sortable: false,
+      type: 'email',
+      flex: 1,
+      minWidth: 200,
+    },
+    {
+      field: 'action',
+      headerName: '',
+      sortable: false,
+      disableColumnMenu: true,
+      flex: 1,
+      renderCell: (params: any) => {
+        return (
+          <div className={classes.cell_action}>
+            <button >
+              <p>관리</p>
+            </button>
+            <button onClick={() => { navigate(ROUTE.INFOWEBSITE) }} >
+              <p>정보</p>
+            </button>
+            <button >
+              <p>결제</p>
+            </button>
+            <button onClick={() => { navigate(ROUTE.REGISTERANDMODIFYGOOGLEPLAY) }}>
+              <img src={CHPlay} />
+              <p>신청</p>
+            </button>
+            <button onClick={() => { navigate(ROUTE.REGISTERANDMODIFYAPPLESTORE) }}>
+              <img src={AppleIcon} />
+              <p>신청</p>
+            </button>
+            <button onClick={() => { }}>
+              <img src={MenuDots} />
+            </button>
+          </div>
+
+        )
+      }
+    },
+  ];
+
+  const columnStyles = {
+    action: {
+      fontWeight: 'bold',
+      color: 'blue',
+    },
   };
 
 
@@ -108,7 +198,7 @@ const SiteListAndExpiredList = () => {
             <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 700, textAlign: 'center', color: '#fff' }}>2</p>
           </div>
         </div>
-        <button onClick={() => { navigate(ROUTE.INFOWEBSITE) }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', backgroundColor: '#2B83FE', padding: '8px 12px', textAlign: 'center' }}>
+        <button onClick={() => { }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', backgroundColor: '#2B83FE', padding: '8px 12px', textAlign: 'center' }}>
           <img src={plusIcon} />
           <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' }}>사이트 생성</p>
         </button>
@@ -116,10 +206,13 @@ const SiteListAndExpiredList = () => {
       <DataGrid
         rows={rows}
         columns={columns}
+        // columnStyles={columnStyles}
         checkboxSelection
+        disableRowSelectionOnClick
         hideFooter
         sx={{
           '& .MuiDataGrid-main': {
+            display: 'flex',
             '& .MuiDataGrid-columnHeaders': {
               borderColor: '#D0D5DD',
               backgroundColor: '#F1F1F1',

@@ -89,7 +89,7 @@ function InfoWebsite() {
                     <p style={{ padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' }}>*알림 아이콘은 앱에서 알림이 왔을때 상단에 보여지는 아이콘입니다.</p>
                 </div>
 
-                <button onClick={() => { navigate(ROUTE.REGISTERANDMODIFYGOOGLEPLAY) }} style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', backgroundColor: '#2B83FE', padding: '8px 12px', textAlign: 'center' }}>
+                <button onClick={() => { navigate(ROUTE.SITELISTANDEXPIREDLIST) }} style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', backgroundColor: '#2B83FE', padding: '8px 12px', textAlign: 'center' }}>
                     <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' }}>제출하기</p>
                 </button>
             </div>

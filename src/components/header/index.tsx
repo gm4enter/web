@@ -125,7 +125,7 @@ const Header = () => {
         <li onClick={() => navigate(ROUTE.CONTACT)}>Contact</li> */}
 
         <li onClick={() => console.log("ROUTE.HOME")}>About</li>
-        <li onClick={() => console.log("ROUTE.SOLUTION")}>Solution</li>
+        <li onClick={() => navigate(ROUTE.DEPOSITANDHISTORY)}>Solution</li>
         <li onClick={() => console.log("ROUTE.PRICE")}>Price</li>
         <li onClick={() => console.log("ROUTE.CONTACT")}>Contact</li>
       </ul>
