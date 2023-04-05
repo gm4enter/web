@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 const SiteCreation = () => {
     return (
-        <div style={{ width: '100%', padding: "24px" }}>
+        <div style={{ padding: "24px" }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '10px 12px' }}>
                 <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, }}>생성할 사이트 선택</p>
                 <div style={{ backgroundColor: 'rgba(235, 243, 255, 0.24)', border: '1px solid rgba(112, 119, 127, 0.2)', borderRadius: '4px', padding: '10px 24px' }}>
