@@ -1,4 +1,4 @@
-import {makeStyles} from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import naver from '../../asset/images/naver.png'
 import kakao from '../../asset/images/kakao.png'

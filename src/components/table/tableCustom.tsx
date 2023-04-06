@@ -1,4 +1,4 @@
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import SortDown from '../../asset/icons/sort_down'
 import SortUp from '../../asset/icons/sort_up'

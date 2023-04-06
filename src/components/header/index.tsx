@@ -1,5 +1,4 @@
-import { makeStyles } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
+import { makeStyles } from '@mui/styles'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import logo from '../../asset/images/logo.png'

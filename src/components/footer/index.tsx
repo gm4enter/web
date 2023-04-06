@@ -1,9 +1,10 @@
-import { makeStyles } from '@material-ui/core/styles'
+
 import React from 'react'
 import earth from '../../asset/images/earth.png'
 import instaIcon from '../../asset/images/instagram.png'
 import gitIcon from '../../asset/images/githubIcon.png'
 import ytIcon from '../../asset/images/youtubeIcon.png'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles({
   footer_container: {

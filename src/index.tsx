@@ -7,8 +7,7 @@ import reportWebVitals from './reportWebVitals'
 import './index.scss'
 import Router from './router'
 import BaseAdminLayout from './layouts/admin'
-import { createTheme, ThemeProvider } from '@material-ui/core'
-
+import { createTheme, ThemeProvider } from '@mui/material'
 const container = document.getElementById('root')!
 const root = createRoot(container)
 
