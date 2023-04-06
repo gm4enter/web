@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import React, { ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import Footer from '../../components/footer'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { MuiColorInput, MuiColorInputColors } from 'mui-color-input'
 import styled from '@emotion/styled'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles({
     muiColorInput_container: {

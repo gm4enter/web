@@ -1,4 +1,4 @@
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import React, {ReactNode} from 'react'
 import Footer from '../../components/footer'
 import Header from '../../components/header'

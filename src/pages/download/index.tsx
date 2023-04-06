@@ -1,10 +1,10 @@
-import {makeStyles} from '@material-ui/core'
 import React, {useState} from 'react'
 import InputSearch from '../../components/input_search'
 import background from '../../asset/images/background_download.png'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import TableCustom from '../../components/table/tableCustom'
 import {COLUMN_TABLE_DOWNLOAD} from '../../constants/column'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles({
   download_container: {
