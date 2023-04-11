@@ -20,6 +20,11 @@ const useStyles = makeStyles({
 const AdminLayout: React.FC<Props> = ({ children }) => {
   const classes = useStyles()
   const location = useLocation()
+  const [isShowSidebar, setIsShowSidebar] = React.useState(true)
+
+  const handleButtonShow = (check: boolean) => {
+    setIsShowSidebar(check);
+  }
   const checkLayout = () => {
     if (location.pathname === '/') {
       return (
@@ -30,12 +35,13 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
         </div>
       )
     }
+
     else {
       return (
         <div className={classes.container_layout}>
-          <HeaderAdmin />
+          <HeaderAdmin handleButtonShow= {handleButtonShow} />
           <div style={{ display: 'flex' }}>
-            <Sidebar />
+            <Sidebar isOpen={isShowSidebar} />
             <div style={{ flex: 1 }}>
               {children}
             </div>
@@ -43,7 +49,7 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
         </div>
       )
     }
-  } 
+  }
   return (
     checkLayout()
   )

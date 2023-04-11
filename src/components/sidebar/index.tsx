@@ -21,9 +21,13 @@ const dataDeposits = [
     { name: '고객센터', icon: iconSidebar4, iconActive: iconSidebar4Active, path: ROUTE.CUSTOMERCENTER },
 ];
 
-export default function SideBar() {
+interface IProps {
+    isOpen: boolean
+}
+export default function SideBar(props: IProps) {
     const location = useLocation()
     const navigate = useNavigate()
+    const { isOpen } = props
     return (
         <div>
             <div
@@ -74,22 +78,26 @@ export default function SideBar() {
                             onClick={() => navigate(item.path)}
                         >
                             <img src={(location.pathname.includes(item.path)) ? item.iconActive : item.icon} style={{ height: '24px', width: '24px' }} />
-                            <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>{item.name}</p>
+                            {isOpen && <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>{item.name}</p>}
                         </div>
                     ))}
                 </div>
                 <div style={{ marginBottom: '76px', borderTop: '1px solid #D0D5DD' }}>
                     <div style={{ display: 'flex', alignItems: 'center', padding: '24px', gap: '8px' }}>
                         <img src={iconLogoutSidebar} style={{ height: '24px', width: '24px' }} />
-                        <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>고객센터</p>
+                        {isOpen && <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>고객센터</p>}
                     </div>
                 </div>
             </div>
             <div
                 style={
-                    {
-                        width: '256px',
-                    }
+                    (isOpen)
+                        ? {
+                            width: '256px',
+                        }
+                        : {
+                            width: '110px',
+                        }
                 }
             />
         </div>

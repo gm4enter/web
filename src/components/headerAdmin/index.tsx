@@ -70,15 +70,26 @@ const useStyles = makeStyles({
     },
 })
 
-const HeaderAdmin = () => {
+interface IProps {
+    handleButtonShow: (check: boolean) => void,
+}
+
+const HeaderAdmin = (props: IProps) => {
     const classes = useStyles()
     const navigate = useNavigate()
+    const {handleButtonShow} = props
+    const [isShowSideBar, setIsShowSideBar] = useState(true)
+
+    const handleClick = () => {
+        setIsShowSideBar(!isShowSideBar)
+        handleButtonShow(isShowSideBar)
+    }
     return (
         <div
             className={classes.container_header}
         >
             <div>
-                <img src={hamburgerMenu} alt='' />
+                <img src={hamburgerMenu} alt='' onClick={handleClick} />
                 <div onClick={() => { navigate(ROUTE.HOME) }}>
                     <img src={logo} alt="logo" />
                     <div>

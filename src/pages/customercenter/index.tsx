@@ -1,21 +1,17 @@
-import React, { useRef } from 'react'
-import Box from '@mui/material/Box';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import iconPlusBlue from '../../asset/images/iconPlusBlue.png'
-import avatarDemoCustomer from '../../asset/images/avatarDemoCustomer.png'
-import GalleryAdd from '../../asset/images/GalleryAdd.png'
-import Plain from '../../asset/images/Plain.png'
-import avatarChat1 from '../../asset/images/avatarChat1.png'
-import closeIcon from '../../asset/images/cancel.png'
-import MenuDots from '../../asset/images/MenuDots.png'
-import arrowIcon from '../../asset/images/arrow.png'
-import moment from 'moment'
-import { makeStyles } from '@mui/styles';
 import { Modal } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import moment from 'moment';
+import React, { useRef, useState } from 'react';
+import SendIcon from '../../asset/icons/send';
+import GalleryAdd from '../../asset/images/GalleryAdd.png';
+import MenuDots from '../../asset/images/MenuDots.png';
+import arrowIcon from '../../asset/images/arrow.png';
+import avatarChat1 from '../../asset/images/avatarChat1.png';
+import avatarDemoCustomer from '../../asset/images/avatarDemoCustomer.png';
+import closeIcon from '../../asset/images/cancel.png';
+import iconPlusBlue from '../../asset/images/iconPlusBlue.png';
 import { Input } from '../../components/base/input/Input';
-import {InputImage} from '../../components/base/input/InputImage';
+import { InputImage } from '../../components/base/input/InputImage';
 
 
 
@@ -130,9 +126,12 @@ const CustomerCenter = () => {
   const classes = useStyles();
   const ref = useRef<HTMLDivElement>(null)
 
-  const [open, setOpen] = React.useState(false);
+  const [valueInput, setValueInput] = useState('')
+
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
 
   return (
     <div style={{
@@ -301,9 +300,16 @@ const CustomerCenter = () => {
           <button style={{ display: 'flex', padding: '4px', backgroundColor: '#fff', border: 'none', borderRadius: '10px', alignItems: 'center' }}>
             <img src={GalleryAdd} style={{ height: '32px', width: '32px' }} alt="" />
           </button>
-          <input style={{ flex: 1, fontSize: '16px', fontWeight: 500, border: '1px solid #B1B5C3', padding: '12px 16px', borderRadius: '12px', }} placeholder='Type here.......' />
+          <input
+            style={{ flex: 1, fontSize: '16px', fontWeight: 500, border: '1px solid #B1B5C3', padding: '12px 16px', borderRadius: '12px', }}
+            placeholder='Type here.......'
+            onChange={(e) => {
+              setValueInput(e.target.value)
+            }}
+            value={valueInput}
+          />
           <button type='submit' style={{ display: 'flex', padding: '4px', backgroundColor: '#fff', border: 'none', borderRadius: '10px', alignItems: 'center' }}>
-            <img src={Plain} style={{ height: '32px', width: '32px' }} alt="" />
+            <SendIcon color={valueInput ? '#3B71FE' : ''} />
           </button>
         </div>
       </div>
