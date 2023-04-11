@@ -5,7 +5,6 @@ import Footer from '../../components/footer'
 import Header from '../../components/header'
 import HeaderAdmin from '../../components/headerAdmin'
 import Sidebar from '../../components/sidebar'
-import BaseLayout from '../base'
 interface Props {
   children: ReactNode
 }
@@ -37,7 +36,7 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
           <HeaderAdmin />
           <div style={{ display: 'flex' }}>
             <Sidebar />
-            <div style={{ marginLeft: '256px', flex: 1 }}>
+            <div style={{ flex: 1 }}>
               {children}
             </div>
           </div>

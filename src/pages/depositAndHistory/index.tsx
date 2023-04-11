@@ -1,7 +1,9 @@
-import React from 'react'
-import infoCircle from '../../asset/images/iconInfoCircle.png'
-import { makeStyles } from '@mui/styles'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { useState } from 'react'
+import infoCircle from '../../asset/images/iconInfoCircle.png'
+import { Input } from '../../components/base/input/Input'
+import { HistoryTable } from './components/HistoryTable'
 
 
 const useStyles = makeStyles({
@@ -14,11 +16,25 @@ const useStyles = makeStyles({
     }
 })
 
+const DataMock = [
+    { id: 1, name: '2023-02-01 ', data: [
+        { id: 1, date: '2023-02-01 ', explain: '사용 - 우리 웹사이트 (1년)', echarge: '100,00011', use: '', balance: '100,000' },
+    ] },
+    { id: 2, name: '2023-02-01 ', data: [
+        { id: 1, date: '2023-02-01 ', explain: '사용 - 우리 웹사이트 (1년)', echarge: '100,00021', use: '', balance: '100,000' },
+        { id: 2, date: '2023-02-01 ', explain: '사용 - 우리 웹사이트 (1년)', echarge: '100,00022', use: '', balance: '100,000' },
+        { id: 2, date: '2023-02-01 ', explain: '사용 - 우리 웹사이트 (1년)', echarge: '100,00022', use: '', balance: '100,000' },
+    ] },
+]
+
 const DespositAndHistory = () => {
     const classes = useStyles()
-    const [paymentMethod, setPaymentMethod] = React.useState('1');
-    const [deposit, setDeposit] = React.useState('5');
-
+    const [paymentMethod, setPaymentMethod] = useState('1');
+    const [deposit, setDeposit] = useState('5');
+    const [input, setInput] = useState('');
+    const handleChangeInput = (event: SelectChangeEvent) => {
+        setInput(event.target.value);
+    }
     const handleChangeDeposit = (event: SelectChangeEvent) => {
         setDeposit(event.target.value);
     };
@@ -38,10 +54,11 @@ const DespositAndHistory = () => {
                     <li>사용한 예치금에 대한 전자 세금계산서는 익월 10일까지 파트너 정보에 기입된 세금 정보에 따라 발송됩니다.</li>
                 </ul>
             </div>
+
+
             <div style={{ display: 'flex', gap: '23px', marginTop: '32px', justifyContent: 'space-between' }}>
                 <div style={{ flex: 1 }}>
-                    <p style={{ padding: 0, margin: '0 0 8px 0', fontSize: '14px', fontWeight: 500, }}>예치금 잔액</p>
-                    <input style={{ width: 'calc(100% - 32px)', border: '1px solid #D0D5DD', borderRadius: '8px', padding: '10px 16px', fontSize: '16px', fontWeight: 500, lineHeight: '24px' }} />
+                    <Input label='예치금 잔액' value={input} onChange={handleChangeInput} />
                 </div>
                 <div style={{ flex: 1 }}>
                     <p style={{ padding: 0, margin: '0 0 8px 0', fontSize: '14px', fontWeight: 500, }}>예치금 잔액</p>
@@ -68,6 +85,7 @@ const DespositAndHistory = () => {
                         <MenuItem value={2}>신용카드</MenuItem>
                         <MenuItem value={3}>신용카드</MenuItem>
                     </Select>
+
                 </div>
                 <div style={{ flex: 1 }}>
                     <p style={{ padding: 0, margin: '0 0 8px 0', fontSize: '14px', fontWeight: 500, }}>예치금 잔액</p>
@@ -94,6 +112,11 @@ const DespositAndHistory = () => {
                 <button onClick={() => { console.log('clicked btn 충전하기') }} style={{ border: 'none', backgroundColor: '#2B83FE', padding: '10px 24px', textAlign: 'center', marginTop: '28px', borderRadius: '8px' }}>
                     <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' }}>충전하기</p>
                 </button>
+            </div>
+
+            <div style={{ marginTop: '24px' }}>
+                <p style={{ padding: 0, margin: '0 0 10px 0', fontSize: '18px', fontWeight: 500, color: '#ccc' }}>예치금 내역</p>
+                <HistoryTable data={DataMock} />
             </div>
         </div>
     )

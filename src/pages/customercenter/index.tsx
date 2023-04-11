@@ -8,10 +8,14 @@ import avatarDemoCustomer from '../../asset/images/avatarDemoCustomer.png'
 import GalleryAdd from '../../asset/images/GalleryAdd.png'
 import Plain from '../../asset/images/Plain.png'
 import avatarChat1 from '../../asset/images/avatarChat1.png'
+import closeIcon from '../../asset/images/cancel.png'
 import MenuDots from '../../asset/images/MenuDots.png'
 import arrowIcon from '../../asset/images/arrow.png'
 import moment from 'moment'
 import { makeStyles } from '@mui/styles';
+import { Modal } from '@mui/material';
+import { Input } from '../../components/base/input/Input';
+import {InputImage} from '../../components/base/input/InputImage';
 
 
 
@@ -29,6 +33,35 @@ const data2 = [
   { id: 2, title: '공지사항', button: '공지사항' },
   { id: 2, title: '공지사항', button: '공지사항' },
   { id: 2, title: '공지사항', button: '공지사항' },
+]
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  backgroundColor: '#fff',
+  borderRadius: '12px',
+  boxShadow: '0 0 12px 0 rgba(0, 0, 0, 0.25)',
+  border: 'none',
+};
+
+const dataImg = [
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
+  avatarDemoCustomer,
 ]
 
 const useStyles = makeStyles({
@@ -97,6 +130,10 @@ const CustomerCenter = () => {
   const classes = useStyles();
   const ref = useRef<HTMLDivElement>(null)
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <div style={{
       height: 'calc(100vh - 76px)',
@@ -112,7 +149,7 @@ const CustomerCenter = () => {
       <div style={{ display: 'flex', flexDirection: 'column', width: '40%', height: '100%', borderLeft: '1px solid #D0D5DD', borderRight: '1px solid #D0D5DD', }}>
         <div style={{ display: "flex", justifyContent: 'space-between', alignItems: 'center', padding: '24px 16px', borderBottom: '1px solid #D0D5DD', }}>
           <p style={{ padding: 0, margin: 0 }}>1:1문의</p>
-          <button style={{ display: 'flex', padding: '8px', gap: '4px', backgroundColor: '#fff', border: '1px solid #2B83FE ', borderRadius: '4px', alignItems: 'center' }}>
+          <button onClick={handleOpen} style={{ display: 'flex', padding: '8px', gap: '4px', backgroundColor: '#fff', border: '1px solid #2B83FE ', borderRadius: '4px', alignItems: 'center' }}>
             <img src={iconPlusBlue} style={{ height: '20px', width: '20px' }} alt="" />
             <p style={{ padding: 0, margin: 0, color: '#2B83FE' }}>문의작성</p>
           </button>
@@ -270,6 +307,42 @@ const CustomerCenter = () => {
           </button>
         </div>
       </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        disableAutoFocus
+      >
+        <div style={style}>
+          <div style={{ display: 'flex', padding: '16px 32px', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #EDEDED', textAlign: 'center', }}>
+            <p style={{ padding: 0, margin: 0, fontSize: '20px', fontWeight: 500, textAlign: 'center', }}>문의 작성</p>
+            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '24px', width: '24px' }} onClick={handleClose} />
+          </div>
+          <div style={{ padding: '24px 32px 32px 32px', alignItems: 'center', borderBottom: '1px solid #EDEDED', }}>
+            <Input containerStyle={{ width: '430px' }} value='' onChange={() => { }} label='연락처' placeholder='휴대폰 번호를 입력해주세요.' />
+            <Input containerStyle={{ width: '430px', marginTop: '16px' }} value='' onChange={() => { }} label='제목' placeholder='휴대폰 번호를 입력해주세요.' />
+            <textarea
+              style={{
+                width: '398px', marginTop: '16px',
+                border: '1px solid #D0D5DD',
+                borderRadius: '8px',
+                padding: '10px 16px',
+                fontSize: '16px',
+                fontWeight: 500,
+                lineHeight: '24px'
+              }}
+              rows={5}
+              placeholder='내용을 입력해주세요.'
+            />
+            <div>
+              <p style={{ padding: 0, margin: '16px 0 8px 0', fontSize: '16px', fontWeight: 500, lineHeight: '24px', color: '#272B30', }}>캡처이미지 & 이미지 자료</p>
+              <InputImage />
+            </div>
+          </div>
+          <button onClick={handleClose} style={{ width: '100%', justifyContent: 'center', alignItems: 'center', border: 'none', borderRadius: '8px', backgroundColor: '#2B83FE', padding: '10px 24px', textAlign: 'center', }}>
+            <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' }}>완료</p>
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -21,28 +21,36 @@ const useStyles = makeStyles({
         transition: '0.4s',
         boxSizing: 'border-box',
         boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.12)',
-        '&>:nth-child(1)': {
+        '&>div:nth-child(1)': {
             display: 'flex',
-            gap: '6px',
-            paddingRight: '4px',
+            gap: '4px',
+            justifyContent: 'center',
             alignItems: 'center',
-            '&>img:nth-child(1)': {
+            '&>img': {
                 width: '24px',
                 height: '24px',
-            },
-            '&>img:nth-child(2)': {
-                width: '48px',
-                height: '48px',
+                cursor: 'pointer',
             },
             '&>div': {
-                fontWeight: 700,
-                fontSize: '24px',
-                '&>p': {
-                    color: 'blue',
-                    fontWeight: 500,
-                    fontSize: '16px',
-                    padding: 0,
-                    margin: 0
+                display: 'flex',
+                gap: '6px',
+                paddingRight: '4px',
+                alignItems: 'center',
+                cursor: 'pointer',
+                '&>img': {
+                    width: '48px',
+                    height: '48px',
+                },
+                '&>div': {
+                    fontWeight: 700,
+                    fontSize: '24px',
+                    '&>p': {
+                        color: 'blue',
+                        fontWeight: 500,
+                        fontSize: '16px',
+                        padding: 0,
+                        margin: 0
+                    },
                 },
             },
         },
@@ -69,15 +77,18 @@ const HeaderAdmin = () => {
         <div
             className={classes.container_header}
         >
-            <div onClick={() => { navigate(ROUTE.HOME) }}>
+            <div>
                 <img src={hamburgerMenu} alt='' />
-                <img src={logo} alt="logo" />
-                <div>
-                    GM4 Company
-                    <p>
-                        Solution
-                    </p>
+                <div onClick={() => { navigate(ROUTE.HOME) }}>
+                    <img src={logo} alt="logo" />
+                    <div>
+                        GM4 Company
+                        <p>
+                            Solution
+                        </p>
+                    </div>
                 </div>
+
             </div>
             <div>
                 <div>

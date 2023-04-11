@@ -5,6 +5,7 @@ import iconBack from '../../asset/images/iconBack.png';
 import iconQuestion from '../../asset/images/iconQuestion.png';
 import infoCircle from '../../asset/images/iconInfoCircle.png';
 import { ROUTE } from '../../router/routes';
+import { InputuploadImage } from '../../components/base/input/InputuploadImage';
 
 
 function RegisterAndModifyGooglePlay() {
@@ -69,9 +70,8 @@ function RegisterAndModifyGooglePlay() {
                             <img src={iconQuestion} style={{ height: '18px', width: '18px' }} />
                         </div>
                         <p style={{ padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' }}>고해상도 아이콘: 512x512 / 32비트 PNG(알파 있음)</p>
-                        <button onClick={() => { }} style={{ marginTop: '16px', borderRadius: '2px', border: '.5px solid #6B7280', backgroundColor: '#fff', padding: '8px 12px', textAlign: 'center' }}>
-                            <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, color: '#374151' }}>업로드</p>
-                        </button>
+                        <InputuploadImage type='512' containerStyle={{marginTop: '16px'}} />
+
                     </div>
 
                     <div style={{ width: '50%' }}>
@@ -80,9 +80,8 @@ function RegisterAndModifyGooglePlay() {
                             <img src={iconQuestion} style={{ height: '18px', width: '18px' }} />
                         </div>
                         <p style={{ padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' }}>가로x세로 1440x2960 JPG또는 24비트 PNG(알파 없음)</p>
-                        <button onClick={() => { }} style={{ marginTop: '16px', borderRadius: '2px', border: '.5px solid #6B7280', backgroundColor: '#fff', padding: '8px 12px', textAlign: 'center' }}>
-                            <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, color: '#374151' }}>업로드</p>
-                        </button>
+                        <InputuploadImage type='1440' containerStyle={{marginTop: '16px'}} />
+
                     </div>
                 </div>
 
@@ -97,13 +96,11 @@ function RegisterAndModifyGooglePlay() {
                         <span>안드로이드 5.0 이상부터 유채색 알림 아이콘을 지원하지 않아 단색 아이콘을 첨부하셔야 합니다. </span>
                         <a style={{ textDecoration: 'none', color: '#2B83FE' }} href="#">자세히 알아보기</a>
                     </p>
-                    <button onClick={() => { }} style={{ marginTop: '16px', borderRadius: '2px', border: '.5px solid #6B7280', backgroundColor: '#fff', padding: '8px 12px', textAlign: 'center' }}>
-                        <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, color: '#374151' }}>PNG 파일 업로드</p>
-                    </button>
+                    <InputuploadImage type='96' containerStyle={{marginTop: '16px'}} />
                     <p style={{ padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' }}>*알림 아이콘은 앱에서 알림이 왔을때 상단에 보여지는 아이콘입니다.</p>
                 </div>
 
-                <button onClick={() => { navigate(ROUTE.REGISTERANDMODIFYAPPLESTORE) }} style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', backgroundColor: '#2B83FE', padding: '8px 12px', textAlign: 'center' }}>
+                <button onClick={() => { navigate(ROUTE.SITELISTANDEXPIREDLIST) }} style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', backgroundColor: '#2B83FE', padding: '8px 12px', textAlign: 'center' }}>
                     <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' }}>제출하기</p>
                 </button>
             </div>
