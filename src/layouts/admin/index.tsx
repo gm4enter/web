@@ -5,7 +5,6 @@ import Footer from '../../components/footer'
 import Header from '../../components/header'
 import HeaderAdmin from '../../components/headerAdmin'
 import Sidebar from '../../components/sidebar'
-import BaseLayout from '../base'
 interface Props {
   children: ReactNode
 }
@@ -21,6 +20,11 @@ const useStyles = makeStyles({
 const AdminLayout: React.FC<Props> = ({ children }) => {
   const classes = useStyles()
   const location = useLocation()
+  const [isShowSidebar, setIsShowSidebar] = React.useState(true)
+
+  const handleButtonShow = (check: boolean) => {
+    setIsShowSidebar(check);
+  }
   const checkLayout = () => {
     if (location.pathname === '/') {
       return (
@@ -31,20 +35,21 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
         </div>
       )
     }
+
     else {
       return (
         <div className={classes.container_layout}>
-          <HeaderAdmin />
+          <HeaderAdmin handleButtonShow= {handleButtonShow} />
           <div style={{ display: 'flex' }}>
-            <Sidebar />
-            <div style={{ marginLeft: '256px', flex: 1 }}>
+            <Sidebar isOpen={isShowSidebar} />
+            <div style={{ flex: 1 }}>
               {children}
             </div>
           </div>
         </div>
       )
     }
-  } 
+  }
   return (
     checkLayout()
   )

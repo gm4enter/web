@@ -8,6 +8,7 @@ import { ROUTE } from '../../router/routes';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { MuiColorInput } from 'mui-color-input'
 import { InputColor } from '../../components/base/InputColor';
+import { InputuploadImage } from '../../components/base/input/InputuploadImage';
 
 
 function RegisterAndModifyAppleStore() {
@@ -104,9 +105,8 @@ function RegisterAndModifyAppleStore() {
                             <img src={iconQuestion} style={{ height: '18px', width: '18px' }} />
                         </div>
                         <p style={{ padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' }}>32비트 PNG(알파 없음), 모서리는 자동으로 둥글게 처리됩니다.</p>
-                        <button onClick={() => { }} style={{ marginTop: '16px', borderRadius: '2px', border: '.5px solid #6B7280', backgroundColor: '#fff', padding: '8px 12px', textAlign: 'center' }}>
-                            <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, color: '#374151' }}>업로드</p>
-                        </button>
+                        <InputuploadImage type='1024' containerStyle={{marginTop: '16px'}} />
+
                     </div>
 
                     <div style={{ width: '50%' }}>
@@ -115,9 +115,8 @@ function RegisterAndModifyAppleStore() {
                             <img src={iconQuestion} style={{ height: '18px', width: '18px' }} />
                         </div>
                         <p style={{ padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' }}>JPG또는 24비트 PNG(알파 없음)</p>
-                        <button onClick={() => { }} style={{ marginTop: '16px', borderRadius: '2px', border: '.5px solid #6B7280', backgroundColor: '#fff', padding: '8px 12px', textAlign: 'center' }}>
-                            <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, color: '#374151' }}>업로드</p>
-                        </button>
+                        <InputuploadImage type='640' containerStyle={{marginTop: '16px'}} />
+
                     </div>
                 </div>
             </div>

@@ -48,7 +48,13 @@ const useStyles = makeStyles({
       gap: '64px', padding: 0,
       margin: 0,
       fontSize: '18px',
-      fontWeight: 500
+      fontWeight: 500,
+      '&>li': {
+        cursor: 'pointer',
+        '&:hover': {
+          color: 'blue',
+        },
+      },
     },
     '&>:nth-child(3)': {
       '&>div': {

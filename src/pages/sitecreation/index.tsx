@@ -4,6 +4,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Box, Modal, Typography } from '@mui/material';
 import closeIcon from '../../asset/images/cancel.png'
+import avatarDemoCustomer from '../../asset/images/avatarDemoCustomer.png'
+
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -14,17 +16,25 @@ const style = {
     borderRadius: '12px',
     boxShadow: '0 0 12px 0 rgba(0, 0, 0, 0.25)',
     border: 'none',
-    padding: '4px',
+    // padding: '4px',
 };
 
 const dataImg = [
-    closeIcon,
-    closeIcon,
-    closeIcon,
-    closeIcon,
-    closeIcon,
-    closeIcon,
-    closeIcon,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
+    avatarDemoCustomer,
 ]
 const SiteCreation = () => {
     const [open, setOpen] = React.useState(false);
@@ -82,39 +92,22 @@ const SiteCreation = () => {
                         <p style={{ padding: 0, margin: 0, fontSize: '20px', fontWeight: 500, textAlign: 'center', }}>테마 선택</p>
                         <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '24px', width: '24px' }} onClick={handleClose} />
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', margin: '16px 24px 16px 32px', height: '526px', gap: '16px', overflow: 'auto' }}>
-                        <div style={{ flex: 1, backgroundColor: 'green', gap: '10px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', margin: '16px 14px 0px 22px', height: '546px', gap: '16px', overflow: 'auto', }}>
+                        <div style={{ width: '800px' }}>
                             {dataImg.map((item, index) => {
                                 return (
-                                    <img src={item} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px', backgroundColor:'red' }} onClick={() => { }} />
+                                    <img src={item} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px', margin: '0px 10px 16px 10px' }} onClick={() => { }} />
                                 )
                             })}
                         </div>
-
-                        {/* <div style={{ display: 'flex', gap: '20px', }}>
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                        </div>
-                        <div style={{ display: 'flex', gap: '20px', }}>
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                        </div>
-                        <div style={{ display: 'flex', gap: '20px', }}>
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                        </div>
-                        <div style={{ display: 'flex', gap: '20px', }}>
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                            <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '255px', width: '180px' }} onClick={() => { }} />
-                        </div> */}
+                    </div>
+                    <div style={{ display: 'flex', padding: '16px 44px 24px 24px', justifyContent: 'flex-end', alignItems: 'center', borderTop: '1px solid #EDEDED', textAlign: 'center', gap: '16px' }}>
+                        <button onClick={handleClose} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', border: '1px solid #D0D5DD', borderRadius: '8px', backgroundColor: '#fff', padding: '10px 24px', textAlign: 'center' }}>
+                            <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#272B30' }}>완료</p>
+                        </button>
+                        <button onClick={handleClose} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', borderRadius: '8px', backgroundColor: '#2B83FE', padding: '10px 24px', textAlign: 'center',  }}>
+                            <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' }}>완료</p>
+                        </button>
                     </div>
                 </div>
             </Modal>

@@ -21,66 +21,86 @@ const dataDeposits = [
     { name: '고객센터', icon: iconSidebar4, iconActive: iconSidebar4Active, path: ROUTE.CUSTOMERCENTER },
 ];
 
-export default function SideBar() {
+interface IProps {
+    isOpen: boolean
+}
+export default function SideBar(props: IProps) {
     const location = useLocation()
     const navigate = useNavigate()
+    const { isOpen } = props
     return (
-        <div
-            style={
-                {
-                    position: 'fixed',
-                    left: 0,
-                    zIndex: 1000,
-                    backgroundColor: '#fff',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    boxSizing: 'border-box',
-                    boxShadow: '1px 0px 4px rgba(0, 0, 0, 0.12)',
-                }
-            }
-        >
+        <div>
             <div
-                style={{
-                    margin: '24px 24px 0 24px',
-                    flex: 1,
-                    overflow: 'auto',
-                }}
-
+                style={
+                    {
+                        position: 'fixed',
+                        left: 0,
+                        zIndex: 1000,
+                        backgroundColor: '#fff',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        boxSizing: 'border-box',
+                        boxShadow: '1px 0px 4px rgba(0, 0, 0, 0.12)',
+                    }
+                }
             >
-                {dataDeposits.map((item, index) => (
-                    <div
-                        // style={{ display: 'flex', alignItems: 'center', padding: '12px 10px', gap: '8px' }}
-                        style={
-                            // location.pathname === item.path || location.pathname === item.path2
-                            (location.pathname.includes(item.path))
-                                ? {
-                                    display: 'flex', alignItems: 'center', padding: '12px 10px', gap: '8px',
-                                    fontWeight: 500,
-                                    color: '#000',
-                                    backgroundColor: '#EDEDED',
-                                    borderRadius: '8px',
-                                }
-                                : {
-                                    display: 'flex', alignItems: 'center', padding: '12px 10px', gap: '8px',
-                                    fontWeight: 500,
-                                    color: '#70777F',
-                                }
-                        }
-                        onClick={() => navigate(item.path)}
-                    >
-                        <img src={(location.pathname.includes(item.path)) ? item.iconActive : item.icon} style={{ height: '24px', width: '24px' }} />
-                        <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>{item.name}</p>
+                <div
+                    style={{
+                        margin: '24px 24px 0 24px',
+                        flex: 1,
+                        overflow: 'auto',
+                    }}
+
+                >
+                    {dataDeposits.map((item, index) => (
+                        <div
+                            // style={{ display: 'flex', alignItems: 'center', padding: '12px 10px', gap: '8px' }}
+                            style={
+                                // location.pathname === item.path || location.pathname === item.path2
+                                (location.pathname.includes(item.path))
+                                    ? {
+                                        display: 'flex', alignItems: 'center', padding: '12px 10px', gap: '8px',
+                                        fontWeight: 500,
+                                        color: '#000',
+                                        backgroundColor: '#EDEDED',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                    }
+                                    : {
+                                        display: 'flex', alignItems: 'center', padding: '12px 10px', gap: '8px',
+                                        fontWeight: 500,
+                                        color: '#70777F',
+                                        cursor: 'pointer',
+                                    }
+                            }
+                            onClick={() => navigate(item.path)}
+                        >
+                            <img src={(location.pathname.includes(item.path)) ? item.iconActive : item.icon} style={{ height: '24px', width: '24px' }} />
+                            {isOpen && <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>{item.name}</p>}
+                        </div>
+                    ))}
+                </div>
+                <div style={{ marginBottom: '76px', borderTop: '1px solid #D0D5DD' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', padding: '24px', gap: '8px' }}>
+                        <img src={iconLogoutSidebar} style={{ height: '24px', width: '24px' }} />
+                        {isOpen && <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>고객센터</p>}
                     </div>
-                ))}
-            </div>
-            <div style={{ marginBottom: '76px', borderTop: '1px solid #D0D5DD' }}>
-                <div style={{ display: 'flex', alignItems: 'center', padding: '24px', gap: '8px' }}>
-                    <img src={iconLogoutSidebar} style={{ height: '24px', width: '24px' }} />
-                    <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>고객센터</p>
                 </div>
             </div>
+            <div
+                style={
+                    (isOpen)
+                        ? {
+                            width: '256px',
+                        }
+                        : {
+                            width: '110px',
+                        }
+                }
+            />
         </div>
+
     );
 }
