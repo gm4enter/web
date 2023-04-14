@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import React, {ReactNode} from 'react'
+import React, { ReactNode } from 'react'
 import Footer from '../../components/footer'
 import Header from '../../components/header'
 interface Props {
@@ -8,16 +8,18 @@ interface Props {
 
 const useStyles = makeStyles({
   container_layout: {
-    paddingTop: '86px',
+    // '&>div': {
+    //   marginTop: '104px'
+    // }
   },
 })
 
-const BaseLayout: React.FC<Props> = ({children}) => {
+const BaseLayout: React.FC<Props> = ({ children }) => {
   const classes = useStyles()
   return (
     <div className={classes.container_layout}>
       <Header />
-      {children}
+        {children}
       <Footer />
     </div>
   )

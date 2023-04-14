@@ -2,7 +2,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { SelectChangeEvent } from "@mui/material/Select";
 import TextField from '@mui/material/TextField';
 import { DataGrid } from '@mui/x-data-grid';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppleIcon from '../../asset/images/AppleLogo.png';
 import CHPlay from '../../asset/images/CHPlayIcon.png';
@@ -11,8 +11,25 @@ import searchIcon from '../../asset/images/searchIcon.png';
 import MenuDots from '../../asset/images/MenuDots.png';
 import { ROUTE } from '../../router/routes';
 import { makeStyles } from '@mui/styles'
+import { DropDownInput } from '../../components/base/input/DropdownInput';
+import { MenuItem, Select } from '@mui/material';
 
 const useStyles = makeStyles({
+  container: {
+    padding: "24px",
+    '&>p:nth-of-type(1)': {
+      padding: 0, margin: 0, fontSize: '18px', fontWeight: 500,
+    },
+    '&>div:nth-of-type(1)': {
+      marginTop: '12px', display: 'flex', gap: '12px',
+    },
+    '&>div:nth-of-type(2)': {
+      display: 'flex', gap: '23px', margin: '24px 0 12px 0', justifyContent: 'space-between', alignItems: 'center',
+      '&>div': {
+        display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center', height: '28px',
+      },
+    },
+  },
   cell_action: {
     display: 'flex',
     flex: 1,
@@ -78,10 +95,14 @@ const SiteListAndExpiredList = () => {
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
   };
+  const [paymentMethod, setPaymentMethod] = useState('1');
+  const handleChangePaymentMethod = (event: SelectChangeEvent) => {
+    setPaymentMethod(event.target.value);
+  };
 
   const columns = [
     {
-      field: 'address', headerName: '사이트', disableColumnMenu: true, sortable: false, flex: .5, minWidth: 150,
+      field: 'address', headerName: '사이트', disableColumnMenu: true, sortable: false, minWidth: 200,
       renderCell: (params: any) => (
         <div style={{ whiteSpace: 'pre-line' }}>
           {params.value.split('\n').map((line: string, i: number) => (
@@ -93,16 +114,15 @@ const SiteListAndExpiredList = () => {
         </div>
       ),
     },
-    { field: 'endDate', headerName: '만료일', disableColumnMenu: true, sortable: false, minWidth: 100 },
-    { field: 'startDate', headerName: '개설일', disableColumnMenu: true, type: 'Date', minWidth: 100 },
+    { field: 'endDate', headerName: '만료일', disableColumnMenu: true, sortable: false, },
+    { field: 'startDate', headerName: '개설일', disableColumnMenu: true, type: 'Date', },
     {
       field: 'director',
       headerName: '관리자',
       disableColumnMenu: true,
       sortable: false,
       type: 'email',
-      flex: 1,
-      minWidth: 200,
+      minWidth: 300,
     },
     {
       field: 'action',
@@ -140,18 +160,10 @@ const SiteListAndExpiredList = () => {
     },
   ];
 
-  const columnStyles = {
-    action: {
-      fontWeight: 'bold',
-      color: 'blue',
-    },
-  };
-
-
   return (
-    <div style={{ padding: "24px" }}>
-      <p style={{ padding: 0, margin: 0, fontSize: '18px', fontWeight: 500, }}>분류</p>
-      <div style={{ marginTop: '12px', display: 'flex', gap: '12px' }}>
+    <div className={classes.container} style={{}}>
+      <p style={{}}>분류</p>
+      <div style={{}}>
         <TextField
           id="outlined-start-adornment"
           placeholder="Search bar..."
@@ -161,38 +173,28 @@ const SiteListAndExpiredList = () => {
             style: { padding: '0 0 0 16px', margin: 0, borderRadius: '8px', borderColor: '#D0D5DD', fontSize: '16px', fontWeight: 400 },
           }}
         />
-        <select style={{ width: '240px', border: '1px solid #D0D5DD', borderRadius: '8px', padding: '10px 16px', fontSize: '16px', fontWeight: 500, lineHeight: '24px' }} >
-          <option value="사용중">사용중</option>
-          <option value="사용중">사용중</option>
-          <option value="사용중">사용중</option>
-        </select>
-
-        {/* <Select
-          value={age}
-          onChange={handleChange}
+        <Select
+          value={paymentMethod}
+          onChange={handleChangePaymentMethod}
           displayEmpty
           sx={{
-            minWidth: 300,
-            backgroundColor: 'rgba(238, 242, 242, 0.4)',
-
+            width: '240px',
+            height: '44px',
             borderColor: '#D0D5DD',
             borderRadius: '8px',
             fontSize: '16px',
             fontWeight: 500,
             lineHeight: '24px'
           }}
-          inputProps={{ "aria-label": "Without label", style: { padding: '10px' } }}
+          inputProps={{ "aria-label": "Without label" }}
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select> */}
+          <MenuItem value={1}>신용카드</MenuItem>
+          <MenuItem value={2}>신용카드</MenuItem>
+          <MenuItem value={3}>신용카드</MenuItem>
+        </Select>
       </div>
-      <div style={{ display: 'flex', gap: '23px', margin: '24px 0 12px 0', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center', height: '28px' }}>
+      <div style={{}}>
+        <div style={{}}>
           <p style={{ padding: 0, margin: 0, fontSize: '18px', fontWeight: 500, }}>생성한 사이트</p>
           <div style={{ height: '28px', width: '28px', borderRadius: '50%', backgroundColor: '#2B83FE', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 700, textAlign: 'center', color: '#fff' }}>2</p>

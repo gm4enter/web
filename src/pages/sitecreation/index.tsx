@@ -65,7 +65,7 @@ const SiteCreation = () => {
 
             <div style={{ display: 'flex', gap: '81px', padding: '10px 12px', marginTop: '16px' }}>
                 <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, }}>개설 비용</p>
-                <div style={{}}>
+                <div>
                     <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, marginBottom: '8px' }}>1년 (5,500,000원) - VAT 포함</p>
                     <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 400, color: '#70777F' }}>부가세 포함</p>
                 </div>

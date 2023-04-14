@@ -11,9 +11,10 @@ interface Props {
 
 const useStyles = makeStyles({
   container_layout: {
-    marginTop: '76px',
+    marginTop: '104px',
   },
   container_admin_layout: {
+    marginTop: '76px',
   },
 })
 
@@ -38,7 +39,7 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
 
     else {
       return (
-        <div className={classes.container_layout}>
+        <div className={classes.container_admin_layout}>
           <HeaderAdmin handleButtonShow= {handleButtonShow} />
           <div style={{ display: 'flex' }}>
             <Sidebar isOpen={isShowSidebar} />
