@@ -40,7 +40,7 @@ const AdminLayout: React.FC<Props> = ({children}) => {
         <div className={classes.container_admin_layout}>
           <HeaderAdmin handleButtonShow={handleButtonShow} />
           <div style={{display: 'flex'}}>
-            {/* <Sidebar isOpen={isShowSidebar} /> */}
+            <Sidebar isOpen={isShowSidebar} />
             <div style={{flex: 1}}>{children}</div>
           </div>
         </div>

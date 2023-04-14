@@ -6,6 +6,11 @@ import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingP
 import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
 import background from '../../asset/images/netBackground.png'
 
+
+//Mobile: width < 740px
+//Tablet: 740px < width < 1024px
+//Desktop: width >=1024px
+
 const useStyles = makeStyles({
   home_container: {
     marginLeft: '100px',
