@@ -1,6 +1,6 @@
-import { makeStyles } from '@mui/styles'
-import React, { ReactNode } from 'react'
-import { useLocation } from 'react-router-dom'
+import {makeStyles} from '@mui/styles'
+import React, {ReactNode} from 'react'
+import {useLocation} from 'react-router-dom'
 import Footer from '../../components/footer'
 import Header from '../../components/header'
 import HeaderAdmin from '../../components/headerAdmin'
@@ -18,13 +18,13 @@ const useStyles = makeStyles({
   },
 })
 
-const AdminLayout: React.FC<Props> = ({ children }) => {
+const AdminLayout: React.FC<Props> = ({children}) => {
   const classes = useStyles()
   const location = useLocation()
   const [isShowSidebar, setIsShowSidebar] = React.useState(true)
 
   const handleButtonShow = (check: boolean) => {
-    setIsShowSidebar(check);
+    setIsShowSidebar(check)
   }
   const checkLayout = () => {
     if (location.pathname === '/') {
@@ -35,25 +35,19 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
           <Footer />
         </div>
       )
-    }
-
-    else {
+    } else {
       return (
         <div className={classes.container_admin_layout}>
-          <HeaderAdmin handleButtonShow= {handleButtonShow} />
-          <div style={{ display: 'flex' }}>
-            <Sidebar isOpen={isShowSidebar} />
-            <div style={{ flex: 1 }}>
-              {children}
-            </div>
+          <HeaderAdmin handleButtonShow={handleButtonShow} />
+          <div style={{display: 'flex'}}>
+            {/* <Sidebar isOpen={isShowSidebar} /> */}
+            <div style={{flex: 1}}>{children}</div>
           </div>
         </div>
       )
     }
   }
-  return (
-    checkLayout()
-  )
+  return checkLayout()
 }
 
 export default AdminLayout
