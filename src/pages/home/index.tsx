@@ -8,43 +8,60 @@ import background from '../../asset/images/netBackground.png'
 
 const useStyles = makeStyles({
   home_container: {
-    marginTop: '-50px',
     marginLeft: '100px',
-    '&>div:nth-of-type(1)': {
-      // width: '100%',
-      backgroundImage: `url("${background}")`,
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-      boxSizing: 'border-box',
+    display: 'flex',
+    justifyContent: 'space-between',
+    height: 'calc(100vh - 104px - 88px)',
+    backgroundImage: `url("${background}")`,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    boxSizing: 'border-box',
+    '&>div': {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      '&>div:nth-of-type(1)': {
+        '&>p:nth-of-type(1)': {
+          fontSize: '46px', padding: 0, margin: 0, fontWeight: 500, lineHeight: '66px', color: '#272B30'
+        },
+        '&>p:nth-of-type(2)': {
+          textTransform: "uppercase", fontSize: '68px', fontWeight: 900, lineHeight: '66px', padding: 0, margin: 0, color: '#272B30'
+        },
+        '&>div': {
+          display: 'flex', gap: '12px', alignItems: 'center',
+          '&>p:nth-of-type(1)': {
+            textTransform: "uppercase", fontSize: '61px', fontWeight: 500, padding: 0, margin: 0, textAlign: 'center', color: '#272B30'
+          },
+          '&>img:nth-of-type(1)': {
+            // width: '180px', height: '64px'
+          },
+        },
+      },
+      '&>img': {},
     },
+
   }
 });
 
 const Home = () => {
   const classes = useStyles()
   const navigate = useNavigate()
-  const [value, setValue] = React.useState(0)
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue)
-  }
   return (
     <div className={classes.home_container}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ position: 'relative' }} >
-          <div style={{ marginTop: '162px' }}>
-            <p style={{ fontSize: '46px', padding: 0, margin: 0, fontWeight: 500, lineHeight: '66px', color: '#272B30' }}>Fast - Simple - Optimal</p>
-            <p style={{ textTransform: "uppercase", fontSize: '68px', fontWeight: 900, lineHeight: '66px', padding: 0, margin: 0, }}>technology</p>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <p style={{ textTransform: "uppercase", fontSize: '61px', fontWeight: 500, padding: 0, margin: 0, textAlign: 'center' }}>Solution</p>
-              <img
-                style={{ width: '180px', height: '64px' }} src={arowIconLandingPage} alt='' />
-            </div>
+      <div>
+        <div>
+          <p>Fast - Simple - Optimal</p>
+          <p>technology</p>
+          <div>
+            <p>Solution</p>
+            <img src={arowIconLandingPage} alt='' />
           </div>
-          <img style={{ height: '137px', width: '139px', position: 'absolute', left: '187px', bottom: '106px' }} src={gmaLogoLandingPage} alt='' />
         </div>
-        <img style={{ height: '724px', width: '736px', margin: '63px 63px 33px 0 ' }} src={businessGlobalLandingPage} alt='' />
+        <img src={gmaLogoLandingPage} alt='' />
       </div>
+      <img src={businessGlobalLandingPage} alt='' />
     </div>
   )
 }

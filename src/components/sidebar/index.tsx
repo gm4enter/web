@@ -11,6 +11,7 @@ import iconSidebar4Active from '../../asset/images/iconSidebar4Active.png'
 import iconLogoutSidebar from '../../asset/images/iconLogoutSidebar.png'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTE } from '../../router/routes'
+import { makeStyles } from '@mui/styles';
 
 
 
@@ -21,44 +22,67 @@ const dataDeposits = [
     { name: '고객센터', icon: iconSidebar4, iconActive: iconSidebar4Active, path: ROUTE.CUSTOMERCENTER },
 ];
 
+const useStyles = makeStyles({
+    container: {
+        '&>div:nth-child(1)': {
+            position: 'fixed',
+            left: 0,
+            zIndex: 1000,
+            backgroundColor: '#fff',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxSizing: 'border-box',
+            boxShadow: '1px 0px 4px rgba(0, 0, 0, 0.12)',
+            '&>div:nth-child(1)': {
+                margin: '24px 24px 0 24px',
+                flex: 1,
+                overflow: 'auto',
+                '&>img': {
+                    height: '24px', width: '24px'
+                },
+                '&>div': {
+                    '&>p': {
+                        padding: 0, margin: 0, fontSize: '14px', fontWeight: 500
+                    },
+                },
+            },
+            '&>div:nth-child(2)': {
+                marginBottom: '76px',
+                borderTop: '1px solid #D0D5DD',
+                '&>div': {
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '24px',
+                    gap: '8px',
+                    '&>img': {
+                        height: '24px', width: '24px'
+                    },
+                    '&>p': {
+                        padding: 0, margin: 0, fontSize: '14px', fontWeight: 500
+                    },
+                },
+            },
+        },
+        '&>div:nth-child(2)': {},
+    },
+})
 interface IProps {
     isOpen: boolean
 }
 export default function SideBar(props: IProps) {
     const location = useLocation()
     const navigate = useNavigate()
+    const classes = useStyles()
     const { isOpen } = props
     return (
-        <div>
-            <div
-                style={
-                    {
-                        position: 'fixed',
-                        left: 0,
-                        zIndex: 1000,
-                        backgroundColor: '#fff',
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        boxSizing: 'border-box',
-                        boxShadow: '1px 0px 4px rgba(0, 0, 0, 0.12)',
-                    }
-                }
-            >
-                <div
-                    style={{
-                        margin: '24px 24px 0 24px',
-                        flex: 1,
-                        overflow: 'auto',
-                    }}
-
-                >
+        <div className={classes.container}>
+            <div>
+                <div>
                     {dataDeposits.map((item, index) => (
                         <div
-                            // style={{ display: 'flex', alignItems: 'center', padding: '12px 10px', gap: '8px' }}
                             style={
-                                // location.pathname === item.path || location.pathname === item.path2
                                 (location.pathname.includes(item.path))
                                     ? {
                                         display: 'flex', alignItems: 'center', padding: '12px 10px', gap: '8px',
@@ -77,15 +101,15 @@ export default function SideBar(props: IProps) {
                             }
                             onClick={() => navigate(item.path)}
                         >
-                            <img src={(location.pathname.includes(item.path)) ? item.iconActive : item.icon} style={{ height: '24px', width: '24px' }} />
-                            {isOpen && <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>{item.name}</p>}
+                            <img src={(location.pathname.includes(item.path)) ? item.iconActive : item.icon} />
+                            {isOpen && <p>{item.name}</p>}
                         </div>
                     ))}
                 </div>
-                <div style={{ marginBottom: '76px', borderTop: '1px solid #D0D5DD' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', padding: '24px', gap: '8px' }}>
-                        <img src={iconLogoutSidebar} style={{ height: '24px', width: '24px' }} />
-                        {isOpen && <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 }}>고객센터</p>}
+                <div>
+                    <div>
+                        <img src={iconLogoutSidebar} />
+                        {isOpen && <p>고객센터</p>}
                     </div>
                 </div>
             </div>

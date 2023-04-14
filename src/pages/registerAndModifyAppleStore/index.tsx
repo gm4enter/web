@@ -1,33 +1,147 @@
-import { width } from '@mui/system';
-import React from 'react'
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import iconBack from '../../asset/images/iconBack.png';
-import iconQuestion from '../../asset/images/iconQuestion.png';
 import infoCircle from '../../asset/images/iconInfoCircle.png';
-import { ROUTE } from '../../router/routes';
-import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
-import { MuiColorInput } from 'mui-color-input'
+import iconQuestion from '../../asset/images/iconQuestion.png';
 import { InputColor } from '../../components/base/InputColor';
+import { Input } from '../../components/base/input/Input';
 import { InputuploadImage } from '../../components/base/input/InputuploadImage';
+import { ROUTE } from '../../router/routes';
 
+const useStyles = makeStyles({
+    container: {
+        padding: '24px',
+        '&>div:nth-of-type(1)': {
+            display: 'flex',
+            gap: '8px',
+            alignItems: 'center',
+            '&>img': { height: '24px', width: '24px' },
+            '&>p': { padding: 0, margin: 0, fontSize: '18px', fontWeight: 500, },
+        },
+        '&>div:nth-of-type(2)': {
+            backgroundColor: 'rgba(235, 243, 255, 0.24)',
+            border: '1px solid rgba(112, 119, 127, 0.2)',
+            borderRadius: '4px',
+            padding: '24px',
+            marginTop: '24px',
+            '&>div:nth-of-type(1)': {
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                '&>img': { height: '24px', width: '24px' },
+                '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, },
+            },
+            '&>p:nth-of-type(1)': { padding: 0, margin: '10px 0 0 0', fontSize: '14px', fontWeight: 400 },
+            '&>ul': {
+                margin: 0, padding: '0 0 0 24px', fontSize: '14px', fontWeight: 400,
+            },
+            '&>p:nth-of-type(2)': {
+                padding: 0, margin: 0, fontSize: '14px', fontWeight: 400,
+                '&>a': { textDecoration: 'none', color: '#2B83FE' },
+            },
+        },
+        '&>div:nth-of-type(3)': {
+            backgroundColor: 'rgba(238, 242, 242, 0.4)', borderLeft: '3px solid #2B83FE', padding: '24px', marginTop: '16px',
+            '&>p': { padding: 0, margin: 0, fontSize: '14px', fontWeight: 400 },
+        },
+        '&>div:nth-of-type(4)': {
+            marginTop: '16px',
+            padding: '24px',
+            borderRadius: '12px',
+            border: '1px solid #D0D5DD',
+            '&>p:nth-of-type(1)': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, },
+            '&>div': {
+                display: 'flex',
+                alignItems: 'center',
+                paddingLeft: '32px',
+                gap: '44px',
+                marginTop: '24px',
+                '&>div:nth-of-type(1)': {
+                    display: 'flex', width: '190px', gap: '4px', alignItems: 'center', justifyContent: 'flex-end',
+                    '&>p': { padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30' },
+                    '&>img': { height: '16px', width: '16px' },
+                },
+            },
+            '&>div:nth-of-type(1)': { marginTop: '24px', },
+            '&>div:nth-of-type(2)': { marginTop: '24px', },
+            '&>div:nth-of-type(3)': { marginTop: '16px', },
+            '&>div:nth-of-type(4)': { marginTop: '16px', },
+            '&>div:nth-of-type(5)': { marginTop: '16px', },
+            '&>div:nth-of-type(6)': { marginTop: '16px', },
+        },
+        '&>div:nth-of-type(5)': {
+            marginTop: '16px',
+            padding: '24px',
+            borderRadius: '12px',
+            border: '1px solid #D0D5DD',
+            '&>p:nth-of-type(1)': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, },
+            '&>div': {
+                display: 'flex', gap: '16px', marginTop: '24px',
+                '&>div': {
+                    width: '50%',
+                    '&>div': {
+                        display: 'flex', gap: '4px', alignItems: 'center',
+                        '&>p': { padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30', },
+                        '&>img': { height: '18px', width: '18px' },
+                    },
+                    '&>p': { padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' },
+                },
+
+            },
+
+        },
+        '&>div:nth-of-type(6)': {
+            marginTop: '16px',
+            padding: '24px',
+            borderRadius: '12px',
+            border: '1px solid #D0D5DD',
+            '&>p:nth-of-type(1)': { padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#111315' },
+            '&>div': {
+                marginTop: '12px',
+                '&>p': { padding: 0, margin: '0 0 12px 0', fontSize: '14px', fontWeight: 500, },
+            },
+            '&>button': {
+                marginTop: '32px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                border: 'none',
+                backgroundColor: '#2B83FE',
+                padding: '8px 24px',
+                textAlign: 'center',
+                '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' },
+            },
+
+        },
+    }
+});
 
 function RegisterAndModifyAppleStore() {
     const navigate = useNavigate()
+    const classes = useStyles();
+    const [value1, setValue1] = useState('')
+    const [value2, setValue2] = useState('')
+    const [value3, setValue3] = useState('')
+    const [value4, setValue4] = useState('')
+    const [value5, setValue5] = useState('')
+    const [value6, setValue6] = useState('')
     return (
-        <div style={{ padding: "24px" }}>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <img src={iconBack} style={{ height: '24px', width: '24px' }} onClick={() => { navigate(-1) }} />
-                <p style={{ padding: 0, margin: 0, fontSize: '18px', fontWeight: 500, }}>앱스토어 등록 및 수정</p>
+        <div className={classes.container}>
+            <div>
+                <img src={iconBack} onClick={() => { navigate(-1) }} />
+                <p>앱스토어 등록 및 수정</p>
             </div>
-            <div style={{ backgroundColor: 'rgba(235, 243, 255, 0.24)', border: '1px solid rgba(112, 119, 127, 0.2)', borderRadius: '4px', padding: '24px', marginTop: '24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <img style={{ height: '24px', width: '24px' }} src={infoCircle} />
-                    <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500 }}>주의</p>
+            <div>
+                <div>
+                    <img src={infoCircle} alt='' />
+                    <p>주의</p>
                 </div>
-                <p style={{ padding: 0, margin: '10px 0 0 0', fontSize: '14px', fontWeight: 400 }}>
+                <p>
                     iOS용 앱은 Apple App Store에 등록하기 위해 Apple의 심사를 받아야 합니다. Apple의 정책에 의해 거절될 수 있으며 자주 발생하는 유형은 다음과 같습니다.
                 </p>
-                <ul style={{ margin: 0, padding: '0 0 0 24px', fontSize: '14px', fontWeight: 400 }}>
+                <ul>
                     <li>타사 플랫폼 언급 : 내 사이트에 Apple 플랫폼 외의 Android, Google Play 등과 관련된 문구나 이미지가 포함되면 심사에 거절될 수 있습니다. 안드로이드가 탑재된 기기(예: 갤럭시S7)의 이미지 사용도 거절 사유가 될 수 있습니다.</li>
                     <li>앱 내 구매 : 디지털 상품, 이용권 등 비실물 상품을 앱 내에서 판매할 경우 등록 거절 사유가 됩니다. (실물 상품을 판매하는 쇼핑몰은 문제되지 않습니다.)</li>
                     <li>사행성 콘텐츠 : 도박 등 사행성 콘텐츠가 포함된 사이트는 등록 거절 사유가 됩니다.</li>
@@ -37,91 +151,126 @@ function RegisterAndModifyAppleStore() {
                     <li>컨테이너 앱 : 사이트 구성이 단순 회사소개거나 일반 앱 사용자가 활동할 수 있는 컨텐츠가 부족할 경우 등록이 제한 됩니다.</li>
                 </ul>
 
-                <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 400 }}>
+                <p>
                     보다 자세한 사항은
-                    <a href='' style={{ textDecoration: 'none', color: '#2B83FE' }}> Apple App Store 앱 심사 지침 </a>
+                    <a href='#'> Apple App Store 앱 심사 지침 </a>
                     을 참고하시기 바랍니다.
                 </p>
             </div>
-            <div style={{ backgroundColor: 'rgba(238, 242, 242, 0.4)', borderLeft: '3px solid #2B83FE', padding: '24px', marginTop: '16px' }}>
-                <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 400 }}>
+            <div>
+                <p>
                     Apple App Store 심사는 신청일로부터 약 10영업일이 소요될 수 있습니다.
                 </p>
-                <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 400 }}>
+                <p>
                     파트너도 앞으로 앱 신청/업데이트시 개별 Apple 개발자 계정이 필요합니다.
                 </p>
             </div>
-            <div style={{ marginTop: '16px', padding: '24px', borderRadius: '12px', border: '1px solid #D0D5DD' }}>
-                <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, }}>개발자 정보</p>
-                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '32px', gap: '44px', marginTop: '24px', }}>
-                    <div style={{ display: 'flex', width: '190px', gap: '4px', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30' }}>Apple 개발자 계정</p>
-                        <img src={iconQuestion} style={{ height: '16px', width: '16px' }} />
+            <div>
+                <p>개발자 정보</p>
+                <div>
+                    <div>
+                        <p>Apple 개발자 계정</p>
+                        <img src={iconQuestion} alt='' />
                     </div>
-                    <input placeholder='입력해주세요.' style={{ width: '50%', padding: '12px 16px', fontSize: '14px', fontWeight: 400, borderRadius: '8px', border: '1px solid #D0D5DD' }} />
+                    <Input
+                        placeholder='입력해주세요.'
+                        value={value1}
+                        onChange={(e) => { setValue1(e.target.value) }}
+                        containerStyle={{ width: 'calc(50% + 32px)', }}
+                        inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '32px', gap: '44px', marginTop: '24px', }}>
-                    <div style={{ display: 'flex', width: '190px', gap: '4px', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30' }}>Apple 개발자 계정 비밀번호</p>
-                        <img src={iconQuestion} style={{ height: '16px', width: '16px' }} />
+                <div>
+                    <div>
+                        <p>Apple 개발자 계정 비밀번호</p>
+                        <img src={iconQuestion} alt='' />
                     </div>
-                    <input placeholder='입력해주세요.' style={{ width: '50%', padding: '12px 16px', fontSize: '14px', fontWeight: 400, borderRadius: '8px', border: '1px solid #D0D5DD' }} />
+                    <Input
+                        placeholder='입력해주세요.'
+                        value={value2}
+                        onChange={(e) => { setValue2(e.target.value) }}
+                        containerStyle={{ width: 'calc(50% + 32px)', }}
+                        inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '32px', gap: '44px', marginTop: '16px', }}>
-                    <div style={{ display: 'flex', width: '190px', gap: '4px', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30' }}>클라이언트 담당자 연락처</p>
-                        <img src={iconQuestion} style={{ height: '16px', width: '16px' }} />
+                <div>
+                    <div>
+                        <p>클라이언트 담당자 연락처</p>
+                        <img src={iconQuestion} />
                     </div>
-                    <input placeholder='입력해주세요.' style={{ width: '50%', padding: '12px 16px', fontSize: '14px', fontWeight: 400, borderRadius: '8px', border: '1px solid #D0D5DD' }} />
+                    <Input
+                        placeholder='입력해주세요.'
+                        value={value3}
+                        onChange={(e) => { setValue3(e.target.value) }}
+                        containerStyle={{ width: 'calc(50% + 32px)', }}
+                        inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '32px', gap: '44px', marginTop: '16px', }}>
-                    <div style={{ display: 'flex', width: '190px', gap: '4px', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30' }}>앱 제목</p>
-                        <img src={iconQuestion} style={{ height: '16px', width: '16px' }} />
+                <div>
+                    <div>
+                        <p>앱 제목</p>
+                        <img src={iconQuestion} alt='' />
                     </div>
-                    <input placeholder='입력해주세요.' style={{ width: '50%', padding: '12px 16px', fontSize: '14px', fontWeight: 400, borderRadius: '8px', border: '1px solid #D0D5DD' }} />
+                    <Input
+                        placeholder='입력해주세요.'
+                        value={value4}
+                        onChange={(e) => { setValue4(e.target.value) }}
+                        containerStyle={{ width: 'calc(50% + 32px)', }}
+                        inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '32px', gap: '44px', marginTop: '16px', }}>
-                    <div style={{ display: 'flex', width: '190px', gap: '4px', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30' }}>앱 설명</p>
-                        <img src={iconQuestion} style={{ height: '16px', width: '16px' }} />
+                <div>
+                    <div>
+                        <p>앱 설명</p>
+                        <img src={iconQuestion} alt='' />
                     </div>
-                    <input placeholder='입력해주세요.' style={{ width: '50%', padding: '12px 16px', fontSize: '14px', fontWeight: 400, borderRadius: '8px', border: '1px solid #D0D5DD' }} />
+                    <Input
+                        placeholder='입력해주세요.'
+                        value={value5}
+                        onChange={(e) => { setValue5(e.target.value) }}
+                        containerStyle={{ width: 'calc(50% + 32px)', }}
+                        inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '32px', gap: '44px', marginTop: '16px', }}>
-                    <div style={{ display: 'flex', width: '190px', gap: '4px', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30' }}>검색키워드</p>
-                        <img src={iconQuestion} style={{ height: '16px', width: '16px' }} />
+                <div>
+                    <div>
+                        <p>검색키워드</p>
+                        <img src={iconQuestion} alt='' />
                     </div>
-                    <input placeholder='예시)맛집,강남맛집,논현맛집,강남샐러드' style={{ width: '50%', padding: '12px 16px', fontSize: '14px', fontWeight: 400, borderRadius: '8px', border: '1px solid #D0D5DD' }} />
+                    <Input
+                        placeholder='예시)맛집,강남맛집,논현맛집,강남샐러드'
+                        value={value6}
+                        onChange={(e) => { setValue6(e.target.value) }}
+                        containerStyle={{ width: 'calc(50% + 32px)', }}
+                        inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    />
                 </div>
             </div>
-            <div style={{ marginTop: '16px', padding: '24px', borderRadius: '12px', border: '1px solid #D0D5DD' }}>
-                <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, }}>그래픽 저작물</p>
-                <div style={{ display: 'flex', gap: '16px', marginTop: '24px' }}>
-                    <div style={{ width: '50%' }}>
-                        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                            <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30' }}>고해상도 아이콘 가로세로 1024x1024</p>
-                            <img src={iconQuestion} style={{ height: '18px', width: '18px' }} />
+            <div>
+                <p>그래픽 저작물</p>
+                <div>
+                    <div>
+                        <div>
+                            <p>고해상도 아이콘 가로세로 1024x1024</p>
+                            <img src={iconQuestion} alt='' />
                         </div>
-                        <p style={{ padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' }}>32비트 PNG(알파 없음), 모서리는 자동으로 둥글게 처리됩니다.</p>
-                        <InputuploadImage type='1024' containerStyle={{marginTop: '16px'}} />
-
+                        <p>32비트 PNG(알파 없음), 모서리는 자동으로 둥글게 처리됩니다.</p>
+                        <InputuploadImage type='1024' containerStyle={{ marginTop: '16px' }} />
                     </div>
 
-                    <div style={{ width: '50%' }}>
-                        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                            <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#272B30' }}>시작화면 가로세로 640x960</p>
-                            <img src={iconQuestion} style={{ height: '18px', width: '18px' }} />
+                    <div>
+                        <div>
+                            <p>시작화면 가로세로 640x960</p>
+                            <img src={iconQuestion} alt='' />
                         </div>
-                        <p style={{ padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' }}>JPG또는 24비트 PNG(알파 없음)</p>
-                        <InputuploadImage type='640' containerStyle={{marginTop: '16px'}} />
+                        <p>JPG또는 24비트 PNG(알파 없음)</p>
+                        <InputuploadImage type='640' containerStyle={{ marginTop: '16px' }} />
 
                     </div>
                 </div>
             </div>
-            <div style={{ marginTop: '16px', padding: '24px', borderRadius: '12px', border: '1px solid #D0D5DD' }}>
-                <p style={{ padding: 0, margin: 0, fontSize: '14px', fontWeight: 500, color: '#111315' }}>상단 상태바 글자색상</p>
+            <div>
+                <p>상단 상태바 글자색상</p>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     defaultValue="흰색"
@@ -132,12 +281,12 @@ function RegisterAndModifyAppleStore() {
                     <FormControlLabel value="흰색" control={<Radio />} label="흰색" />
                     <FormControlLabel value="검정색" control={<Radio />} label="검정색" />
                 </RadioGroup>
-                <div style={{ marginTop: '12px' }}>
-                    <p style={{ padding: 0, margin: '0 0 12px 0', fontSize: '14px', fontWeight: 500, }}>상단 상태바 배경색</p>
-                    <InputColor style={{border: 'none'}} />
+                <div style={{}}>
+                    <p style={{}}>상단 상태바 배경색</p>
+                    <InputColor style={{ border: 'none' }} />
                 </div>
-                <button onClick={() => { navigate(ROUTE.SITELISTANDEXPIREDLIST) }} style={{ marginTop: '32px', display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', backgroundColor: '#2B83FE', padding: '8px 24px', textAlign: 'center' }}>
-                    <p style={{ padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' }}>완료</p>
+                <button onClick={() => { navigate(ROUTE.SITELISTANDEXPIREDLIST) }}>
+                    <p>완료</p>
                 </button>
             </div>
 

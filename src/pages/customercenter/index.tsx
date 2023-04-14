@@ -16,19 +16,12 @@ import { InputImage } from '../../components/base/input/InputImage';
 
 
 const data = [
-  { id: 1, title: '1:1문의 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부', button: '문의작성' },
-  { id: 2, title: '공지사항', button: '공지사항' },
-  { id: 3, title: '자주묻는질문', button: '자주묻는질문' },
-  { id: 4, title: '이용약관', button: '이용약관' },
-  { id: 5, title: '개인정보처리방침', button: '개인정보처리방침' },
-  { id: 6, title: '이메일무단수집거부', button: '이메일무단수집거부' },
-]
-const data2 = [
-  { id: 1, title: '1:1문의 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부', button: '문의작성' },
-  { id: 2, title: '공지사항', button: '공지사항' },
-  { id: 2, title: '공지사항', button: '공지사항' },
-  { id: 2, title: '공지사항', button: '공지사항' },
-  { id: 2, title: '공지사항', button: '공지사항' },
+  { id: 1, title: '1:1문의 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부 이메일무단수집거부', button: '문의작성', avatar: avatarDemoCustomer },
+  { id: 2, title: '공지사항', button: '공지사항', avatar: avatarDemoCustomer },
+  { id: 3, title: '자주묻는질문', button: '자주묻는질문', avatar: avatarDemoCustomer },
+  { id: 4, title: '이용약관', button: '이용약관', avatar: avatarDemoCustomer },
+  { id: 5, title: '개인정보처리방침', button: '개인정보처리방침', avatar: avatarDemoCustomer },
+  { id: 6, title: '이메일무단수집거부', button: '이메일무단수집거부', avatar: avatarDemoCustomer },
 ]
 
 const style = {
@@ -41,24 +34,6 @@ const style = {
   boxShadow: '0 0 12px 0 rgba(0, 0, 0, 0.25)',
   border: 'none',
 };
-
-const dataImg = [
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-  avatarDemoCustomer,
-]
 
 const useStyles = makeStyles({
   message_user_container: {
@@ -127,6 +102,9 @@ const CustomerCenter = () => {
   const ref = useRef<HTMLDivElement>(null)
 
   const [valueInput, setValueInput] = useState('')
+  const [valueInputModal1, setValueInputModal1] = useState('')
+  const [valueInputModal2, setValueInputModal2] = useState('')
+  const [valueInputModal3, setValueInputModal3] = useState('')
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -173,7 +151,7 @@ const CustomerCenter = () => {
               }
               onClick={() => setSelectedIndex(index)}
             >
-              <img src={avatarDemoCustomer} style={{ height: '110px', width: '92px', boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.12)', borderRadius: '8px' }} />
+              <img src={item.avatar} style={{ height: '110px', width: '92px', boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.12)', borderRadius: '8px' }} />
               <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <p style={{
                   padding: 0, margin: 0, fontSize: '16px', fontWeight: 400,
@@ -324,8 +302,8 @@ const CustomerCenter = () => {
             <img src={closeIcon} alt="close" style={{ cursor: 'pointer', height: '24px', width: '24px' }} onClick={handleClose} />
           </div>
           <div style={{ padding: '24px 32px 32px 32px', alignItems: 'center', borderBottom: '1px solid #EDEDED', }}>
-            <Input containerStyle={{ width: '430px' }} value='' onChange={() => { }} label='연락처' placeholder='휴대폰 번호를 입력해주세요.' />
-            <Input containerStyle={{ width: '430px', marginTop: '16px' }} value='' onChange={() => { }} label='제목' placeholder='휴대폰 번호를 입력해주세요.' />
+            <Input containerStyle={{ width: '430px' }} value={valueInputModal1} onChange={(e) => { setValueInputModal1(e.target.value) }} label='연락처' placeholder='휴대폰 번호를 입력해주세요.' />
+            <Input containerStyle={{ width: '430px', marginTop: '16px' }} value={valueInputModal2} onChange={(e) => { setValueInputModal2(e.target.value) }} label='제목' placeholder='휴대폰 번호를 입력해주세요.' />
             <textarea
               style={{
                 width: '398px', marginTop: '16px',
