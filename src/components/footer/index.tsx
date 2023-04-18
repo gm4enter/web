@@ -10,6 +10,9 @@ const useStyles = makeStyles({
   footer_container: {
     background: '#FAFAFA',
     padding: '1rem 5rem',
+    '@media (max-width: 768px)': {
+      padding: '1rem',
+    },
     '&>div:nth-of-type(1)': {
       display: 'flex',
       justifyContent: 'space-between',
@@ -20,6 +23,12 @@ const useStyles = makeStyles({
         alignItems: 'center',
         fontSize: 18,
         gap: '16px',
+        fontWeight: 500,
+        '@media (max-width: 768px)': {
+          alignItems: 'flex-start',
+          flexDirection: 'column',
+          fontSize: 12,
+        },
         '&>ul': {
           display: 'flex',
           padding: '0',
@@ -29,6 +38,15 @@ const useStyles = makeStyles({
             marginLeft: '2rem',
             fontWeight: 500,
             fontSize: '18px',
+          },
+          '@media (max-width: 768px)': {
+            fontSize: 12,
+            gap: '4px',
+            '&>li': {
+              fontWeight: 500,
+              fontSize: '12px',
+              marginLeft: '1rem',
+            },
           },
         },
       },
@@ -40,27 +58,45 @@ const useStyles = makeStyles({
         alignItems: 'center',
         fontWeight: 500,
         fontSize: '18px',
+        '@media (max-width: 768px)': {
+          flexDirection: 'column',
+          fontSize: 12,
+          alignItems: 'flex-end',
+        },
         '&>div:nth-of-type(1)': {
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
+          '@media (max-width: 768px)': {
+            gap: '4px',
+            '&>img': {
+              height: '20px',
+              width: '20px',
+            },
+          },
         },
         '&>div:nth-of-type(2)': {
           display: 'flex',
           alignItems: 'center',
           gap: '25px',
+
           '&>div': {
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            '&>a': {
-              height: '32px',
+            '&img': {
               width: '32px',
-              '&img': {
-                width: '32px',
-                height: '32px',
-              }
-            }
+              height: '32px',
+            },
+          },
+          '@media (max-width: 768px)': {
+            gap: '8px',
+            '&>div': {
+              '&>img': {
+                width: '20px',
+                height: '20px',
+              },
+            },
           },
         },
       },
@@ -88,15 +124,9 @@ const Footer = () => {
           <div>
             Follow us on
             <div>
-              <a href=''>
-                <img src={instaIcon} alt="instagram" />
-              </a>
-              <a href=''>
-                <img src={gitIcon} alt="github" />
-              </a>
-              <a href=''>
-                <img src={ytIcon} alt="youtube" />
-              </a>
+              <img src={instaIcon} alt="instagram" onClick={() => { }} />
+              <img src={gitIcon} alt="github" onClick={() => { }} />
+              <img src={ytIcon} alt="youtube" onClick={() => { }} />
             </div>
           </div>
         </div>

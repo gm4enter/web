@@ -20,7 +20,7 @@ const useStyles = makeStyles({
         color: '#374151',
       },
     },
-    '@media (max-width: 780px)': {
+    '@media (max-width: 768px)': {
       '&>button': {
         width: '100%',
         height: '44px',

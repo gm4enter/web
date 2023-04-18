@@ -18,9 +18,9 @@ const BaseLayout: React.FC<Props> = ({ children }) => {
   const classes = useStyles()
   return (
     <div className={classes.container_layout}>
-      <Header />
+      {/* <Header />
         {children}
-      <Footer />
+      <Footer /> */}
     </div>
   )
 }

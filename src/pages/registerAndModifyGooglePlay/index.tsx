@@ -18,7 +18,7 @@ import {
 const useStyles = makeStyles({
   container: {
     padding: '24px',
-    '@media (max-width: 780px)': {
+    '@media (max-width: 768px)': {
       padding: 16,
     },
     '&>div:nth-of-type(1)': {
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
       alignItems: 'center',
       '&>img': {height: '24px', width: '24px'},
       '&>p': {padding: 0, margin: 0, fontSize: '18px', fontWeight: 500},
-      '@media (max-width: 780px)': {
+      '@media (max-width: 768px)': {
         '&>p': {padding: 0, margin: 0, fontSize: '16px', fontWeight: 500},
       },
     },
@@ -68,7 +68,7 @@ const useStyles = makeStyles({
       '&>div:nth-of-type(2)': {
         display: 'none',
       },
-      '@media (max-width: 780px)': {
+      '@media (max-width: 768px)': {
         padding: '0',
         borderRadius: '0',
         '&>div:nth-of-type(1)': {
@@ -85,7 +85,7 @@ const useStyles = makeStyles({
       borderRadius: '12px',
       border: '1px solid #D0D5DD',
       '&>p': {padding: 0, margin: 0, fontSize: '16px', fontWeight: 500},
-      '@media (max-width: 780px)': {
+      '@media (max-width: 768px)': {
         padding: '0',
         borderRadius: '12px',
         border: 'none',
@@ -111,7 +111,7 @@ const useStyles = makeStyles({
         fontSize: '14px',
         fontWeight: 400,
       },
-      '@media (max-width: 780px)': {
+      '@media (max-width: 768px)': {
         padding: '0 0 16px 0 ',
         borderRadius: '0',
         border: 'none',
@@ -197,7 +197,7 @@ const useStyles = makeStyles({
           color: '#fff',
         },
       },
-      '@media (max-width: 780px)': {
+      '@media (max-width: 768px)': {
         padding: '0',
         border: 'none',
         '&>div:nth-of-type(1)': {

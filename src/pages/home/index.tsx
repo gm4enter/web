@@ -7,8 +7,8 @@ import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
 import background from '../../asset/images/netBackground.png'
 
 
-//Mobile: width < 740px
-//Tablet: 740px < width < 1024px
+//Mobile: width < 768px
+//Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
 
 const useStyles = makeStyles({
@@ -45,8 +45,68 @@ const useStyles = makeStyles({
       },
       '&>img': {},
     },
+    '&>div:nth-of-type(3)': {
+      display: 'none',
+    },
+  },
+  '@media (max-width: 768px)': {
+    home_container: {
+      position: 'relative',
+      marginLeft: '0',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItem: 'center',
+      height: 'calc(100vh - 104px - 120px)',
+      backgroundImage: `url("${background}")`,
+      backgroundSize: 'center',
+      backgroundRepeat: 'no-repeat',
+      boxSizing: 'border-box',
 
-  }
+      '&>div:nth-of-type(1)': {
+        '&>div:nth-of-type(1)': {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          '&>p:nth-of-type(1)': {
+            fontSize: '24px', padding: 0, margin: 0, fontWeight: 500, lineHeight: '30px', color: '#272B30'
+          },
+          '&>p:nth-of-type(2)': {
+            textTransform: "uppercase", fontSize: '40px', fontWeight: 900, lineHeight: '60px', padding: 0, margin: 0, color: '#272B30'
+          },
+          '&>div': {
+            display: 'flex', gap: '8px', alignItems: 'center',
+            '&>p:nth-of-type(1)': {
+              textTransform: "uppercase", fontSize: '36px', fontWeight: 500, padding: 0, margin: 0, textAlign: 'center', color: '#272B30'
+            },
+            '&>img:nth-of-type(1)': {
+              width: '100px', height: '36px'
+            },
+          },
+        },
+        '&>img': {
+          display: 'none',
+        },
+      },
+      '&>div:nth-of-type(2)': {
+        '&>img': {
+          width: '375px',
+          height: 'auto',
+        },
+      },
+      '&>div:nth-of-type(3)': {
+        display: 'block',
+        position: 'absolute',
+        left: '15px',
+        bottom: '12px',
+        '&>img': {
+          width: '75px',
+          height: '75px',
+        },
+      },
+    }
+  },
 });
 
 const Home = () => {
@@ -66,7 +126,12 @@ const Home = () => {
         </div>
         <img src={gmaLogoLandingPage} alt='' />
       </div>
-      <img src={businessGlobalLandingPage} alt='' />
+      <div>
+        <img src={businessGlobalLandingPage} alt='' />
+      </div>
+      <div>
+        <img src={gmaLogoLandingPage} alt='' />
+      </div>
     </div>
   )
 }

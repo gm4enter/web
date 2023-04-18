@@ -10,7 +10,7 @@ import {Checkbox} from '@mui/material'
 import SiteItem from '../../components/siteItem'
 
 const useStyles = makeStyles({
-  '@media (min-width: 780px)': {
+  '@media (min-width: 768px)': {
     site_list_mobile: {
       display: 'none',
     },
