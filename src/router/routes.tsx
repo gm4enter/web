@@ -7,6 +7,7 @@ import CustomerCenter from '../pages/customercenter'
 import InfoWebsite from '../pages/infoWebsite'
 import RegisterAndModifyGooglePlay from '../pages/registerAndModifyGooglePlay'
 import RegisterAndModifyAppleStore from '../pages/registerAndModifyAppleStore'
+import CustomerCenterItem from '../layouts/customerCenterItem'
 import RemittanceHistory from '../pages/depositAndHistory/remittanceHistory'
 
 export const ROUTE = {
@@ -15,9 +16,12 @@ export const ROUTE = {
   SITECREATION: '/sitecreation',
   SITELISTANDEXPIREDLIST: '/sitelistandexpiredlist',
   INFOWEBSITE: '/sitelistandexpiredlist/infowebsite',
-  REGISTERANDMODIFYGOOGLEPLAY: '/sitelistandexpiredlist/registerandmodifygoogleplay',
-  REGISTERANDMODIFYAPPLESTORE: '/sitelistandexpiredlist/registerandmodifyapplestore',
+  REGISTERANDMODIFYGOOGLEPLAY:
+    '/sitelistandexpiredlist/registerandmodifygoogleplay',
+  REGISTERANDMODIFYAPPLESTORE:
+    '/sitelistandexpiredlist/registerandmodifyapplestore',
   CUSTOMERCENTER: '/customercenter',
+  CUSTOMERCENTER_ITEM: '/customercenter/:id',
   ABOUT: '/about',
   SOLUTION: '/solution',
   PRICE: '/price',
@@ -35,9 +39,16 @@ const routes: Array<MyRouteProp> = [
   {path: ROUTE.SITECREATION, element: <SiteCreation />},
   {path: ROUTE.SITELISTANDEXPIREDLIST, element: <SiteListAndExpiredList />},
   {path: ROUTE.INFOWEBSITE, element: <InfoWebsite />},
-  {path: ROUTE.REGISTERANDMODIFYGOOGLEPLAY, element: <RegisterAndModifyGooglePlay />},
-  {path: ROUTE.REGISTERANDMODIFYAPPLESTORE, element: <RegisterAndModifyAppleStore />},
+  {
+    path: ROUTE.REGISTERANDMODIFYGOOGLEPLAY,
+    element: <RegisterAndModifyGooglePlay />,
+  },
+  {
+    path: ROUTE.REGISTERANDMODIFYAPPLESTORE,
+    element: <RegisterAndModifyAppleStore />,
+  },
   {path: ROUTE.CUSTOMERCENTER, element: <CustomerCenter />},
+  {path: ROUTE.CUSTOMERCENTER_ITEM, element: <CustomerCenterItem />},
   {path: ROUTE.REMITTANCEHISTORY, element: <RemittanceHistory />},
 
 ]
