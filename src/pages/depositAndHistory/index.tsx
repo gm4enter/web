@@ -109,7 +109,7 @@ const useStyles = makeStyles({
         container_deposit: {
             display: 'flex',
             flexDirection: 'column',
-            heigh: '100%',
+            height: 'calc(100vh - 124px)',
             '&>div:nth-of-type(1)': {
                 '&>button': {
                     display: 'block',
@@ -140,6 +140,7 @@ const useStyles = makeStyles({
                 }
             },
             '&>div:nth-of-type(3)': {
+                flex: 1,
                 flexDirection: 'column',
                 marginTop: '32px',
                 justifyContent: 'space-between',
@@ -156,6 +157,9 @@ const useStyles = makeStyles({
                             padding: 0, margin: '0px 0 8px 0', fontSize: '12px', fontWeight: 500,
                         },
                     },
+                },
+                '&>div:nth-of-type(2)': {
+                    flex: 1,
                 },
                 '&>button': {
                     border: 'none',
@@ -277,6 +281,7 @@ const DespositAndHistory = () => {
                         </Select>
                     </div>
                 </div>
+                <div />
                 <button onClick={() => { console.log('clicked btn 충전하기') }}>
                     <p>충전하기</p>
                 </button>

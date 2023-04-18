@@ -112,7 +112,10 @@ const useStyles = makeStyles({
 
     '@media (max-width: 768px)': {
         container_site: {
+            height: 'calc(100vh - 108px)',
             padding: '16px',
+            display: 'flex',
+            flexDirection: 'column',
             '&>div:nth-of-type(1)': {
                 display: 'block',
                 padding: '0',
@@ -137,6 +140,7 @@ const useStyles = makeStyles({
             '&>div:nth-of-type(4)': {
                 display: 'block',
                 padding: 0,
+                flex: 1,
             },
             '&>div:nth-of-type(5)': {
                 marginTop: '16px',
@@ -154,22 +158,24 @@ const useStyles = makeStyles({
             left: 0,
             bottom: 0,
             right: 0,
-            transform: 'translate(0%, 30%)',
+            // height: '312px',
+            transform: 'translate(0%, 0%)',
+            display: 'flex',
+            flexDirection: 'column',
+            borderRadius: 0,
+            borderTopLeftRadius: '12px',
+            borderTopRightRadius: '12px',
             '&>div:nth-of-type(1)': {
                 display: 'flex', padding: '16px 24px 16px 32px', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #EDEDED', textAlign: 'center',
                 '&>p': { padding: 0, margin: 0, fontSize: '20px', fontWeight: 500, textAlign: 'center', color: '#111315' },
                 '&>img': { cursor: 'pointer', height: '24px', width: '24px' },  
             },
             '&>div:nth-of-type(2)': {
-                padding: '20px 24px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '24px',
+                flex: 1,
+                padding: '16px 24px',
                 '&>div': {
                     width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                   
                     '&>div': {
                         display: 'flex',
                         alignItems: 'center',
@@ -181,13 +187,13 @@ const useStyles = makeStyles({
                 },
             },
             '&>div:nth-of-type(3)': {
-                display: 'flex', padding: '16px 44px 24px 24px', justifyContent: 'flex-end', alignItems: 'center', borderTop: '1px solid #EDEDED', textAlign: 'center', gap: '16px',
+                display: 'flex', padding: '24px 16px', justifyContent: 'flex-end', alignItems: 'center', borderTop: 'none', textAlign: 'center', gap: '10px',
                 '&>button:nth-of-type(1)': {
-                    display: 'flex', justifyContent: 'center', alignItems: 'center', border: '1px solid #D0D5DD', borderRadius: '8px', backgroundColor: '#fff', padding: '10px 24px', textAlign: 'center',
+                   flex: 1, justifyContent: 'center', alignItems: 'center', border: '1px solid #D0D5DD', borderRadius: '8px', backgroundColor: '#fff', padding: '10px 24px', textAlign: 'center',
                     '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#272B30' },
                 },
                 '&>button:nth-of-type(2)': {
-                    display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', borderRadius: '8px', backgroundColor: '#2B83FE', padding: '10px 24px', textAlign: 'center',
+                    flex: 1, justifyContent: 'center', alignItems: 'center', border: 'none', borderRadius: '8px', backgroundColor: '#2B83FE', padding: '10px 24px', textAlign: 'center',
                     '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' },
                 },
             },
