@@ -8,7 +8,7 @@ import { ROUTE } from '../../router/routes'
 const useStyles = makeStyles({
     container_header: {
         position: 'fixed',
-        zIndex: 1300,
+        zIndex: 1100,
         top: 0,
         left: 0,
         right: 0,
@@ -68,6 +68,58 @@ const useStyles = makeStyles({
             },
         },
     },
+    '@media (max-width: 768px)': {
+        container_header: {
+            padding: '16px',
+            '&>div:nth-child(1)': {
+                display: 'flex',
+                gap: '4px',
+                justifyContent: 'center',
+                alignItems: 'center',
+                '&>img': {
+                    width: '24px',
+                    height: '24px',
+                    cursor: 'pointer',
+                },
+                '&>div': {
+                    display: 'flex',
+                    gap: '6px',
+                    paddingRight: '4px',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    '&>img': {
+                        width: '36px',
+                        height: '36px',
+                    },
+                    '&>div': {
+                        fontWeight: 700,
+                        fontSize: '16px',
+                        '&>p': {
+                            color: 'blue',
+                            fontWeight: 500,
+                            fontSize: '12px',
+                            padding: 0,
+                            margin: 0
+                        },
+                    },
+                },
+            },
+            '&>:nth-child(2)': {
+                '&>div': {
+                    backgroundColor: '#fff',
+                    fontSize: '18px',
+                    fontWeight: 500,
+                    margin: 0,
+                    '&>img:nth-child(1)': {
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                    },
+                },
+            },
+        },
+
+    },
 })
 
 interface IProps {
@@ -77,8 +129,8 @@ interface IProps {
 const HeaderAdmin = (props: IProps) => {
     const classes = useStyles()
     const navigate = useNavigate()
-    const {handleButtonShow} = props
-    const [isShowSideBar, setIsShowSideBar] = useState(true)
+    const { handleButtonShow } = props
+    const [isShowSideBar, setIsShowSideBar] = useState(false)
 
     const handleClick = () => {
         setIsShowSideBar(!isShowSideBar)
