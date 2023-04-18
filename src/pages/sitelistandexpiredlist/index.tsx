@@ -18,7 +18,7 @@ import SiteListMobile from '../siteListMobile'
 const useStyles = makeStyles({
   container: {
     padding: '24px',
-    '@media (max-width: 780px)': {
+    '@media (max-width: 768px)': {
       display: 'none',
     },
     '&>p:nth-of-type(1)': {
@@ -390,7 +390,7 @@ const SiteListAndExpiredList = () => {
           hideFooter
           sx={{
             '& .MuiDataGrid-main': {
-              display: 'flex',
+              // display: 'flex',
               '& .MuiDataGrid-columnHeaders': {
                 borderColor: '#D0D5DD',
                 backgroundColor: '#F1F1F1',

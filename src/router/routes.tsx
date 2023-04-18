@@ -8,6 +8,7 @@ import InfoWebsite from '../pages/infoWebsite'
 import RegisterAndModifyGooglePlay from '../pages/registerAndModifyGooglePlay'
 import RegisterAndModifyAppleStore from '../pages/registerAndModifyAppleStore'
 import CustomerCenterItem from '../layouts/customerCenterItem'
+import RemittanceHistory from '../pages/depositAndHistory/remittanceHistory'
 
 export const ROUTE = {
   HOME: '/',
@@ -25,6 +26,7 @@ export const ROUTE = {
   SOLUTION: '/solution',
   PRICE: '/price',
   CONTACT: '/contact',
+  REMITTANCEHISTORY: '/depositandhistory/remittancehistory',
 }
 
 const routes: Array<MyRouteProp> = [
@@ -47,5 +49,7 @@ const routes: Array<MyRouteProp> = [
   },
   {path: ROUTE.CUSTOMERCENTER, element: <CustomerCenter />},
   {path: ROUTE.CUSTOMERCENTER_ITEM, element: <CustomerCenterItem />},
+  {path: ROUTE.REMITTANCEHISTORY, element: <RemittanceHistory />},
+
 ]
 export default routes

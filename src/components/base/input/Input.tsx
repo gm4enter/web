@@ -26,7 +26,7 @@ const useStyles = makeStyles({
       fontWeight: 500,
       lineHeight: '24px',
     },
-    '@media (max-width: 780px)': {
+    '@media (max-width: 768px)': {
       '&>input': {
         width: '100%',
         boxSizing: 'border-box',

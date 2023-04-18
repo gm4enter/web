@@ -12,6 +12,7 @@ import iconLogoutSidebar from '../../asset/images/iconLogoutSidebar.png'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTE } from '../../router/routes'
 import { makeStyles } from '@mui/styles';
+import { Drawer } from '@mui/material';
 
 
 
@@ -23,7 +24,10 @@ const dataDeposits = [
 ];
 
 const useStyles = makeStyles({
-    container: {
+    container_sidebar: {
+        '@media (max-width: 768px)': {
+            display: 'none',
+        },
         '&>div:nth-child(1)': {
             position: 'fixed',
             left: 0,
@@ -67,6 +71,12 @@ const useStyles = makeStyles({
         },
         '&>div:nth-child(2)': {},
     },
+    container_sidebar_mb: {
+        '@media (min-width: 768px)': {
+            display: 'none',
+        },
+    },
+
 })
 interface IProps {
     isOpen: boolean
@@ -76,8 +86,27 @@ export default function SideBar(props: IProps) {
     const navigate = useNavigate()
     const classes = useStyles()
     const { isOpen } = props
+
+    const [state, setState] = React.useState({
+        left: false,
+    });
+    const toggleDrawer =
+        (anchor: 'left', open: boolean) =>
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === 'keydown' &&
+                    ((event as React.KeyboardEvent).key === 'Tab' ||
+                        (event as React.KeyboardEvent).key === 'Shift')
+                ) {
+                    return;
+                }
+
+                setState({ ...state, [anchor]: open });
+            };
+
+
     return (
-        <div className={classes.container}>
+        <div className={classes.container_sidebar}>
             <div>
                 <div>
                     {dataDeposits.map((item, index) => (
@@ -102,20 +131,22 @@ export default function SideBar(props: IProps) {
                             onClick={() => navigate(item.path)}
                         >
                             <img src={(location.pathname.includes(item.path)) ? item.iconActive : item.icon} />
-                            {isOpen && <p>{item.name}</p>}
+                            {/* {!isOpen && <p>{item.name}</p>} */}
+                            <p>{item.name}</p>
                         </div>
                     ))}
                 </div>
                 <div>
                     <div>
                         <img src={iconLogoutSidebar} />
-                        {isOpen && <p>고객센터</p>}
+                        {/* {!isOpen && <p>고객센터</p>} */}
+                        <p>고객센터</p>
                     </div>
                 </div>
             </div>
-            <div
+            {/* <div
                 style={
-                    (isOpen)
+                    (!isOpen)
                         ? {
                             width: '256px',
                         }
@@ -123,8 +154,15 @@ export default function SideBar(props: IProps) {
                             width: '110px',
                         }
                 }
+            /> */}
+            <div
+                style={
+                    {
+                        width: '256px',
+                    }
+
+                }
             />
         </div>
-
     );
 }
