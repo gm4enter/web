@@ -53,7 +53,7 @@ const useStyles = makeStyles({
   container: {
     height: 'calc(100vh - 76px)',
     marginRight: '24px',
-    '@media (max-width: 780px)': {
+    '@media (max-width: 768px)': {
       marginRight: '0',
     },
     display: 'flex',
@@ -143,7 +143,7 @@ const useStyles = makeStyles({
           },
         },
       },
-      '@media (max-width: 780px)': {
+      '@media (max-width: 768px)': {
         width: '100%',
         marginRight: '0',
         border: 'none',
@@ -257,7 +257,7 @@ const useStyles = makeStyles({
           alignItems: 'center',
         },
       },
-      '@media (max-width: 780px)': {
+      '@media (max-width: 768px)': {
         display: 'none',
       },
     },
