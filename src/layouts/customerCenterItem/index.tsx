@@ -136,7 +136,7 @@ const useStyles = makeStyles({
           alignItems: 'center',
         },
       },
-      '@media (max-width: 780px)': {
+      '@media (max-width: 768px)': {
         width: '100%',
       },
     },
