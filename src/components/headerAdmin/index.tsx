@@ -4,6 +4,12 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import logo from '../../asset/images/logo.png'
 import hamburgerMenu from '../../asset/images/HamburgerMenu.png'
 import { ROUTE } from '../../router/routes'
+import { signInWithPopup } from 'firebase/auth'
+import axios from 'axios'
+import { LOGIN, USER } from '../../apis/urlConfig'
+import { auth, provider } from '../../services/firebase'
+import axiosClient, { setTokens } from '../../apis/axiosClient'
+import { UserType } from '../../types/user.type'
 
 const useStyles = makeStyles({
     container_header: {
@@ -131,11 +137,60 @@ const HeaderAdmin = (props: IProps) => {
     const navigate = useNavigate()
     const { handleButtonShow } = props
     const [isShowSideBar, setIsShowSideBar] = useState(false)
+    const [tokenFirebase, setTokenFirebase] = useState('')
+    const [statusLogin, setStatusLogin] = useState(false)
+    const [user, setUser] = useState<UserType>()
 
     const handleClick = () => {
         setIsShowSideBar(!isShowSideBar)
         handleButtonShow(isShowSideBar)
     }
+    const handleLogin = () => {
+        signInWithPopup(auth, provider)
+            .then((data: any) => {
+                setTokenFirebase(data.user.accessToken)
+            })
+            .catch((error: any) => {
+                console.log(error)
+            })
+    }
+    useEffect(() => {
+        if (tokenFirebase) {
+            const data = {
+                firebaseToken: tokenFirebase,
+            }
+            axiosClient.post(LOGIN, data)
+                .then((res: any) => {
+                    if (res.statusCode === 200) {
+                        setStatusLogin(true)
+                        localStorage.setItem('accessToken', res.data?.accessToken)
+                    }
+                    else {
+                        console.log('message: ', res.message);
+                    }
+                })
+                .catch((error: any) => {
+                    console.log(error)
+                })
+        }
+    }, [tokenFirebase])
+
+    useEffect(() => {
+        if (localStorage.getItem('accessToken')) {
+
+            setTokens()
+            axiosClient.get(USER)
+                .then((res: { data: UserType }) => {
+                    if (res.data) {
+                        setUser(res.data)
+                    }
+                })
+                .catch((error: any) => {
+                    console.log(error)
+                })
+
+        }
+    }, [statusLogin])
     return (
         <div
             className={classes.container_header}
@@ -154,14 +209,20 @@ const HeaderAdmin = (props: IProps) => {
 
             </div>
             <div>
-                <div>
-                    <img
-                        src={
-                            'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80'
-                        }
-                        alt=''
-                    />
-                </div>
+                {user ? (
+                    <div>
+                        <img
+                            src={
+                                user?.photo
+                            }
+                            alt=''
+                        />
+                    </div>
+                ) : (
+                    <button onClick={handleLogin}>
+                        로그인
+                    </button>
+                )}
             </div>
 
         </div>

@@ -354,7 +354,7 @@ const useStyles = makeStyles({
       alignItems: 'center',
       borderBottom: '1px solid #EDEDED',
       '&>textarea': {
-        width: '398px',
+        width: 'calc(100% - 32px)',
         marginTop: '16px',
         border: '1px solid #D0D5DD',
         borderRadius: '8px',
@@ -588,7 +588,7 @@ const CustomerCenter = () => {
                 setValueInputModal2(e.target.value)
               }}
               label='제목'
-              placeholder='휴대폰 번호를 입력해주세요.'
+              placeholder='입력해주세요.'
             />
             <textarea rows={5} placeholder='내용을 입력해주세요.' />
             <div>
