@@ -1,27 +1,10 @@
-export const LOGIN = '/auth/login'
-export const LOGOUT = ''
 
-//upload file
-export const UPLOAD_IMAGE = '/system/upload-image'
-export const UPLOAD_IMAGES = '/system/multiple-upload'
-export const UPLOAD_fILE = '/system/upload-file'
+export const LOGIN = `/user/login`;
+export const LOGOUT = "";
 
-//Portfolios
+//user
+export const USER = `/user/profile`;  //get
 
-export const PORTFOLIO = '/portfolio'
-
-//order_project
-
-export const ORDER_PROJECT = '/order-project'
-
-export const UPLOAD_fILES = '/system/multiple-file'
-
-//option
-
-export const OPTION = '/option'
-
-//tag
-
-export const TAG = '/tag'
-
-export const TYPE = '/type'
+//conversation
+export const CONVERSATION_LIST = "/conversation/list";  //get
+export const CONVERSATION = "/conversation/get";  //get

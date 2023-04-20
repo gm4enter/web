@@ -312,10 +312,10 @@ const SiteCreation = () => {
                     </div>
                     <div>
                         <button onClick={handleClose}>
-                            <p>완료</p>
+                            <p>취소</p>
                         </button>
                         <button onClick={handleClose}>
-                            <p>완료</p>
+                            <p>생성</p>
                         </button>
                     </div>
                 </div>

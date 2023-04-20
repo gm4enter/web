@@ -60,7 +60,7 @@ const dataHeaders = [
     { name: 'About', icon: iconSidebar1, iconActive: iconSidebar1Active, path: ROUTE.ABOUT },
     { name: 'Solution', icon: iconSidebar1, iconActive: iconSidebar1Active, path: ROUTE.DEPOSITANDHISTORY },
     { name: 'Price', icon: iconSidebar1, iconActive: iconSidebar1Active, path: ROUTE.PRICE },
-    { name: 'Contact', icon: iconSidebar1, iconActive: iconSidebar1Active, path: ROUTE.CONTACT },
+    { name: 'Contact', icon: iconSidebar1, iconActive: iconSidebar1Active, path: ROUTE.CUSTOMERCENTER },
 ];
 
 interface IProps {

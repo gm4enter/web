@@ -23,22 +23,18 @@ export const ROUTE = {
   CUSTOMERCENTER: '/customercenter',
   CUSTOMERCENTER_ITEM: '/customercenter/:id',
   ABOUT: '/about',
-  SOLUTION: '/solution',
   PRICE: '/price',
-  CONTACT: '/contact',
   REMITTANCEHISTORY: '/depositandhistory/remittancehistory',
 }
 
 const routes: Array<MyRouteProp> = [
-  {path: ROUTE.HOME, element: <Home />},
-  {path: ROUTE.ABOUT, element: <Home />},
-  {path: ROUTE.SOLUTION, element: <Home />},
-  {path: ROUTE.PRICE, element: <Home />},
-  {path: ROUTE.CONTACT, element: <Home />},
-  {path: ROUTE.DEPOSITANDHISTORY, element: <DepositAndHistory />},
-  {path: ROUTE.SITECREATION, element: <SiteCreation />},
-  {path: ROUTE.SITELISTANDEXPIREDLIST, element: <SiteListAndExpiredList />},
-  {path: ROUTE.INFOWEBSITE, element: <InfoWebsite />},
+  { path: ROUTE.HOME, element: <Home /> },
+  { path: ROUTE.ABOUT, element: <Home /> },
+  { path: ROUTE.PRICE, element: <Home /> },
+  { path: ROUTE.DEPOSITANDHISTORY, element: <DepositAndHistory /> },
+  { path: ROUTE.SITECREATION, element: <SiteCreation /> },
+  { path: ROUTE.SITELISTANDEXPIREDLIST, element: <SiteListAndExpiredList /> },
+  { path: ROUTE.INFOWEBSITE, element: <InfoWebsite /> },
   {
     path: ROUTE.REGISTERANDMODIFYGOOGLEPLAY,
     element: <RegisterAndModifyGooglePlay />,
@@ -47,9 +43,9 @@ const routes: Array<MyRouteProp> = [
     path: ROUTE.REGISTERANDMODIFYAPPLESTORE,
     element: <RegisterAndModifyAppleStore />,
   },
-  {path: ROUTE.CUSTOMERCENTER, element: <CustomerCenter />},
-  {path: ROUTE.CUSTOMERCENTER_ITEM, element: <CustomerCenterItem />},
-  {path: ROUTE.REMITTANCEHISTORY, element: <RemittanceHistory />},
+  { path: ROUTE.CUSTOMERCENTER, element: <CustomerCenter /> },
+  { path: ROUTE.CUSTOMERCENTER_ITEM, element: <CustomerCenterItem /> },
+  { path: ROUTE.REMITTANCEHISTORY, element: <RemittanceHistory /> },
 
 ]
 export default routes
