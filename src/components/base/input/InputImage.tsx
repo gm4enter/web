@@ -42,12 +42,12 @@ const useStyles = makeStyles({
 
 interface Iprops {
     type?: string;
-    onChange?: (images: string[]) => void;
+    onImageChange?: (images: string[]) => void;
     containerStyle?: React.CSSProperties;
 }
 
 export const InputImage = (props: Iprops) => {
-    const { type, onChange, containerStyle, ...restProps } = props;
+    const { type, onImageChange, containerStyle, ...restProps } = props;
     const classes = useStyles();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [images, setImages] = useState<string[]>([]);
@@ -59,6 +59,7 @@ export const InputImage = (props: Iprops) => {
                 newImages.push(URL.createObjectURL(event.target.files[i]));
             }
             setImages([...images, ...newImages]);
+            onImageChange && onImageChange([...images, ...newImages]);
         }
     };
 
