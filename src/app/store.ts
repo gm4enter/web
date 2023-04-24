@@ -9,10 +9,12 @@ import createSagaMiddleware from 'redux-saga'
 import rootSaga from './rootSaga'
 import {conversationReducer} from '../features/conversation/conversationSlice'
 import {loadingReducer} from '../components/loading/loadingSlice'
+import { transactionReducer } from '../features/transaction/transactionSlice'
 
 const rootReducer = combineReducers({
   conversationReducer: conversationReducer,
   loadingReducer: loadingReducer,
+  transactionReducer:transactionReducer
 })
 
 const sagaMiddleware = createSagaMiddleware()

@@ -52,6 +52,7 @@ interface Iprops {
   labelStyle?: React.CSSProperties
   countStyle?: React.CSSProperties
   inputStyle?: React.CSSProperties
+  disabled?: boolean
 }
 
 export const Input = (props: Iprops) => {
@@ -68,6 +69,7 @@ export const Input = (props: Iprops) => {
     inputStyle,
     isCountValueLength,
     maxLength,
+    disabled,
     ...restProps
   } = props
   const classes = useStyles()
@@ -91,6 +93,7 @@ export const Input = (props: Iprops) => {
         placeholder={placeholder}
         style={inputStyle}
         {...restProps}
+        disabled={disabled}
       />
     </div>
   )
