@@ -339,7 +339,7 @@ const Header = (props: IProps) => {
         <li onClick={() => navigate(ROUTE.CUSTOMERCENTER)}>Contact</li>
       </ul>
       <div>
-        {user ? (
+        {localStorage.getItem('accessToken') ? (
           <div onClick={handleClickMenuUser}>
             <img
               src={

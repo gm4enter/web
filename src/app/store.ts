@@ -7,11 +7,17 @@ import {
 } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
 import rootSaga from './rootSaga'
+import {conversationReducer} from '../features/conversation/conversationSlice'
+import {loadingReducer} from '../components/loading/loadingSlice'
 
-const rootReducer = combineReducers({})
+const rootReducer = combineReducers({
+  conversationReducer: conversationReducer,
+  loadingReducer: loadingReducer,
+})
 
 const sagaMiddleware = createSagaMiddleware()
-const middleware = [...getDefaultMiddleware({thunk: false}), sagaMiddleware]
+// const middleware = [...getDefaultMiddleware({thunk: false}), sagaMiddleware]
+const middleware = (getDefaultMiddleware: any) => getDefaultMiddleware().concat(sagaMiddleware)
 
 export const store = configureStore({
   reducer: rootReducer,

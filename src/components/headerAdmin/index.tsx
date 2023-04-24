@@ -209,7 +209,7 @@ const HeaderAdmin = (props: IProps) => {
 
             </div>
             <div>
-                {user ? (
+                {localStorage.getItem('accessToken') ? (
                     <div>
                         <img
                             src={
