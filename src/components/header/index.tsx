@@ -265,6 +265,19 @@ const Header = (props: IProps) => {
         console.log(error)
       })
   }
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken')
+    setOpenModal(false)
+    navigate(ROUTE.HOME)
+  }
+  const handleClickSolution = () => {
+    if (!!localStorage.getItem('accessToken')) {
+      navigate(ROUTE.DEPOSITANDHISTORY)
+    }
+    else {
+      alert('이 기능을 사용하려면 로그인해야 합니다.')
+    }
+  }
   useLayoutEffect(() => {
     if (tokenFirebase) {
       const data = {
@@ -334,7 +347,7 @@ const Header = (props: IProps) => {
       </div>
       <ul>
         <li onClick={() => console.log("ROUTE.HOME")}>About</li>
-        <li onClick={() => navigate(ROUTE.DEPOSITANDHISTORY)}>Solution</li>
+        <li onClick={handleClickSolution}>Solution</li>
         <li onClick={() => console.log("ROUTE.PRICE")}>Price</li>
         <li onClick={() => navigate(ROUTE.CUSTOMERCENTER)}>Contact</li>
       </ul>
@@ -379,11 +392,9 @@ const Header = (props: IProps) => {
             </div>
           </div>
           <p>파트너 관리</p>
-          <p>로그아웃</p>
+          <p onClick={handleLogout}>로그아웃</p>
         </div>
       </Modal>
-
-
     </div>
   )
 }

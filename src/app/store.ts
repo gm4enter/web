@@ -10,9 +10,11 @@ import rootSaga from './rootSaga'
 import {conversationReducer} from '../features/conversation/conversationSlice'
 import {loadingReducer} from '../components/loading/loadingSlice'
 import { transactionReducer } from '../features/transaction/transactionSlice'
+import { planReducer } from '../features/plan/planSlice'
 
 const rootReducer = combineReducers({
   conversationReducer: conversationReducer,
+  planReducer: planReducer,
   loadingReducer: loadingReducer,
   transactionReducer:transactionReducer
 })

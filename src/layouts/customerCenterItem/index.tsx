@@ -1,5 +1,5 @@
-import {makeStyles} from '@mui/styles'
-import React, {useRef, useState} from 'react'
+import { makeStyles } from '@mui/styles'
+import React, { useEffect, useRef, useState } from 'react'
 import moment from 'moment'
 import SendIcon from '../../asset/icons/send'
 import GalleryAdd from '../../asset/images/GalleryAdd.png'
@@ -10,79 +10,71 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 import avatarDemoCustomer from '../../asset/images/avatarDemoCustomer.png'
 import closeIcon from '../../asset/images/cancel.png'
 import iconPlusBlue from '../../asset/images/iconPlusBlue.png'
-import {Input} from '../../components/base/input/Input'
-import {InputImage} from '../../components/base/input/InputImage'
-import {useNavigate} from 'react-router'
+import { Input } from '../../components/base/input/Input'
+import { InputImage } from '../../components/base/input/InputImage'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { ConversationDetailType } from '../../types/conversationDetail.type'
+import { loadingActions } from '../../components/loading/loadingSlice'
+import { useAppDispatch } from '../../app/hooks'
+import axiosClient from '../../apis/axiosClient'
+import { CONVERSATION, MESSAGE } from '../../apis/urlConfig'
 
 
 const useStyles = makeStyles({
   customer_center_item: {
-    paddingBottom: '100px',
+    height: 'calc(100vh - 132px)',
     '&>div:nth-of-type(1)': {
       display: 'flex',
       alignItems: 'center',
-      padding: '12px',
+      padding: '16px',
+      gap: '4px',
       '&>span': {
-        marginRight: '8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       },
     },
     '&>div:nth-of-type(2)': {
       display: 'flex',
       flexDirection: 'column',
-      width: '60%',
       height: '100%',
       borderRight: '1px solid #D0D5DD',
       '&>div:nth-of-type(1)': {
-        padding: '12px',
+        padding: '24px 16px',
         borderBottom: '1px solid #D0D5DD',
-
-        background: '#F1F1F1',
-        '&>div:nth-of-type(1)': {
+        display: 'flex',
+        justifyContent: 'space-between',
+        // alignItems: 'center',
+        '&>div': {
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          '&>div': {
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            '&>img': {height: '44px', width: '44px', borderRadius: '50%'},
-            '&>div': {
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              '&>p': {padding: 0, margin: 0},
-              '&>p:nth-of-type(1)': {
-                fontSize: '16px',
-                fontWeight: 700,
-                color: '#141416',
-              },
-              '&>p:nth-of-type(2)': {
-                fontSize: '12px',
-                fontWeight: 400,
-                color: '#272B30',
-              },
-            },
-          },
-          '&>img': {
-            height: '24px',
-            width: '24px',
-            // border: '.5px solid #B1B5C3',
-            padding: '4px',
-            borderRadius: '10px',
+          flexDirection: 'column',
+          gap: '8px',
+          '&>p:nth-of-type(1)': {
+            padding: 0,
+            margin: 0,
+            fontSize: '16px',
+            fontWeight: 700,
+            color: '#141416',
+            maxWidth: '100%',
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
           },
         },
-        '&>p': {
-          padding: 0,
-          margin: '16px 0 0 0',
-          fontSize: '14px',
-          fontWeight: 500,
-          color: '#2D2F31',
+        '&>img': {
+          height: '24px',
+          width: '24px',
+          border: 'none',
+          padding: '4px',
+          borderRadius: '10px',
         },
       },
       '&>div:nth-of-type(2)': {
-        padding: '12px 12px 0 12px',
+        padding: '16px',
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
@@ -94,21 +86,16 @@ const useStyles = makeStyles({
           fontSize: '16px',
           fontWeight: 700,
           color: '#262626',
-          '&>span': {color: '#0078FF'},
+          '&>span': { color: '#0078FF' },
         },
         '&>div:nth-of-type(1)': {},
       },
       '&>div:nth-of-type(3)': {
         display: 'flex',
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
         alignItems: 'center',
         padding: '24px 20px',
-        boxShadow: '0px -1px 2px rgba(0, 0, 0, 0.16)',
+        borderTop: '1px solid #3B71FE',
         gap: '8px',
-        background: 'white',
         '&>button:nth-of-type(1)': {
           display: 'flex',
           padding: '4px',
@@ -117,7 +104,7 @@ const useStyles = makeStyles({
           borderRadius: '10px',
           alignItems: 'center',
           cursor: 'pointer',
-          '&>img': {height: '32px', width: '32px'},
+          '&>img': { height: '32px', width: '32px' },
         },
         '&>input': {
           flex: 1,
@@ -136,9 +123,9 @@ const useStyles = makeStyles({
           alignItems: 'center',
         },
       },
-      '@media (max-width: 768px)': {
-        width: '100%',
-      },
+    },
+    '@media (min-width: 769px)': {
+      display: 'none',
     },
   },
   message_user_container: {
@@ -154,7 +141,7 @@ const useStyles = makeStyles({
       borderRadius: '50%',
       marginRight: '1rem',
     },
-    '&>div': {
+    '&>div:nth-of-type(1)': {
       '&>p:nth-of-type(1)': {
         fontSize: '14px',
         marginBottom: '0',
@@ -164,6 +151,17 @@ const useStyles = makeStyles({
         fontWeight: 400,
         color: 'rgba(45, 47, 49, 0.5)',
         margin: 0,
+      },
+      '&>div': {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        margin: '12px 0 12px 0',
+        '&>img': {
+          height: '53px',
+          width: '44px',
+          borderRadius: '4px',
+        }
       },
       '&>img': {
         width: '80px',
@@ -199,21 +197,117 @@ const useStyles = makeStyles({
   border: {
     borderRight: '1px solid #DCE1E7',
   },
+  type1Conversation: {
+    padding: '4px 8px',
+    backgroundColor: '#FFE7E4',
+    borderRadius: '10px',
+    width: 'fit-content',
+    '&>p:nth-of-type(1)': {
+      padding: 0,
+      margin: 0,
+      fontSize: '16px',
+      lineHeight: '16px',
+      fontWeight: 500,
+      color: '#FD3535',
+    },
+  },
+  type2Conversation: {
+    padding: '4px 8px',
+    backgroundColor: 'rgba(253, 53, 233, 0.1)',
+    borderRadius: '10px',
+    width: 'fit-content',
+    '&>p:nth-of-type(1)': {
+      padding: 0,
+      margin: 0,
+      fontSize: '16px',
+      lineHeight: '16px',
+      fontWeight: 500,
+      color: '#FD35E9',
+    },
+  },
+  type3Conversation: {
+    padding: '4px 8px',
+    backgroundColor: '#ccc',
+    borderRadius: '10px',
+    width: 'fit-content',
+    '&>p:nth-of-type(1)': {
+      padding: 0,
+      margin: 0,
+      fontSize: '16px',
+      lineHeight: '16px',
+      fontWeight: 500,
+      color: '#fff',
+    },
+  },
 })
+
+const formatDate = (date: string) => {
+  const index = date.indexOf('T')
+  return date.slice(0, index)
+}
 
 const CustomerCenterItem = () => {
   const classes = useStyles()
-  const [selectedIndex, setSelectedIndex] = React.useState(1)
   const ref = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
+  const { id } = useParams()
+  const dispatch = useAppDispatch()
 
-  const [valueInput, setValueInput] = useState('')
+  const [reload, setReload] = useState(true)
+  const [valueMessage, setValueMessage] = useState('')
 
-  const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const conversationActiveId = id
+
+  const checkTypeConversation = (type: string) => {
+    switch (type) {
+      case '추가 질문':
+        return classes.type1Conversation
+      case '완료':
+        return classes.type2Conversation
+      case 'TYPE_3':
+        return classes.type3Conversation
+      default:
+        return classes.type3Conversation
+    }
+  }
+
+  const [conversationDetail, setConversationDetail] = useState<ConversationDetailType>()
+  console.log('````conversationDetail', conversationDetail);
+
+  const handleMessage = async () => {
+    try {
+      dispatch(loadingActions.openLoading())
+      await axiosClient.post(`${MESSAGE}/create`, {
+        content: valueMessage,
+        conversation: conversationActiveId,
+      })
+      setValueMessage('')
+      setReload(true)
+      dispatch(loadingActions.loadingSuccess())
+    } catch (error) {
+      console.log(error)
+      dispatch(loadingActions.loadingSuccess())
+    }
+  }
+
+  useEffect(() => {
+    const getDetailConversation = async () => {
+      try {
+        dispatch(loadingActions.openLoading())
+        const data: { data: ConversationDetailType } = await axiosClient.get(
+          `${CONVERSATION}/get/${conversationActiveId}`
+        )
+        setConversationDetail(data.data)
+        dispatch(loadingActions.loadingSuccess())
+        setReload(false)
+      } catch (error) {
+        console.log(error)
+        dispatch(loadingActions.loadingSuccess())
+      }
+    }
+    reload && conversationActiveId && getDetailConversation()
+  }, [reload, conversationActiveId, dispatch])
+
   return (
     <div className={classes.customer_center_item}>
       <div>
@@ -226,92 +320,68 @@ const CustomerCenterItem = () => {
         </span>{' '}
         Back
       </div>
+
       <div>
         <div>
           <div>
-            <div>
-              <img src={avatarChat1} alt='' />
-              <div>
-                <p>name12</p>
-                <p>(684) 555-0102</p>
-              </div>
+            <div className={checkTypeConversation(conversationDetail?.topic || '')}>
+              <p>{conversationDetail?.topic}</p>
             </div>
-            <img src={MenuDots} alt='' />
+            <p>{conversationDetail?.title}</p>
           </div>
-          <p>아까 입금했는데 이기명이름으로 30만원했어요 확인해주 세요.</p>
+          <img src={MenuDots} alt='' />
         </div>
+
         <div>
           <p>
             댓글
-            <span> (3)</span>
+            <span> ({conversationDetail?.messages?.length})</span>
           </p>
           <div ref={ref}>
             <div>
               <div className={classes.message_user_container}>
-                <img src={avatarChat1} alt='' />
+                <img src={conversationDetail?.creator?.photo} alt='' />
                 <div>
-                  <p>우리집</p>
-                  <p>{moment().format('YYYY-MM-DD')}</p>
-                  <p>안녕하세요. 확인 되셨습니다. 감사합니다.</p>
-                  {/* <img
-              src='https://bedental.vn/wp-content/uploads/2022/12/Anh-Avatar-Doremon-dep-ngau-cute.jpg'
-              alt=''
-            /> */}
+                  <p>{conversationDetail?.creator?.firstName} {conversationDetail?.creator?.lastName}</p>
+                  <p>{formatDate(conversationDetail?.creator?.createdAt || '')}</p>
+                  <div>
+                    {(conversationDetail?.thumbnail || []).map((item, index) => (
+                      <img
+                        src={item}
+                        alt=''
+                      />
+                    ))}
+                  </div>
+                  <p>{conversationDetail?.description}</p>
                 </div>
-                {/* <img src={arrowIcon} alt='' /> */}
               </div>
             </div>
-            <div
-              className={classes.message_user_container}
-              style={{marginLeft: '40px', borderLeft: '1px solid #DCE1E7'}}
-            >
-              <img
-                style={{width: '40px', height: '40px'}}
-                src={avatarChat1}
-                alt=''
-              />
-              <div>
-                <p>우리집</p>
-                <p>{moment().format('YYYY-MM-DD')}</p>
-                <p>안녕하세요. 확인 되셨습니다. 감사합니다.</p>
-                <img src={avatarChat1} alt='' />
-              </div>
-              <img src={arrowIcon} alt='' />
-            </div>
-            <div
-              className={classes.message_user_container}
-              style={{marginLeft: '40px', borderLeft: '1px solid #DCE1E7'}}
-            >
-              <img
-                style={{width: '40px', height: '40px'}}
-                src={avatarChat1}
-                alt=''
-              />
-              <div>
-                <p>우리집</p>
-                <p>{moment().format('YYYY-MM-DD')}</p>
-                <p>안녕하세요. 확인 되셨습니다. 감사합니다.</p>
-                <img src={avatarChat1} alt='' />
-              </div>
-              <img src={arrowIcon} alt='' />
-            </div>
-            <div
-              className={classes.message_user_container}
-              style={{marginLeft: '40px'}}
-            >
-              <img
-                style={{width: '40px', height: '40px'}}
-                src={avatarChat1}
-                alt=''
-              />
-              <div>
-                <p>우리집</p>
-                <p>{moment().format('YYYY-MM-DD')}</p>
-                <p>안녕하세요. 확인 되셨습니다. 감사합니다.</p>
-                <img src={avatarChat1} alt='' />
-              </div>
-              <img src={arrowIcon} alt='' />
-            </div>
+
+            {conversationDetail?.messages?.map((item, index, array) => {
+              const styleItem = { marginLeft: '60px', borderLeft: '1px solid #DCE1E7' }
+              if (index + 1 === array.length) {
+                styleItem.borderLeft = '1px solid #FAFAFA'
+              }
+              return (
+                <div
+                  className={classes.message_user_container}
+                  style={styleItem}
+                  key={item._id}
+                >
+                  <img
+                    src={item.sender?.photo}
+                    alt=''
+                  />
+                  <div>
+                    <p>{item.sender.firstName} {item.sender.lastName}</p>
+                    <p>{formatDate(item.updatedAt || '')}</p>
+                    <p>{item.content}</p>
+                    <img src={avatarChat1} alt='' />
+                  </div>
+                  <img src={arrowIcon} alt='' />
+                </div>
+              )
+            })}
           </div>
         </div>
 
@@ -322,12 +392,12 @@ const CustomerCenterItem = () => {
           <input
             placeholder='Type here.......'
             onChange={(e) => {
-              setValueInput(e.target.value)
+              setValueMessage(e.target.value)
             }}
-            value={valueInput}
+            value={valueMessage}
           />
-          <button type='submit'>
-            <SendIcon color={valueInput ? '#3B71FE' : ''} />
+          <button type='submit' onClick={handleMessage}>
+            <SendIcon color={valueMessage ? '#3B71FE' : ''} />
           </button>
         </div>
       </div>
