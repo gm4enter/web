@@ -453,10 +453,11 @@ const CustomerCenter = () => {
   const [valueInputModal3, setValueInputModal3] = useState('')
   const [valueImages, setValueImages] = useState<string[]>([])
 
+  const listConversation = useAppSelector(selectListData)
+
   const [conversationActiveId, setConversationActiveId] = useState('')
 
   const [conversationDetail, setConversationDetail] = useState<ConversationDetailType>()
-  console.log('conversationDetail', conversationDetail);
 
   const [reload, setReload] = useState(true)
   const [open, setOpen] = useState(false)
@@ -468,6 +469,7 @@ const CustomerCenter = () => {
     if (fullScreen) {
       setConversationActiveId(item._id)
       navigate(`${ROUTE.CUSTOMERCENTER}/${item._id}`)
+      setReload(true)
     }
     else {
       setConversationActiveId(item._id)
@@ -489,10 +491,17 @@ const CustomerCenter = () => {
     }
   }
 
-
-
   const handleImageChange = (images: string[]) => {
     setValueImages(images)
+  }
+
+  const handleOpenConversation = () => {
+    if (fullScreen) {
+      navigate(`${ROUTE.CREATECONVERSATION_ITEM}`)
+    }
+    else {
+     setOpen(true)
+    }
   }
   const handleCreateConversation = () => {
     if (valueInputModal1 !== '' && valueInputModal2 !== '' && valueInputModal3 !== '' && valueImages.length > 0) {
@@ -502,12 +511,12 @@ const CustomerCenter = () => {
         description: valueInputModal3,
         thumbnail: valueImages
       }
-
       conversationApi.create(data)
         .then((res: any) => {
           if (res.statusCode === 201) {
             console.log('create conversation success');
             handleClose()
+            dispatch(conversationActions.getList({ params: undefined }))
           }
           else {
             console.log('message: ', res.message);
@@ -523,7 +532,21 @@ const CustomerCenter = () => {
   }
 
 
-  const listConversation = useAppSelector(selectListData)
+  const handleMessage = async () => {
+    try {
+      dispatch(loadingActions.openLoading())
+      await axiosClient.post(`${MESSAGE}/create`, {
+        content: valueMessage,
+        conversation: conversationActiveId,
+      })
+      setValueMessage('')
+      setReload(true)
+      dispatch(loadingActions.loadingSuccess())
+    } catch (error) {
+      console.log(error)
+      dispatch(loadingActions.loadingSuccess())
+    }
+  }
 
   useEffect(() => {
     dispatch(conversationActions.getList({ params: undefined }))
@@ -552,27 +575,13 @@ const CustomerCenter = () => {
     reload && conversationActiveId && getDetailConversation()
   }, [conversationActiveId, reload, dispatch])
 
-  const handleMessage = async () => {
-    try {
-      dispatch(loadingActions.openLoading())
-      await axiosClient.post(`${MESSAGE}/create`, {
-        content: valueMessage,
-        conversation: conversationActiveId,
-      })
-      setValueMessage('')
-      setReload(true)
-      dispatch(loadingActions.loadingSuccess())
-    } catch (error) {
-      console.log(error)
-      dispatch(loadingActions.loadingSuccess())
-    }
-  }
+  
   return (
     <div className={classes.container}>
       <div>
         <div>
           <p>1:1문의</p>
-          <button onClick={handleOpen}>
+          <button onClick={handleOpenConversation}>
             <img src={iconPlusBlue} alt='' />
             <p>문의작성</p>
           </button>

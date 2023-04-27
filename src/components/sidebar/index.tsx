@@ -60,6 +60,7 @@ const useStyles = makeStyles({
                     alignItems: 'center',
                     padding: '24px',
                     gap: '8px',
+                    cursor: 'pointer',
                     '&>img': {
                         height: '24px', width: '24px'
                     },
@@ -104,7 +105,11 @@ export default function SideBar(props: IProps) {
                 setState({ ...state, [anchor]: open });
             };
 
-
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken')
+        navigate(ROUTE.HOME)
+    }
+    
     return (
         <div className={classes.container_sidebar}>
             <div>
@@ -137,7 +142,7 @@ export default function SideBar(props: IProps) {
                     ))}
                 </div>
                 <div>
-                    <div>
+                    <div onClick={handleLogout}>
                         <img src={iconLogoutSidebar} />
                         {/* {!isOpen && <p>고객센터</p>} */}
                         <p>고객센터</p>

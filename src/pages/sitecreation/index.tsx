@@ -3,12 +3,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import avatarDemoCustomer from '../../asset/images/avatarDemoCustomer.png';
 import closeIcon from '../../asset/images/cancel.png';
 import eyeIcon from '../../asset/images/EyeScan.png';
 import { useTheme } from '@mui/material/styles';
 import { CheckBox } from '@material-ui/icons';
+import { planActions, selectListData } from '../../features/plan/planSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { PlanType } from '../../types/plan.type';
 
 const useStyles = makeStyles({
     container_site: {
@@ -168,14 +171,13 @@ const useStyles = makeStyles({
             '&>div:nth-of-type(1)': {
                 display: 'flex', padding: '16px 24px 16px 32px', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #EDEDED', textAlign: 'center',
                 '&>p': { padding: 0, margin: 0, fontSize: '20px', fontWeight: 500, textAlign: 'center', color: '#111315' },
-                '&>img': { cursor: 'pointer', height: '24px', width: '24px' },  
+                '&>img': { cursor: 'pointer', height: '24px', width: '24px' },
             },
             '&>div:nth-of-type(2)': {
                 flex: 1,
                 padding: '16px 24px',
                 '&>div': {
                     width: '100%',
-                   
                     '&>div': {
                         display: 'flex',
                         alignItems: 'center',
@@ -189,7 +191,7 @@ const useStyles = makeStyles({
             '&>div:nth-of-type(3)': {
                 display: 'flex', padding: '24px 16px', justifyContent: 'flex-end', alignItems: 'center', borderTop: 'none', textAlign: 'center', gap: '10px',
                 '&>button:nth-of-type(1)': {
-                   flex: 1, justifyContent: 'center', alignItems: 'center', border: '1px solid #D0D5DD', borderRadius: '8px', backgroundColor: '#fff', padding: '10px 24px', textAlign: 'center',
+                    flex: 1, justifyContent: 'center', alignItems: 'center', border: '1px solid #D0D5DD', borderRadius: '8px', backgroundColor: '#fff', padding: '10px 24px', textAlign: 'center',
                     '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#272B30' },
                 },
                 '&>button:nth-of-type(2)': {
@@ -224,9 +226,29 @@ const SiteCreation = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const classes = useStyles();
+    const dispatch = useAppDispatch();
+    const listPlan = useAppSelector(selectListData)
+    console.log('listPlan', listPlan);
 
-    const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+    const [plan, setPlan] = React.useState<PlanType>(listPlan[0]);
+
+    console.log('plan', plan);
+    
+    const handleOnClickRadio = (e: any) => {
+        listPlan.map((item, index) => {
+            if (item._id === e.target.value) {
+                setPlan(item)
+            }
+        })
+    }
+
+    useEffect(() => {
+        dispatch(planActions.getList({ params: undefined }))
+    }, [dispatch])
+
+    useLayoutEffect(() => {
+        setPlan(listPlan[0])
+    }, [listPlan])
 
     return (
         <div className={classes.container_site}>
@@ -244,16 +266,16 @@ const SiteCreation = () => {
                     // defaultValue="female"
                     name="radio-buttons-group"
                 >
-                    <FormControlLabel value="2" control={<Radio />} label="일반(2년) - 개설비용이 발생하며 모든 기능을 정상적으로 사용할 수 있습니다. 판매용 사이트는 이 항목을 선택하세요." />
-                    <FormControlLabel value="1" control={<Radio />} label="일반(1년) - 개설비용이 발생하며 모든 기능을 정상적으로 사용할 수 있습니다. 판매용 사이트는 이 항목을 선택하세요." />
-                    <FormControlLabel value="3" control={<Radio />} label="일반(3개월) - 개설비용이 발생하며 모든 기능을 정상적으로 사용할 수 있습니다. 판매용 사이트는 이 항목을 선택하세요." />
+                    {listPlan.map((item, index) => (
+                        <FormControlLabel key={item._id} value={item._id} control={<Radio />} label={item.description} onChange={handleOnClickRadio} />
+                    ))}
                 </RadioGroup>
             </div>
 
             <div>
                 <p>개설 비용</p>
                 <div>
-                    <p>1년 (5,500,000원) - VAT 포함</p>
+                    {/* <p>{plan.duration || 1}년 ({plan.price || '1'}원) - VAT 포함</p> */}
                     <p>부가세 포함</p>
                 </div>
             </div>

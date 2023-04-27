@@ -9,6 +9,7 @@ import RegisterAndModifyGooglePlay from '../pages/registerAndModifyGooglePlay'
 import RegisterAndModifyAppleStore from '../pages/registerAndModifyAppleStore'
 import CustomerCenterItem from '../layouts/customerCenterItem'
 import RemittanceHistory from '../pages/depositAndHistory/remittanceHistory'
+import CreateConversationMb from '../pages/customercenter/createConversationMb'
 
 export const ROUTE = {
   HOME: '/',
@@ -22,6 +23,7 @@ export const ROUTE = {
     '/sitelistandexpiredlist/registerandmodifyapplestore',
   CUSTOMERCENTER: '/customercenter',
   CUSTOMERCENTER_ITEM: '/customercenter/:id',
+  CREATECONVERSATION_ITEM: '/customercentermb',
   ABOUT: '/about',
   PRICE: '/price',
   REMITTANCEHISTORY: '/depositandhistory/remittancehistory',
@@ -45,6 +47,7 @@ const routes: Array<MyRouteProp> = [
   },
   { path: ROUTE.CUSTOMERCENTER, element: <CustomerCenter /> },
   { path: ROUTE.CUSTOMERCENTER_ITEM, element: <CustomerCenterItem /> },
+  { path: ROUTE.CREATECONVERSATION_ITEM, element: <CreateConversationMb /> },
   { path: ROUTE.REMITTANCEHISTORY, element: <RemittanceHistory /> },
 
 ]
