@@ -1,17 +1,17 @@
-import { Checkbox, Dialog, DialogContent, DialogTitle, Modal, useMediaQuery } from '@mui/material';
+import { Checkbox, Modal } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { makeStyles } from '@mui/styles';
-import React, { useEffect, useLayoutEffect } from 'react';
-import avatarDemoCustomer from '../../asset/images/avatarDemoCustomer.png';
-import closeIcon from '../../asset/images/cancel.png';
-import eyeIcon from '../../asset/images/EyeScan.png';
-import { useTheme } from '@mui/material/styles';
-import { CheckBox } from '@material-ui/icons';
-import { planActions, selectListData } from '../../features/plan/planSlice';
+import React, { useEffect } from 'react';
+import axiosClient from '../../apis/axiosClient';
+import { SITE, THEME } from '../../apis/urlConfig';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import eyeIcon from '../../asset/images/EyeScan.png';
+import closeIcon from '../../asset/images/cancel.png';
+import { planActions, selectListData } from '../../features/plan/planSlice';
 import { PlanType } from '../../types/plan.type';
+import { ThemeType } from '../../types/theme.type';
 
 const useStyles = makeStyles({
     container_site: {
@@ -204,36 +204,19 @@ const useStyles = makeStyles({
 
 });
 
-const dataImg = [
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-    avatarDemoCustomer,
-]
 const SiteCreation = () => {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const listPlan = useAppSelector(selectListData)
-    console.log('listPlan', listPlan);
+    const [open, setOpen] = React.useState(false);
+    const [plan, setPlan] = React.useState<PlanType>();
+    const [listTheme, setListTheme] = React.useState<ThemeType[]>([]);
+    const [themeId, setThemeId] = React.useState('');
+    const [theme, setTheme] = React.useState<ThemeType>({} as ThemeType)
 
-    const [plan, setPlan] = React.useState<PlanType>(listPlan[0]);
+    console.log('plan', plan?._id, 'theme', theme?._id);
 
-    console.log('plan', plan);
-    
+    //handle pick plan
     const handleOnClickRadio = (e: any) => {
         listPlan.map((item, index) => {
             if (item._id === e.target.value) {
@@ -242,19 +225,57 @@ const SiteCreation = () => {
         })
     }
 
+    //handle modal ( open, call api get list theme, close, submit )
+    const handleOpenModal = () => {
+        setOpen(true)
+        axiosClient.get(`${THEME}/list`)
+            .then((res: any) => {
+                console.log('get theme success!')
+                if (res.statusCode === 200) {
+                    setListTheme(res.data)
+                } else {
+                    console.log('get theme failed!', res.message)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    };
+    const handleClose = () => {
+        setOpen(false)
+        theme ? setThemeId(theme._id) : setThemeId('')
+    };
+    const handleSubmitModal = () => {
+        setTheme(listTheme.find((item) => item._id === themeId) as ThemeType)
+        setOpen(false)
+    }
+
+
+    //handle create website
+    const handleCreateWebsite = () => {
+        if (plan && theme) {
+            axiosClient.post(`${SITE}/create`, { plan: plan._id, theme: theme._id, name: 'test' })
+                .then((res: any) => {
+                    if (res.statusCode === 201) {
+                        //dispatch action get list website
+                        console.log('create website success!', res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+    }
+
     useEffect(() => {
         dispatch(planActions.getList({ params: undefined }))
-    }, [dispatch])
-
-    useLayoutEffect(() => {
-        setPlan(listPlan[0])
-    }, [listPlan])
+    }, [])
 
     return (
         <div className={classes.container_site}>
             <div>
                 <p>생성할 사이트 선택</p>
-                <div onClick={handleOpen}>
+                <div onClick={handleOpenModal}>
                     <p>눌러서 선택해주세요.</p>
                 </div>
             </div>
@@ -266,16 +287,17 @@ const SiteCreation = () => {
                     // defaultValue="female"
                     name="radio-buttons-group"
                 >
-                    {listPlan.map((item, index) => (
-                        <FormControlLabel key={item._id} value={item._id} control={<Radio />} label={item.description} onChange={handleOnClickRadio} />
-                    ))}
+                    {listPlan.map((item, index) => {
+                        return (
+                            <FormControlLabel key={item._id} value={item._id} control={<Radio />} label={item.description} onChange={handleOnClickRadio} />)
+                    })}
                 </RadioGroup>
             </div>
 
             <div>
                 <p>개설 비용</p>
                 <div>
-                    {/* <p>{plan.duration || 1}년 ({plan.price || '1'}원) - VAT 포함</p> */}
+                    {plan && <p>{plan.duration}년 ({plan.price}원) - VAT 포함</p>}
                     <p>부가세 포함</p>
                 </div>
             </div>
@@ -286,7 +308,7 @@ const SiteCreation = () => {
             </div>
 
             <div>
-                <button>
+                <button onClick={handleCreateWebsite}>
                     <p>사이트 생성하기</p>
                 </button>
             </div>
@@ -302,41 +324,38 @@ const SiteCreation = () => {
                         <img src={closeIcon} alt="close" onClick={handleClose} />
                     </div>
                     <div>
-                        <div>
-                            <div>
-                                <p>1.o2o플랫폼</p>
-                                <img src={eyeIcon} alt='' />
-                            </div>
-                            <Checkbox
-                                defaultChecked
-                                sx={{
-                                    padding: 0,
-                                    '&.Mui-checked': {
-                                        color: '#1DC9A0',
-                                    }
-                                }}
-                            />
-                        </div>
-                        <div>
-                            <div>
-                                <p>2.블로그형 홈페이지</p>
-                                <img src={eyeIcon} alt='' />
-                            </div>
-                            <Checkbox
-                                sx={{
-                                    padding: 0,
-                                    '&.Mui-checked': {
-                                        color: '#1DC9A0',
-                                    },
-                                }}
-                            />
-                        </div>
+                        {listTheme.length > 0 && listTheme.map((item, index) => {
+
+                            return (
+                                <div>
+                                    <div>
+                                        <p>{index + 1}.{item.name}</p>
+                                        <img src={eyeIcon} alt='' />
+                                    </div>
+                                    <Checkbox
+                                        // defaultChecked
+                                        sx={{
+                                            padding: 0,
+                                            '&.Mui-checked': {
+                                                color: '#1DC9A0',
+                                            }
+                                        }}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                setThemeId(item._id)
+                                            }
+                                        }}
+                                        checked={themeId === item._id}
+                                    />
+                                </div>
+                            )
+                        })}
                     </div>
                     <div>
                         <button onClick={handleClose}>
                             <p>취소</p>
                         </button>
-                        <button onClick={handleClose}>
+                        <button onClick={handleSubmitModal}>
                             <p>생성</p>
                         </button>
                     </div>
