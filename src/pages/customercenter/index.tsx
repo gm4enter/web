@@ -1,28 +1,28 @@
 import { Modal } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { makeStyles } from '@mui/styles'
-import React, { useEffect, useRef, useState } from 'react'
-import moment from 'moment'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { io } from "socket.io-client"
+import axiosClient from '../../apis/axiosClient'
+import { conversationApi } from '../../apis/conversationApi'
+import { CONVERSATION, MESSAGE } from '../../apis/urlConfig'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import SendIcon from '../../asset/icons/send'
 import GalleryAdd from '../../asset/images/GalleryAdd.png'
 import MenuDots from '../../asset/images/MenuDots.png'
 import arrowIcon from '../../asset/images/arrow.png'
 import avatarChat1 from '../../asset/images/avatarChat1.png'
-import avatarDemoCustomer from '../../asset/images/avatarDemoCustomer.png'
 import closeIcon from '../../asset/images/cancel.png'
 import iconPlusBlue from '../../asset/images/iconPlusBlue.png'
 import { Input } from '../../components/base/input/Input'
 import { InputImage } from '../../components/base/input/InputImage'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { useTheme } from '@mui/material/styles'
-import { useNavigate } from 'react-router'
-import { ROUTE } from '../../router/routes'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { conversationActions, selectListData } from '../../features/conversation/conversationSlice'
 import { loadingActions } from '../../components/loading/loadingSlice'
-import axiosClient from '../../apis/axiosClient'
-import { CONVERSATION, MESSAGE } from '../../apis/urlConfig'
+import { conversationActions, selectListData } from '../../features/conversation/conversationSlice'
+import { ROUTE } from '../../router/routes'
 import { ConversationDetailType } from '../../types/conversationDetail.type'
-import { conversationApi } from '../../apis/conversationApi'
+import { ConversationDetailMessageType } from '../../types/conversationDetailMessage.type'
 
 const useStyles = makeStyles({
   container: {
@@ -185,7 +185,9 @@ const useStyles = makeStyles({
           color: '#262626',
           '&>span': { color: '#0078FF' },
         },
-        '&>div:nth-of-type(1)': {},
+        '&>div:nth-of-type(1)': {
+          overflowY: 'auto'
+        },
       },
       '&>div:nth-of-type(3)': {
         display: 'flex',
@@ -444,7 +446,9 @@ const CustomerCenter = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const ref = useRef<HTMLDivElement>(null)
+  const socketRef = useRef<any>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   const [valueMessage, setValueMessage] = useState('')
@@ -459,8 +463,12 @@ const CustomerCenter = () => {
 
   const [conversationDetail, setConversationDetail] = useState<ConversationDetailType>()
 
+  const [conversationDetailMessage, setConversationDetailMessage] = useState<ConversationDetailMessageType[]>([])
+
   const [reload, setReload] = useState(true)
   const [open, setOpen] = useState(false)
+
+  const [idSocket, setIdSocket] = useState('')
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -500,7 +508,7 @@ const CustomerCenter = () => {
       navigate(`${ROUTE.CREATECONVERSATION_ITEM}`)
     }
     else {
-     setOpen(true)
+      setOpen(true)
     }
   }
   const handleCreateConversation = () => {
@@ -534,17 +542,13 @@ const CustomerCenter = () => {
 
   const handleMessage = async () => {
     try {
-      dispatch(loadingActions.openLoading())
+      setValueMessage('')
       await axiosClient.post(`${MESSAGE}/create`, {
         content: valueMessage,
         conversation: conversationActiveId,
       })
-      setValueMessage('')
-      setReload(true)
-      dispatch(loadingActions.loadingSuccess())
     } catch (error) {
       console.log(error)
-      dispatch(loadingActions.loadingSuccess())
     }
   }
 
@@ -565,6 +569,7 @@ const CustomerCenter = () => {
           `${CONVERSATION}/get/${conversationActiveId}`
         )
         setConversationDetail(data.data)
+        setConversationDetailMessage(data.data?.messages)
         dispatch(loadingActions.loadingSuccess())
         setReload(false)
       } catch (error) {
@@ -575,7 +580,36 @@ const CustomerCenter = () => {
     reload && conversationActiveId && getDetailConversation()
   }, [conversationActiveId, reload, dispatch])
 
-  
+  useEffect(() => {
+    socketRef.current = io('https://server.gmapps.net', {
+      extraHeaders: {
+        Authorization: "Bearer " + localStorage.getItem('accessToken'),
+      }
+    })
+
+    socketRef.current.on('getId', (data: string) => {
+      setIdSocket(data)
+    })
+
+    socketRef.current.on('createMessage', (dataGot: ConversationDetailMessageType) => {
+      setConversationDetailMessage(oldMsgs => [...oldMsgs, dataGot])
+      console.log('```````dataGot', dataGot);
+
+    })
+    return () => {
+      socketRef.current.disconnect();
+    };
+
+  }, []);
+
+  useEffect(() => {
+    // Scroll to the end of the container when data length updates
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [conversationDetailMessage.length]);
+
+
   return (
     <div className={classes.container}>
       <div>
@@ -623,7 +657,7 @@ const CustomerCenter = () => {
             댓글
             <span> ({conversationDetail?.messages?.length})</span>
           </p>
-          <div ref={ref}>
+          <div ref={containerRef}>
             <div>
               <div className={classes.message_user_container}>
                 <img src={conversationDetail?.creator?.photo} alt='' />
@@ -643,7 +677,7 @@ const CustomerCenter = () => {
               </div>
             </div>
 
-            {conversationDetail?.messages?.map((item, index, array) => {
+            {conversationDetailMessage?.map((item, index, array) => {
               const styleItem = { marginLeft: '60px', borderLeft: '1px solid #DCE1E7' }
               if (index + 1 === array.length) {
                 styleItem.borderLeft = '1px solid #FAFAFA'
@@ -681,6 +715,11 @@ const CustomerCenter = () => {
               setValueMessage(e.target.value)
             }}
             value={valueMessage}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleMessage()
+              }
+            }}
           />
           <button type='submit' onClick={handleMessage}>
             <SendIcon color={valueMessage ? '#3B71FE' : ''} />
