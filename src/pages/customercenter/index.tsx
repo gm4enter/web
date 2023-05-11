@@ -696,7 +696,7 @@ const CustomerCenter = () => {
                     <p>{item.sender.firstName} {item.sender.lastName}</p>
                     <p>{formatDate(item.updatedAt || '')}</p>
                     <p>{item.content}</p>
-                    <img src={avatarChat1} alt='' />
+                    {/* <img src={avatarChat1} alt='' /> */}
                   </div>
                   <img src={arrowIcon} alt='' />
                 </div>

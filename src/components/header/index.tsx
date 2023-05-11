@@ -278,6 +278,14 @@ const Header = (props: IProps) => {
       alert('이 기능을 사용하려면 로그인해야 합니다.')
     }
   }
+  const handleClickContact = () => {
+    if (!!localStorage.getItem('accessToken')) {
+      navigate(ROUTE.CUSTOMERCENTER)
+    }
+    else {
+      alert('이 기능을 사용하려면 로그인해야 합니다.')
+    }
+  }
   useLayoutEffect(() => {
     if (tokenFirebase) {
       const data = {
@@ -349,7 +357,7 @@ const Header = (props: IProps) => {
         <li onClick={() => console.log("ROUTE.HOME")}>About</li>
         <li onClick={handleClickSolution}>Solution</li>
         <li onClick={() => console.log("ROUTE.PRICE")}>Price</li>
-        <li onClick={() => navigate(ROUTE.CUSTOMERCENTER)}>Contact</li>
+        <li onClick={handleClickContact}>Contact</li>
       </ul>
       <div>
         {localStorage.getItem('accessToken') ? (
