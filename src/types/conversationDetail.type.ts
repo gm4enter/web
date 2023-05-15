@@ -3,7 +3,7 @@ export interface ConversationDetailType {
   _id: string;
   title: string;
   thumbnail: string[];
-  topic: "TYPE_1" | "TYPE_2" | "TYPE_3";
+  mobileNumber: string;
   description: string;
   creator: {
     _id: string;

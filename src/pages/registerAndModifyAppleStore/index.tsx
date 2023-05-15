@@ -112,10 +112,10 @@ const useStyles = makeStyles({
         marginTop: '24px',
         '&>div:nth-of-type(1)': {
           display: 'flex',
-          width: '190px',
+          width: '220px',
           gap: '4px',
           alignItems: 'center',
-          // justifyContent: 'flex-end',
+          justifyContent: 'flex-end',
           '&>p': {
             padding: 0,
             margin: 0,
@@ -137,12 +137,16 @@ const useStyles = makeStyles({
         border: 'none',
         '&>div': {
           display: 'initial',
+          justifyContent: 'flex-start',
+
           // '&>div:nth-of-type(1)': {
           //   display: 'initial',
           // },
           '&>div:nth-of-type(1)': {
-            // display: 'initial',
-            // justifyContent: 'start',
+            display: 'flex',
+            gap: '4px',
+            alignItems: 'center',
+            justifyContent: 'flex-start !important',
             marginBottom: '6px',
           },
         },

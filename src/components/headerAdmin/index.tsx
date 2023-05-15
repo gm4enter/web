@@ -162,6 +162,7 @@ const HeaderAdmin = (props: IProps) => {
             axiosClient.post(LOGIN, data)
                 .then((res: any) => {
                     if (res.statusCode === 200) {
+                        console.log('message: ', res.message);
                         setStatusLogin(true)
                         localStorage.setItem('accessToken', res.data?.accessToken)
                     }
@@ -177,7 +178,6 @@ const HeaderAdmin = (props: IProps) => {
 
     useEffect(() => {
         if (localStorage.getItem('accessToken')) {
-
             setTokens()
             axiosClient.get(USER)
                 .then((res: { data: UserType }) => {

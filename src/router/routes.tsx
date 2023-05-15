@@ -17,10 +17,15 @@ export const ROUTE = {
   SITECREATION: '/sitecreation',
   SITELISTANDEXPIREDLIST: '/sitelistandexpiredlist',
   INFOWEBSITE: '/sitelistandexpiredlist/infowebsite',
+  INFOWEBSITE_ID: '/sitelistandexpiredlist/infowebsite/:id',
   REGISTERANDMODIFYGOOGLEPLAY:
     '/sitelistandexpiredlist/registerandmodifygoogleplay',
-  REGISTERANDMODIFYAPPLESTORE:
+    REGISTERANDMODIFYGOOGLEPLAY_ID:
+    '/sitelistandexpiredlist/registerandmodifygoogleplay/:id',
+    REGISTERANDMODIFYAPPLESTORE:
     '/sitelistandexpiredlist/registerandmodifyapplestore',
+  REGISTERANDMODIFYAPPLESTORE_ID:
+    '/sitelistandexpiredlist/registerandmodifyapplestore/:id',
   CUSTOMERCENTER: '/customercenter',
   CUSTOMERCENTER_ITEM: '/customercenter/:id',
   CREATECONVERSATION_ITEM: '/customercentermb',
@@ -36,13 +41,13 @@ const routes: Array<MyRouteProp> = [
   { path: ROUTE.DEPOSITANDHISTORY, element: <DepositAndHistory /> },
   { path: ROUTE.SITECREATION, element: <SiteCreation /> },
   { path: ROUTE.SITELISTANDEXPIREDLIST, element: <SiteListAndExpiredList /> },
-  { path: ROUTE.INFOWEBSITE, element: <InfoWebsite /> },
+  { path: ROUTE.INFOWEBSITE_ID, element: <InfoWebsite /> },
   {
-    path: ROUTE.REGISTERANDMODIFYGOOGLEPLAY,
+    path: ROUTE.REGISTERANDMODIFYGOOGLEPLAY_ID,
     element: <RegisterAndModifyGooglePlay />,
   },
   {
-    path: ROUTE.REGISTERANDMODIFYAPPLESTORE,
+    path: ROUTE.REGISTERANDMODIFYAPPLESTORE_ID,
     element: <RegisterAndModifyAppleStore />,
   },
   { path: ROUTE.CUSTOMERCENTER, element: <CustomerCenter /> },

@@ -1,12 +1,12 @@
-import {makeStyles} from '@mui/styles'
-import {useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import { makeStyles } from '@mui/styles'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import iconBack from '../../asset/images/iconBack.png'
 import infoCircle from '../../asset/images/iconInfoCircle.png'
 import iconQuestion from '../../asset/images/iconQuestion.png'
-import {Input} from '../../components/base/input/Input'
-import {InputuploadImage} from '../../components/base/input/InputuploadImage'
-import {ROUTE} from '../../router/routes'
+import { Input } from '../../components/base/input/Input'
+import { InputuploadImage } from '../../components/base/input/InputuploadImage'
+import { ROUTE } from '../../router/routes'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Accordion,
@@ -25,10 +25,10 @@ const useStyles = makeStyles({
       display: 'flex',
       gap: '8px',
       alignItems: 'center',
-      '&>img': {height: '24px', width: '24px'},
-      '&>p': {padding: 0, margin: 0, fontSize: '18px', fontWeight: 500},
+      '&>img': { height: '24px', width: '24px' },
+      '&>p': { padding: 0, margin: 0, fontSize: '18px', fontWeight: 500 },
       '@media (max-width: 768px)': {
-        '&>p': {padding: 0, margin: 0, fontSize: '16px', fontWeight: 500},
+        '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500 },
       },
     },
     '&>div:nth-of-type(2)': {
@@ -42,8 +42,8 @@ const useStyles = makeStyles({
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          '&>img': {height: '24px', width: '24px'},
-          '&>p': {padding: 0, margin: 0, fontSize: '16px', fontWeight: 500},
+          '&>img': { height: '24px', width: '24px' },
+          '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500 },
         },
         '&>p:nth-of-type(1)': {
           padding: 0,
@@ -62,7 +62,7 @@ const useStyles = makeStyles({
           margin: 0,
           fontSize: '14px',
           fontWeight: 400,
-          '&>a': {textDecoration: 'none', color: '#2B83FE'},
+          '&>a': { textDecoration: 'none', color: '#2B83FE' },
         },
       },
       '&>div:nth-of-type(2)': {
@@ -84,7 +84,7 @@ const useStyles = makeStyles({
       padding: '24px',
       borderRadius: '12px',
       border: '1px solid #D0D5DD',
-      '&>p': {padding: 0, margin: 0, fontSize: '16px', fontWeight: 500},
+      '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500 },
       '@media (max-width: 768px)': {
         padding: '0',
         borderRadius: '12px',
@@ -146,7 +146,7 @@ const useStyles = makeStyles({
               fontWeight: 500,
               color: '#272B30',
             },
-            '&>img': {height: '18px', width: '18px'},
+            '&>img': { height: '18px', width: '18px' },
           },
           '&>p': {
             padding: 0,
@@ -163,8 +163,8 @@ const useStyles = makeStyles({
           display: 'flex',
           gap: '4px',
           alignItems: 'center',
-          '&>p': {padding: 0, margin: 0, fontSize: '14px', fontWeight: 500},
-          '&>img': {height: '18px', width: '18px'},
+          '&>p': { padding: 0, margin: 0, fontSize: '14px', fontWeight: 500 },
+          '&>img': { height: '18px', width: '18px' },
         },
         '&>p': {
           padding: 0,
@@ -176,8 +176,8 @@ const useStyles = makeStyles({
         '&>p:nth-of-type(2)': {
           margin: '4px 0 0 0',
           color: '#343941',
-          '&>span:nth-of-type(1)': {color: '#FD3535'},
-          '&>a': {textDecoration: 'none', color: '#2B83FE'},
+          '&>span:nth-of-type(1)': { color: '#FD3535' },
+          '&>a': { textDecoration: 'none', color: '#2B83FE' },
         },
       },
       '&>button': {
@@ -317,7 +317,7 @@ function RegisterAndModifyGooglePlay() {
               fontSize={'14px'}
             >
               <img
-                style={{width: '20x', height: '20px'}}
+                style={{ width: '20x', height: '20px' }}
                 src={infoCircle}
                 alt=''
               />
@@ -383,6 +383,7 @@ function RegisterAndModifyGooglePlay() {
           onChange={(e) => {
             setValue1(e.target.value)
           }}
+          containerStyle={{ marginTop:'20px' }}
         />
         <Input
           label='비밀번호'
@@ -391,6 +392,7 @@ function RegisterAndModifyGooglePlay() {
           onChange={(e) => {
             setValue2(e.target.value)
           }}
+          containerStyle={{ marginTop:'16px' }}
         />
       </div>
 
@@ -404,6 +406,7 @@ function RegisterAndModifyGooglePlay() {
           onChange={(e) => {
             setInputValueNameApp(e.target.value)
           }}
+          containerStyle={{ width: '690px', marginTop:'20px' }}
         />
         <p>* 앱 설치 후 아이콘 아래에 표시되는 이름입니다.</p>
       </div>
@@ -417,18 +420,18 @@ function RegisterAndModifyGooglePlay() {
               <img src={iconQuestion} alt='' />
             </div>
             <p>고해상도 아이콘: 512x512 / 32비트 PNG(알파 있음)</p>
-            <InputuploadImage type='512' containerStyle={{marginTop: '16px'}} />
+            <InputuploadImage type='512' containerStyle={{ marginTop: '16px' }} />
           </div>
 
           <div>
-            <div style={{display: 'flex', gap: '4px', alignItems: 'center'}}>
+            <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
               <p>시작화면 (선택사항)</p>
               <img src={iconQuestion} alt='' />
             </div>
             <p>가로x세로 1440x2960 JPG또는 24비트 PNG(알파 없음)</p>
             <InputuploadImage
               type='1440'
-              containerStyle={{marginTop: '16px'}}
+              containerStyle={{ marginTop: '16px' }}
             />
           </div>
         </div>
@@ -447,7 +450,7 @@ function RegisterAndModifyGooglePlay() {
             </span>
             <a href='#'>자세히 알아보기</a>
           </p>
-          <InputuploadImage type='96' containerStyle={{marginTop: '16px'}} />
+          <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} />
           <p>
             *알림 아이콘은 앱에서 알림이 왔을때 상단에 보여지는 아이콘입니다.
           </p>

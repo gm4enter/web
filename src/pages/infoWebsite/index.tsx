@@ -1,6 +1,6 @@
 import { width } from '@mui/system';
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import iconBack from '../../asset/images/iconBack.png';
 import iconQuestion from '../../asset/images/iconQuestion.png';
 import { ROUTE } from '../../router/routes';
@@ -26,14 +26,14 @@ const useStyles = makeStyles({
             '&>p:nth-of-type(1)': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, },
             '&>p:nth-of-type(2)': { padding: 0, margin: '20px 0 0 0', fontSize: '14px', fontWeight: 500, color: '#272B30' },
         },
+        // '&>div:nth-of-type(3)': {
+        //     marginTop: '16px',
+        //     padding: '24px',
+        //     borderRadius: '12px',
+        //     border: '1px solid #D0D5DD',
+        //     '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, },
+        // },
         '&>div:nth-of-type(3)': {
-            marginTop: '16px',
-            padding: '24px',
-            borderRadius: '12px',
-            border: '1px solid #D0D5DD',
-            '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, },
-        },
-        '&>div:nth-of-type(4)': {
             marginTop: '16px',
             padding: '24px',
             borderRadius: '12px',
@@ -86,12 +86,20 @@ const useStyles = makeStyles({
 function InfoWebsite() {
     const navigate = useNavigate()
     const classes = useStyles()
+    const {id} = useParams()
+    console.log('id cehcec', id);
+    
+    
     const [value, setValue] = useState('')
     const [value2, setValue2] = useState('')
     const [value3, setValue3] = useState('')
     const [value4, setValue4] = useState('')
     const [value5, setValue5] = useState('')
     const [value6, setValue6] = useState('')
+
+    useEffect(() => {
+
+    }, [])
     return (
         <div className={classes.container} >
             <div>
@@ -126,7 +134,7 @@ function InfoWebsite() {
                     inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
                 />
             </div>
-            <div>
+            {/* <div>
                 <p>아마존 서버 계정정보</p>
                 <Input
                     placeholder='URL입력해주세요.'
@@ -151,7 +159,7 @@ function InfoWebsite() {
                     containerStyle={{ width: 'calc(50% + 32px)', marginTop: '16px' }}
                     inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
                 />
-            </div>
+            </div> */}
             <div>
                 <p>그래픽 저작물</p>
                 <div>

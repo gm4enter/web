@@ -92,6 +92,7 @@ export const Input = (props: Iprops) => {
         onChange={(text) => onChange(text)}
         placeholder={placeholder}
         style={inputStyle}
+        {...value.length > (maxLength || 40) && {border: '1px solid red'}}
         {...restProps}
         disabled={disabled}
       />

@@ -10,6 +10,7 @@ import { Input } from '../../components/base/input/Input'
 import { InputImage } from '../../components/base/input/InputImage'
 import { conversationActions } from '../../features/conversation/conversationSlice'
 import { loadingActions } from '../../components/loading/loadingSlice'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 
 const useStyles = makeStyles({
     container_create_conversation: {
@@ -105,28 +106,37 @@ const CreateConversationMb = () => {
     const handleCreateConversation = () => {
         if (valueInputModal1 !== '' && valueInputModal2 !== '' && valueInputModal3 !== '' && valueImages.length > 0) {
             const data = {
-                topic: valueInputModal1,
+                mobileNumber: valueInputModal1,
                 title: valueInputModal2,
                 description: valueInputModal3,
                 thumbnail: valueImages
             }
-            dispatch(loadingActions.openLoading())
+
             conversationApi.create(data)
                 .then((res: any) => {
                     if (res.statusCode === 201) {
                         console.log('create conversation success');
                         dispatch(conversationActions.getList({ params: undefined }))
-                        dispatch(loadingActions.loadingSuccess())
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '성공',
+                            type: 'success',
+                        }))
                         navigate(-1)
                     }
                     else {
                         console.log('message: ', res.message);
-                        dispatch(loadingActions.loadingSuccess())
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '실패',
+                            type: 'error',
+                        }))
                     }
                 })
                 .catch((error: any) => {
                     console.log(error)
-                    dispatch(loadingActions.loadingSuccess())
+                    dispatch(snackBarActions.setStateSnackBar({
+                        content: '실패',
+                        type: 'error',
+                    }))
                 })
         }
         else {
@@ -161,7 +171,7 @@ const CreateConversationMb = () => {
                         setValueInputModal2(e.target.value)
                     }}
                     label='제목'
-                    placeholder='입력해주세요.'
+                    placeholder='제목을 입력해주세요.'
                 />
                 <textarea
                     rows={5}
