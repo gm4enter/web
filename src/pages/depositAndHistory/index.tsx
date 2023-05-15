@@ -136,7 +136,7 @@ const useStyles = makeStyles({
     container_deposit: {
       display: 'flex',
       flexDirection: 'column',
-      height: 'calc(100vh - 124px)',
+      height: 'calc(100vh - 124px)', 
       '&>div:nth-of-type(1)': {
         '&>button': {
           display: 'block',
@@ -298,8 +298,9 @@ const DespositAndHistory = () => {
               label='예치금 잔액'
               value={numberWithCommas(Number(point))}
               onChange={() => {}}
-              labelStyle={{fontSize: '12px'}}
+              // labelStyle={{fontSize: '12px'}}
               disabled
+              inputStyle={{width: 'calc(100% - 32px)'}}
             />
           </div>
           <div>
@@ -315,6 +316,7 @@ const DespositAndHistory = () => {
                 fontSize: '16px',
                 fontWeight: 500,
                 lineHeight: '24px',
+                height: '46px',
               }}
               inputProps={{'aria-label': 'Without label'}}
             >
@@ -336,6 +338,8 @@ const DespositAndHistory = () => {
                 borderRadius: '8px',
                 fontSize: '16px',
                 fontWeight: 500,
+                height: '46px',
+
               }}
               inputProps={{'aria-label': 'Without label'}}
             >

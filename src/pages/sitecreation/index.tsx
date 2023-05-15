@@ -3,15 +3,17 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { makeStyles } from '@mui/styles';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosClient from '../../apis/axiosClient';
-import { SITE, THEME } from '../../apis/urlConfig';
+import { SITE, THEME, USER } from '../../apis/urlConfig';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import eyeIcon from '../../asset/images/EyeScan.png';
 import closeIcon from '../../asset/images/cancel.png';
 import { planActions, selectListData } from '../../features/plan/planSlice';
 import { PlanType } from '../../types/plan.type';
 import { ThemeType } from '../../types/theme.type';
+import { siteActions } from '../../features/site/siteSlice';
+import { numberWithCommas } from '../../utils';
 
 const useStyles = makeStyles({
     container_site: {
@@ -208,11 +210,13 @@ const SiteCreation = () => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const listPlan = useAppSelector(selectListData)
-    const [open, setOpen] = React.useState(false);
-    const [plan, setPlan] = React.useState<PlanType>();
-    const [listTheme, setListTheme] = React.useState<ThemeType[]>([]);
-    const [themeId, setThemeId] = React.useState('');
-    const [theme, setTheme] = React.useState<ThemeType>({} as ThemeType)
+    const [open, setOpen] = useState(false);
+    const [plan, setPlan] = useState<PlanType>();
+    const [listTheme, setListTheme] = useState<ThemeType[]>([]);
+    const [themeId, setThemeId] = useState('');
+    const [theme, setTheme] = useState<ThemeType>({} as ThemeType)
+    const [point, setPoint] = useState<number>()
+
 
     console.log('plan', plan?._id, 'theme', theme?._id);
 
@@ -258,6 +262,7 @@ const SiteCreation = () => {
                 .then((res: any) => {
                     if (res.statusCode === 201) {
                         //dispatch action get list website
+                        dispatch(siteActions.getList({ params: undefined }))
                         console.log('create website success!', res);
                     }
                 })
@@ -269,6 +274,14 @@ const SiteCreation = () => {
 
     useEffect(() => {
         dispatch(planActions.getList({ params: undefined }))
+    }, [])
+
+    useEffect(() => {
+        const getProfile = async () => {
+            const res = await axiosClient.get(USER)
+            setPoint(res.data.wallet.balance)
+        }
+        getProfile()
     }, [])
 
     return (
@@ -297,14 +310,14 @@ const SiteCreation = () => {
             <div>
                 <p>개설 비용</p>
                 <div>
-                    {plan && <p>{plan.duration}년 ({plan.price}원) - VAT 포함</p>}
+                    {plan && <p>{plan.duration}년 ({numberWithCommas(plan.price || 0)}원) - VAT 포함</p>}
                     <p>부가세 포함</p>
                 </div>
             </div>
 
             <div>
                 <p>예치금 잔액</p>
-                <p>196,982 원</p>
+                <p>{numberWithCommas(point || 0)} 원</p>
             </div>
 
             <div>

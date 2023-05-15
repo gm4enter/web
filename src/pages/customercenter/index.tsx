@@ -1,4 +1,4 @@
-import { Modal } from '@mui/material'
+import { Modal, Select } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { makeStyles } from '@mui/styles'
@@ -13,7 +13,8 @@ import SendIcon from '../../asset/icons/send'
 import GalleryAdd from '../../asset/images/GalleryAdd.png'
 import MenuDots from '../../asset/images/MenuDots.png'
 import arrowIcon from '../../asset/images/arrow.png'
-import avatarChat1 from '../../asset/images/avatarChat1.png'
+import noneConversation from '../../asset/images/MessagesNone.png'
+import noneMessage from '../../asset/images/MessagesDetailNone.png'
 import closeIcon from '../../asset/images/cancel.png'
 import iconPlusBlue from '../../asset/images/iconPlusBlue.png'
 import { Input } from '../../components/base/input/Input'
@@ -23,6 +24,8 @@ import { conversationActions, selectListData } from '../../features/conversation
 import { ROUTE } from '../../router/routes'
 import { ConversationDetailType } from '../../types/conversationDetail.type'
 import { ConversationDetailMessageType } from '../../types/conversationDetailMessage.type'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 const useStyles = makeStyles({
   container: {
@@ -147,6 +150,24 @@ const useStyles = makeStyles({
           display: 'flex',
           flexDirection: 'column',
           gap: '8px',
+          '&>div': {
+            display: 'flex',
+            gap: '16px',
+            alignItems: 'center',
+            '&>p:nth-of-type(1)': {
+              padding: 0,
+              margin: 0,
+              fontSize: '14px',
+              fontWeight: 400,
+              color: '#70777F',
+            },
+            '&>p:nth-of-type(2)': {
+              padding: 0,
+              margin: 0,
+              fontSize: '16px',
+              fontWeight: 500,
+            },
+          },
           '&>p:nth-of-type(1)': {
             padding: 0,
             margin: 0,
@@ -226,6 +247,49 @@ const useStyles = makeStyles({
         display: 'none',
       },
     },
+  },
+  noneConversasion: {
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '24px',
+    '&>img': {
+      height: '240px !important',
+      width: '240px !important',
+      boxShadow: 'none !important',
+      borderRadius: 'none !important',
+    },
+    '&>p': {
+      fontSize: '18px',
+      fontWeight: 500,
+      color: '#70777F',
+      margin: 0,
+      padding: 0,
+    }
+
+  },
+  noneMessage: {
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '24px',
+    '&>img': {
+      height: '240px !important',
+      width: '240px !important',
+      boxShadow: 'none !important',
+      borderRadius: 'none !important',
+    },
+    '&>p': {
+      fontSize: '18px',
+      fontWeight: 500,
+      color: '#70777F',
+      margin: 0,
+      padding: 0,
+    }
   },
   message_user_container: {
     display: 'flex',
@@ -435,7 +499,7 @@ const useStyles = makeStyles({
   },
 })
 
-const formatDate = (date: string) => {
+export const formatDate = (date: string) => {
   const index = date.indexOf('T')
   return date.slice(0, index)
 }
@@ -451,6 +515,8 @@ const CustomerCenter = () => {
 
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
+  const [page, setPage] = useState<number>(1)
+
   const [valueMessage, setValueMessage] = useState('')
   const [valueInputModal1, setValueInputModal1] = useState('')
   const [valueInputModal2, setValueInputModal2] = useState('')
@@ -458,6 +524,7 @@ const CustomerCenter = () => {
   const [valueImages, setValueImages] = useState<string[]>([])
 
   const listConversation = useAppSelector(selectListData)
+
 
   const [conversationActiveId, setConversationActiveId] = useState('')
 
@@ -486,19 +553,6 @@ const CustomerCenter = () => {
 
   }
 
-  const checkTypeConversation = (type: string) => {
-    switch (type) {
-      case '추가 질문':
-        return classes.type1Conversation
-      case '완료':
-        return classes.type2Conversation
-      case 'TYPE_3':
-        return classes.type3Conversation
-      default:
-        return classes.type3Conversation
-    }
-  }
-
   const handleImageChange = (images: string[]) => {
     setValueImages(images)
   }
@@ -514,7 +568,7 @@ const CustomerCenter = () => {
   const handleCreateConversation = () => {
     if (valueInputModal1 !== '' && valueInputModal2 !== '' && valueInputModal3 !== '' && valueImages.length > 0) {
       const data = {
-        topic: valueInputModal1,
+        mobileNumber: valueInputModal1,
         title: valueInputModal2,
         description: valueInputModal3,
         thumbnail: valueImages
@@ -523,15 +577,32 @@ const CustomerCenter = () => {
         .then((res: any) => {
           if (res.statusCode === 201) {
             console.log('create conversation success');
-            handleClose()
             dispatch(conversationActions.getList({ params: undefined }))
+            dispatch(snackBarActions.setStateSnackBar({
+              content: '성공',
+              type: 'success',
+            }))
+
+            setValueInputModal1('')
+            setValueInputModal2('')
+            setValueInputModal3('')
+            setValueImages([])
+            handleClose()
           }
           else {
             console.log('message: ', res.message);
+            dispatch(snackBarActions.setStateSnackBar({
+              content: '실패',
+              type: 'error',
+            }))
           }
         })
         .catch((error: any) => {
           console.log(error)
+          dispatch(snackBarActions.setStateSnackBar({
+            content: '실패',
+            type: 'error',
+          }))
         })
     }
     else {
@@ -552,14 +623,17 @@ const CustomerCenter = () => {
     }
   }
 
+
   useEffect(() => {
-    dispatch(conversationActions.getList({ params: undefined }))
-  }, [dispatch])
+    dispatch(conversationActions.getList({ params: { page } }))
+  }, [dispatch, page])
+
 
   useEffect(() => {
     listConversation.length > 0 &&
       setConversationActiveId(listConversation[0]._id)
   }, [listConversation])
+
 
   useEffect(() => {
     const getDetailConversation = async () => {
@@ -580,6 +654,7 @@ const CustomerCenter = () => {
     reload && conversationActiveId && getDetailConversation()
   }, [conversationActiveId, reload, dispatch])
 
+
   useEffect(() => {
     socketRef.current = io('https://server.gmapps.net', {
       extraHeaders: {
@@ -593,8 +668,6 @@ const CustomerCenter = () => {
 
     socketRef.current.on('createMessage', (dataGot: ConversationDetailMessageType) => {
       setConversationDetailMessage(oldMsgs => [...oldMsgs, dataGot])
-      console.log('```````dataGot', dataGot);
-
     })
     return () => {
       socketRef.current.disconnect();
@@ -602,13 +675,13 @@ const CustomerCenter = () => {
 
   }, []);
 
+
   useEffect(() => {
     // Scroll to the end of the container when data length updates
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [conversationDetailMessage.length]);
-
 
   return (
     <div className={classes.container}>
@@ -620,112 +693,128 @@ const CustomerCenter = () => {
             <p>문의작성</p>
           </button>
         </div>
-        <div>
-          {listConversation.map((item, index) => (
-            <div
-              className={conversationActiveId === item._id ? classes.active : classes.inActive}
-              onClick={() => handleListItemClick(item)}
-            >
-              <img src={item.thumbnail[0]} alt='' />
-              <div>
-                <p>{item.title}</p>
+        <div
+        >
+          {
+            listConversation.length > 0 ? listConversation.map((item, index) => (
+              <div
+                className={conversationActiveId === item._id ? classes.active : classes.inActive}
+                onClick={() => handleListItemClick(item)}
+              >
+                <img src={item.thumbnail[0]} alt='' />
                 <div>
-                  <p>상태: </p>
-                  <div className={checkTypeConversation(item.topic)}>
-                    <p>{item.topic}</p>
+                  <p>{item.title}</p>
+                  <div>
+                    <p>연락처: </p>
+                    <div >
+                      <p>{item.mobileNumber}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+              :
+              <div className={classes.noneConversasion}>
+                <img src={noneConversation} alt='' />
+                <p>내역이 없습니다</p>
+              </div>
+          }
         </div>
       </div>
 
-      <div>
+      {listConversation.length > 0 ?
         <div>
           <div>
-            <div className={checkTypeConversation(conversationDetail?.topic || '')}>
-              <p>{conversationDetail?.topic}</p>
-            </div>
-            <p>{conversationDetail?.title}</p>
-          </div>
-          <img src={MenuDots} alt='' />
-        </div>
-
-        <div>
-          <p>
-            댓글
-            <span> ({conversationDetail?.messages?.length})</span>
-          </p>
-          <div ref={containerRef}>
             <div>
-              <div className={classes.message_user_container}>
-                <img src={conversationDetail?.creator?.photo} alt='' />
-                <div>
-                  <p>{conversationDetail?.creator?.firstName} {conversationDetail?.creator?.lastName}</p>
-                  <p>{formatDate(conversationDetail?.creator?.createdAt || '')}</p>
+              <div>
+                <p>연락처: </p>
+                <p>{conversationDetail?.mobileNumber}</p>
+              </div>
+              <p>{conversationDetail?.title}</p>
+            </div>
+            <img src={MenuDots} alt='' />
+          </div>
+
+          <div>
+            <p>
+              피드백
+              <span> ({conversationDetailMessage.length || 0})</span>
+            </p>
+            <div ref={containerRef}>
+              <div>
+                <div className={classes.message_user_container}>
+                  <img src={conversationDetail?.creator?.photo} alt='' />
                   <div>
-                    {(conversationDetail?.thumbnail || []).map((item, index) => (
-                      <img
-                        src={item}
-                        alt=''
-                      />
-                    ))}
+                    <p>{conversationDetail?.creator?.firstName} {conversationDetail?.creator?.lastName}</p>
+                    <p>{formatDate(conversationDetail?.createdAt || '')}</p>
+                    <div>
+                      {(conversationDetail?.thumbnail || []).map((item, index) => (
+                        <img
+                          src={item}
+                          alt=''
+                        />
+                      ))}
+                    </div>
+                    <p>{conversationDetail?.description}</p>
                   </div>
-                  <p>{conversationDetail?.description}</p>
                 </div>
               </div>
-            </div>
 
-            {conversationDetailMessage?.map((item, index, array) => {
-              const styleItem = { marginLeft: '60px', borderLeft: '1px solid #DCE1E7' }
-              if (index + 1 === array.length) {
-                styleItem.borderLeft = '1px solid #FAFAFA'
-              }
-              return (
-                <div
-                  className={classes.message_user_container}
-                  style={styleItem}
-                  key={item._id}
-                >
-                  <img
-                    src={item.sender?.photo}
-                    alt=''
-                  />
-                  <div>
-                    <p>{item.sender.firstName} {item.sender.lastName}</p>
-                    <p>{formatDate(item.updatedAt || '')}</p>
-                    <p>{item.content}</p>
-                    {/* <img src={avatarChat1} alt='' /> */}
+              {conversationDetailMessage?.map((item, index, array) => {
+                const styleItem = { marginLeft: '60px', borderLeft: '1px solid #DCE1E7' }
+                if (index + 1 === array.length) {
+                  styleItem.borderLeft = '1px solid #FAFAFA'
+                }
+                return (
+                  <div
+                    className={classes.message_user_container}
+                    style={styleItem}
+                    key={item._id}
+                  >
+                    <img
+                      src={item.sender?.photo}
+                      alt=''
+                    />
+                    <div>
+                      <p>{item.sender.firstName} {item.sender.lastName}</p>
+                      <p>{formatDate(item.updatedAt || '')}</p>
+                      <p>{item.content}</p>
+                      {/* <img src={avatarChat1} alt='' /> */}
+                    </div>
+                    <img src={arrowIcon} alt='' />
                   </div>
-                  <img src={arrowIcon} alt='' />
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
+          </div>
+
+          <div>
+            <button>
+              <img src={GalleryAdd} alt='' />
+            </button>
+            <input
+              placeholder='Type here.......'
+              onChange={(e) => {
+                setValueMessage(e.target.value)
+              }}
+              value={valueMessage}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleMessage()
+                }
+              }}
+            />
+            <button type='submit' onClick={handleMessage}>
+              <SendIcon color={valueMessage ? '#3B71FE' : ''} />
+            </button>
           </div>
         </div>
-
-        <div>
-          <button>
-            <img src={GalleryAdd} alt='' />
-          </button>
-          <input
-            placeholder='Type here.......'
-            onChange={(e) => {
-              setValueMessage(e.target.value)
-            }}
-            value={valueMessage}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleMessage()
-              }
-            }}
-          />
-          <button type='submit' onClick={handleMessage}>
-            <SendIcon color={valueMessage ? '#3B71FE' : ''} />
-          </button>
+        :
+        <div className={classes.noneMessage}>
+          <img src={noneMessage} alt='' />
+          <p>내역이 없습니다</p>
         </div>
-      </div>
+      }
       <Modal open={open} onClose={handleClose} disableAutoFocus>
         <div className={classes.modal}>
           <div>
@@ -766,7 +855,7 @@ const CustomerCenter = () => {
           </button>
         </div>
       </Modal>
-    </div>
+    </div >
   )
 }
 

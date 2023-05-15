@@ -10,7 +10,6 @@ function* getList(action: PayloadAction<{params?: any}>) {
       transactionApi.getList,
       action.payload.params
     )
-    console.log('res', res)
     yield put(
       transactionActions.getListSuccess({
         listData: res.data,

@@ -2,7 +2,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import { SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AppleIcon from '../../asset/images/AppleLogo.png'
 import CHPlay from '../../asset/images/CHPlayIcon.png'
@@ -14,6 +14,10 @@ import { makeStyles } from '@mui/styles'
 import { DropDownInput } from '../../components/base/input/DropdownInput'
 import { MenuItem, Select } from '@mui/material'
 import SiteListMobile from '../siteListMobile'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { selectListData, siteActions } from '../../features/site/siteSlice'
+import { SiteType } from '../../types/site.type'
+import { formatDate } from '../customercenter'
 
 const useStyles = makeStyles({
   container: {
@@ -86,97 +90,20 @@ const useStyles = makeStyles({
   },
 })
 
-const rows = [
-  {
-    id: 1,
-    address: 'VN추가 \n도메인 미정',
-    endDate: '130일 남음',
-    startDate: '2023.01.01',
-    director: 'tiendatnguyenitnguyen@123.com',
-  },
-  {
-    id: 2,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.02',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 3,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.12',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 4,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.03',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 5,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.04',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 6,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.05',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 7,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.06',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 8,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.07',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 9,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.08',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 10,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.09',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 11,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.10',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 12,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.11',
-    director: 'redjword@naver.com',
-  },
-]
 
 const SiteListAndExpiredList = () => {
   const navigate = useNavigate()
   const classes = useStyles()
+  const dispatch = useAppDispatch()
+  const listDataWebsite = useAppSelector(selectListData)
 
+  const [rows, setRows] = useState<any>([{
+    id: '',
+    address: '',
+    endDate: '',
+    startDate: '',
+    director: '',
+  },]);
   const [age, setAge] = React.useState('')
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -187,6 +114,15 @@ const SiteListAndExpiredList = () => {
     setPaymentMethod(event.target.value)
   }
 
+  const rows2 = [
+    {
+      id: '',
+      address: '',
+      endDate: '',
+      startDate: '',
+      director: '',
+    },
+  ]
   const columns = [
     {
       field: 'address',
@@ -231,52 +167,82 @@ const SiteListAndExpiredList = () => {
       sortable: false,
       disableColumnMenu: true,
       flex: 1,
+      minWidth: 340,
+      // maxWidth: 890,
       renderCell: (params: any) => {
         return (
           <div className={classes.cell_action}>
             <button>
               <p>관리</p>
             </button>
+
             <button
               onClick={() => {
-                navigate(ROUTE.INFOWEBSITE)
+                navigate(`${ROUTE.INFOWEBSITE}/${params.id}`)
               }}
             >
               <p>정보</p>
             </button>
+
             <button>
               <p>결제</p>
             </button>
+
             <button
               onClick={() => {
-                navigate(ROUTE.REGISTERANDMODIFYGOOGLEPLAY)
+                navigate(`${ROUTE.REGISTERANDMODIFYGOOGLEPLAY}/${params.id}`)
               }}
             >
               <img src={CHPlay} />
               <p>신청</p>
             </button>
+
             <button
               onClick={() => {
-                navigate(ROUTE.REGISTERANDMODIFYAPPLESTORE)
+                navigate(`${ROUTE.REGISTERANDMODIFYAPPLESTORE}/${params.id}`)
               }}
             >
               <img src={AppleIcon} />
               <p>신청</p>
             </button>
+
             <button onClick={() => { }}>
               <img src={MenuDots} />
             </button>
+
           </div>
         )
       },
     },
   ]
 
+  useEffect(() => {
+    dispatch(siteActions.getList({ params: undefined }))
+  }, [dispatch])
+
+  useEffect(() => {
+    if (!listDataWebsite) return;
+    else {
+      const data: any = [];
+      listDataWebsite?.forEach((item: SiteType, index) => {
+        const transformedData = {
+          id: item._id,
+          address: 'VN추가 \n도메인 미정',
+          endDate: `${Math.floor(item.remainingDays)}일 남음`,
+          startDate: formatDate(item.createdAt || ''),
+          director: item.adminEmail,
+        };
+        data.push(transformedData);
+      });
+      setRows(data);
+    }
+  }, [listDataWebsite])
+
   return (
     <>
-      <div className={classes.container} style={{}}>
-        <p style={{}}>분류</p>
-        <div style={{}}>
+      <div className={classes.container}>
+        <p>분류</p>
+        <div>
           <TextField
             id='outlined-start-adornment'
             placeholder='Search bar...'
@@ -323,8 +289,8 @@ const SiteListAndExpiredList = () => {
             <MenuItem value={3}>신용카드</MenuItem>
           </Select>
         </div>
-        <div style={{}}>
-          <div style={{}}>
+        <div>
+          <div>
             <p
               style={{ padding: 0, margin: 0, fontSize: '18px', fontWeight: 500 }}
             >
@@ -351,12 +317,12 @@ const SiteListAndExpiredList = () => {
                   color: '#fff',
                 }}
               >
-                2
+                {listDataWebsite?.length}
               </p>
             </div>
           </div>
           <button
-            onClick={() => { }}
+            onClick={() => { navigate(ROUTE.SITECREATION) }}
             style={{
               display: 'flex',
               justifyContent: 'center',
@@ -381,7 +347,7 @@ const SiteListAndExpiredList = () => {
             </p>
           </button>
         </div>
-        <DataGrid
+        {rows.length > 0 && <DataGrid
           rows={rows}
           columns={columns}
           // columnStyles={columnStyles}
@@ -390,7 +356,7 @@ const SiteListAndExpiredList = () => {
           hideFooter
           sx={{
             '& .MuiDataGrid-main': {
-              // display: 'flex',
+              display: 'flex',
               '& .MuiDataGrid-columnHeaders': {
                 borderColor: '#D0D5DD',
                 backgroundColor: '#F1F1F1',
@@ -404,6 +370,7 @@ const SiteListAndExpiredList = () => {
             },
           }}
         />
+        }
       </div>
       <SiteListMobile />
     </>

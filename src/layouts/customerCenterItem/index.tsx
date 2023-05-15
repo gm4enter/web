@@ -260,21 +260,7 @@ const CustomerCenterItem = () => {
 
   const conversationActiveId = id
 
-  const checkTypeConversation = (type: string) => {
-    switch (type) {
-      case '추가 질문':
-        return classes.type1Conversation
-      case '완료':
-        return classes.type2Conversation
-      case 'TYPE_3':
-        return classes.type3Conversation
-      default:
-        return classes.type3Conversation
-    }
-  }
-
   const [conversationDetail, setConversationDetail] = useState<ConversationDetailType>()
-  console.log('````conversationDetail', conversationDetail);
 
   const handleMessage = async () => {
     try {
@@ -351,8 +337,8 @@ const CustomerCenterItem = () => {
       <div>
         <div>
           <div>
-            <div className={checkTypeConversation(conversationDetail?.topic || '')}>
-              <p>{conversationDetail?.topic}</p>
+            <div>
+              <p>{conversationDetail?.mobileNumber}</p>
             </div>
             <p>{conversationDetail?.title}</p>
           </div>

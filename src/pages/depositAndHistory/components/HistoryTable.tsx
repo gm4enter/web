@@ -1,15 +1,15 @@
-import {Table, TableHead, TableRow, TableCell, TableBody} from '@mui/material'
-import {makeStyles} from '@mui/styles'
-import {useEffect, useState} from 'react'
-import {useAppDispatch, useAppSelector} from '../../../app/hooks'
+import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { useEffect, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import {
   selectListTransaction,
   selectTotalData,
   transactionActions,
 } from '../../../features/transaction/transactionSlice'
 import moment from 'moment'
-import {TransactionType} from '../../../types/transaction.type'
-import {numberWithCommas} from '../../../utils'
+import { TransactionType } from '../../../types/transaction.type'
+import { numberWithCommas } from '../../../utils'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 const useStyles = makeStyles({
@@ -25,11 +25,12 @@ export const HistoryTable = () => {
   const [page, setPage] = useState<number>(1)
   const listTransaction = useAppSelector(selectListTransaction)
   const totalData = useAppSelector(selectTotalData)
+
   const [listData, setListData] = useState<
-    {createdAt: string; listData: TransactionType[]}[]
+    { createdAt: string; listData: TransactionType[] }[]
   >([])
   useEffect(() => {
-    dispatch(transactionActions.getList({params: {page}}))
+    dispatch(transactionActions.getList({ params: { page } }))
   }, [dispatch, page])
   // const formatListTransaction = () => {
   //   const listData = listTransaction.map((item) => {
@@ -69,7 +70,7 @@ export const HistoryTable = () => {
         ),
       }
     })
-    const dataNew: {createdAt: string; listData: TransactionType[]}[] = []
+    const dataNew: { createdAt: string; listData: TransactionType[] }[] = []
     listData.forEach((item) => {
       if (dataNew.length === 0) {
         dataNew.push(item)
@@ -93,7 +94,7 @@ export const HistoryTable = () => {
         next={() => setPage(page + 1)}
         hasMore={true}
         loader={<></>}
-        // scrollableTarget='infiniteScroll-conversation'
+      // scrollableTarget='infiniteScroll-conversation'
       >
         {listData.map((item, index) => (
           <div key={item.createdAt}>
@@ -120,20 +121,24 @@ export const HistoryTable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {item.listData.map((item1) => (
-                  <TableRow>
-                    <TableCell>
-                      {moment(item1.createdAt).format('YYYY-MM-DD')}
-                    </TableCell>
-                    <TableCell>{}</TableCell>
-                    <TableCell>{numberWithCommas(item1.value)}</TableCell>
-                    <TableCell>{}</TableCell>
-                    <TableCell>
-                      {item1.amountAvailable &&
-                        numberWithCommas(item1.amountAvailable)}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {item.listData.map((item1) => {
+                  console.log('````999````', item1);
+
+                  return (
+                    <TableRow>
+                      <TableCell>
+                        {moment(item1.createdAt).format('YYYY-MM-DD')}
+                      </TableCell>
+                      <TableCell>{ }</TableCell>
+                      <TableCell>{numberWithCommas(item1.value)}</TableCell>
+                      <TableCell>{ }</TableCell>
+                      <TableCell>
+                        {item1.amountAvailable &&
+                          numberWithCommas(item1.amountAvailable)}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </div>

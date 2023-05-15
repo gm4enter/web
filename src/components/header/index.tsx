@@ -293,7 +293,9 @@ const Header = (props: IProps) => {
       }
       axiosClient.post(LOGIN, data)
         .then((res: any) => {
+          console.log('res: ', res);
           if (res.statusCode === 200) {
+            console.log('message: ', res.message);
             setStatusLogin(true)
             localStorage.setItem('accessToken', res.data?.accessToken)
           }
