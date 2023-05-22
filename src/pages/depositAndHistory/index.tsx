@@ -1,18 +1,20 @@
-import {MenuItem, Select, SelectChangeEvent} from '@mui/material'
-import {makeStyles} from '@mui/styles'
-import {useState, useEffect} from 'react'
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { useState, useEffect } from 'react'
 import infoCircle from '../../asset/images/iconInfoCircle.png'
 import timeHistory from '../../asset/images/TimeHistory.png'
-import {Input} from '../../components/base/input/Input'
-import {HistoryTable} from './components/HistoryTable'
-import {ROUTE} from '../../router/routes'
-import {useNavigate} from 'react-router-dom'
+import noDataIcon from '../../asset/images/ListNone.png'
+import { Input } from '../../components/base/input/Input'
+import { HistoryTable } from './components/HistoryTable'
+import { ROUTE } from '../../router/routes'
+import { useNavigate } from 'react-router-dom'
 import axiosClient from '../../apis/axiosClient'
-import {TRANSACTION, USER} from '../../apis/urlConfig'
-import {numberWithCommas} from '../../utils'
-import {PAYMENT_METHOD} from '../../types/enum'
-import {useAppDispatch} from '../../app/hooks'
-import {loadingActions} from '../../components/loading/loadingSlice'
+import { TRANSACTION, USER } from '../../apis/urlConfig'
+import { numberWithCommas } from '../../utils'
+import { PAYMENT_METHOD } from '../../types/enum'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { loadingActions } from '../../components/loading/loadingSlice'
+import { selectListTransaction } from '../../features/transaction/transactionSlice'
 
 const useStyles = makeStyles({
   container_deposit: {
@@ -136,7 +138,7 @@ const useStyles = makeStyles({
     container_deposit: {
       display: 'flex',
       flexDirection: 'column',
-      height: 'calc(100vh - 124px)', 
+      height: 'calc(100vh - 124px)',
       '&>div:nth-of-type(1)': {
         '&>button': {
           display: 'block',
@@ -220,14 +222,37 @@ const useStyles = makeStyles({
       },
     },
   },
+  no_data: {
+    height: 'calc(100vh - 396px - 76px) ',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '12px',
+    '&>img': {
+      height: '240px',
+      width: '240px',
+    },
+    '&>p': {
+      margin: 0,
+      padding: 0,
+      fontSize: '18px',
+      fontWeight: 500,
+      color: '#70777F',
+    },
+  },
 })
 
 const DespositAndHistory = () => {
   const navigate = useNavigate()
   const classes = useStyles()
   const dispatch = useAppDispatch()
+  const listTransaction = useAppSelector(selectListTransaction)
+
+  console.log('listTransaction', listTransaction);
+
   const [paymentMethod, setPaymentMethod] = useState<PAYMENT_METHOD>(
-    PAYMENT_METHOD.TRANSFER
+    PAYMENT_METHOD.CREDIT_CARD
   )
   const [deposit, setDeposit] = useState<number>(500000)
   const [point, setPoint] = useState<number>()
@@ -297,10 +322,10 @@ const DespositAndHistory = () => {
             <Input
               label='예치금 잔액'
               value={numberWithCommas(Number(point))}
-              onChange={() => {}}
+              onChange={() => { }}
               // labelStyle={{fontSize: '12px'}}
               disabled
-              inputStyle={{width: 'calc(100% - 32px)'}}
+            // inputStyle={{width: 'calc(100% - 32px)'}}
             />
           </div>
           <div>
@@ -318,12 +343,10 @@ const DespositAndHistory = () => {
                 lineHeight: '24px',
                 height: '46px',
               }}
-              inputProps={{'aria-label': 'Without label'}}
+              inputProps={{ 'aria-label': 'Without label' }}
             >
-              <MenuItem value={PAYMENT_METHOD.TRANSFER}>TRANSFER</MenuItem>
-              <MenuItem value={PAYMENT_METHOD.CREDIT_CARD}>
-                CREDIT CARD
-              </MenuItem>
+              <MenuItem value={PAYMENT_METHOD.CREDIT_CARD}>신용카드</MenuItem>
+              <MenuItem value={PAYMENT_METHOD.TRANSFER}>계좌이체(국민은행56690204040102이승우)</MenuItem>
             </Select>
           </div>
           <div>
@@ -341,7 +364,7 @@ const DespositAndHistory = () => {
                 height: '46px',
 
               }}
-              inputProps={{'aria-label': 'Without label'}}
+              inputProps={{ 'aria-label': 'Without label' }}
             >
               <MenuItem value={500000}>500,000원</MenuItem>
               <MenuItem value={1000000}>1,000,000원</MenuItem>
@@ -359,7 +382,17 @@ const DespositAndHistory = () => {
 
       <div>
         <p>예치금 내역</p>
+        {/* {listTransaction.length > 0
+          ?
+          <HistoryTable />
+          :
+          <div className={classes.no_data}>
+            <img src={noDataIcon} alt='' />
+            <p>내역이 없습니다</p>
+          </div>
+        } */}
         <HistoryTable />
+
       </div>
     </div>
   )

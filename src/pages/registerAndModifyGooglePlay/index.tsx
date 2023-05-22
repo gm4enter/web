@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLayoutEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import iconBack from '../../asset/images/iconBack.png'
 import infoCircle from '../../asset/images/iconInfoCircle.png'
 import iconQuestion from '../../asset/images/iconQuestion.png'
@@ -14,6 +14,11 @@ import {
   AccordionSummary,
   Typography,
 } from '@mui/material'
+import axiosClient from '../../apis/axiosClient'
+import { DataAndroidInfoType, SiteType } from '../../types/site.type'
+import { SITE, SYSTEM } from '../../apis/urlConfig'
+import { useAppDispatch } from '../../app/hooks'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 
 const useStyles = makeStyles({
   container: {
@@ -244,10 +249,134 @@ const useStyles = makeStyles({
 function RegisterAndModifyGooglePlay() {
   const navigate = useNavigate()
   const classes = useStyles()
+  const dispatch = useAppDispatch()
+  const { id } = useParams()
+
+  const [reload, setReload] = useState(false)
+
+  const [site, setSite] = useState<SiteType>()
+
   const [inputValueNameApp, setInputValueNameApp] = useState('')
 
+  //user and password
   const [value1, setValue1] = useState('')
   const [value2, setValue2] = useState('')
+
+  //image
+  const [value4, setValue4] = useState<File | null>(null);
+  const [value5, setValue5] = useState<File | null>(null);
+  const [value6, setValue6] = useState<File | null>(null);
+
+  const [icon, setIcon] = useState('')
+  const [homeScreen, setHomeScreen] = useState('')
+  const [notificationIcon, setNotificationIcon] = useState('')
+
+  const handleIcon = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file: File = e.target.files[0];
+      setValue4(file);
+    }
+  }
+  const handleHomeScreen = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file: File = e.target.files[0];
+      setValue5(file);
+    }
+  }
+
+  const handleNotificationIcon = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file: File = e.target.files[0];
+      setValue6(file);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+
+      const formData = new FormData()
+      const formData2 = new FormData()
+      const formData3 = new FormData()
+
+      value4 && formData.append('file', value4)
+
+      value5 && formData2.append('file', value5)
+
+      value6 && formData3.append('file', value6)
+
+      const [resIcon, resHomeScreen, resNotiIcon] = await Promise.all([
+        value4 && axiosClient.post(`${SYSTEM}/upload`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }),
+        value5 && axiosClient.post(`${SYSTEM}/upload`, formData2, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }),
+        value6 && axiosClient.post(`${SYSTEM}/upload`, formData3, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+      ])
+
+      resIcon && setIcon(resIcon.data.filename)
+      resHomeScreen && setHomeScreen(resHomeScreen.data.filename)
+      resNotiIcon && setNotificationIcon(resNotiIcon.data.filename)
+
+      const dataPut: DataAndroidInfoType = {
+        androidInfo: {
+          user: value1,
+          password: value2,
+          appName: inputValueNameApp,
+          icon: icon,
+          homeScreen: homeScreen,
+          notificationIcon: notificationIcon,
+        },
+      }
+      resIcon && (dataPut.androidInfo.icon = resIcon.data.filename)
+      resHomeScreen && (dataPut.androidInfo.homeScreen = resHomeScreen.data.filename)
+      resNotiIcon && (dataPut.androidInfo.notificationIcon = resNotiIcon.data.filename)
+
+      await axiosClient.put(`${SITE}/update/${id}`, dataPut)
+      dispatch(snackBarActions.setStateSnackBar({
+        content: '성공',
+        type: 'success',
+      }))
+      setReload(!reload)
+      navigate(ROUTE.SITELISTANDEXPIREDLIST)
+
+    } catch (error) {
+      console.log('error:', error)
+      dispatch(snackBarActions.setStateSnackBar({
+        content: '실패',
+        type: 'error',
+      }))
+    }
+  }
+
+  useLayoutEffect(() => {
+    if (id) {
+      axiosClient.get(`${SITE}/get/${id}`)
+        .then((res: { data: SiteType }) => {
+          setSite(res.data)
+          if (res.data.androidInfo) {
+            setValue1(res.data.androidInfo.user)
+            setValue2(res.data.androidInfo.password)
+            setInputValueNameApp(res.data.androidInfo.appName)
+
+            setIcon(res.data.androidInfo.icon)
+            setHomeScreen(res.data.androidInfo.homeScreen)
+            setNotificationIcon(res.data.androidInfo.notificationIcon)
+          }
+        })
+        .catch((error: any) => {
+          console.log(error)
+        })
+    }
+  }, [id, reload])
 
   return (
     <div className={classes.container}>
@@ -383,7 +512,7 @@ function RegisterAndModifyGooglePlay() {
           onChange={(e) => {
             setValue1(e.target.value)
           }}
-          containerStyle={{ marginTop:'20px' }}
+          containerStyle={{ maxWidth: '656px', marginTop: '20px', }}
         />
         <Input
           label='비밀번호'
@@ -392,7 +521,8 @@ function RegisterAndModifyGooglePlay() {
           onChange={(e) => {
             setValue2(e.target.value)
           }}
-          containerStyle={{ marginTop:'16px' }}
+          containerStyle={{ maxWidth: '656px', marginTop: '16px' }}
+          isPassword
         />
       </div>
 
@@ -406,7 +536,8 @@ function RegisterAndModifyGooglePlay() {
           onChange={(e) => {
             setInputValueNameApp(e.target.value)
           }}
-          containerStyle={{ width: '690px', marginTop:'20px' }}
+          containerStyle={{ maxWidth: '656px', marginTop: '20px' }}
+          maxLength={40}
         />
         <p>* 앱 설치 후 아이콘 아래에 표시되는 이름입니다.</p>
       </div>
@@ -420,7 +551,7 @@ function RegisterAndModifyGooglePlay() {
               <img src={iconQuestion} alt='' />
             </div>
             <p>고해상도 아이콘: 512x512 / 32비트 PNG(알파 있음)</p>
-            <InputuploadImage type='512' containerStyle={{ marginTop: '16px' }} />
+            <InputuploadImage type='512' containerStyle={{ marginTop: '16px' }} onChange={handleIcon} images={icon} />
           </div>
 
           <div>
@@ -432,6 +563,8 @@ function RegisterAndModifyGooglePlay() {
             <InputuploadImage
               type='1440'
               containerStyle={{ marginTop: '16px' }}
+              onChange={handleHomeScreen}
+              images={homeScreen}
             />
           </div>
         </div>
@@ -450,19 +583,16 @@ function RegisterAndModifyGooglePlay() {
             </span>
             <a href='#'>자세히 알아보기</a>
           </p>
-          <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} />
+          <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} onChange={handleNotificationIcon} images={notificationIcon} />
           <p>
             *알림 아이콘은 앱에서 알림이 왔을때 상단에 보여지는 아이콘입니다.
           </p>
         </div>
 
         <button
-          onClick={() => {
-            navigate(ROUTE.SITELISTANDEXPIREDLIST)
-          }}
-          style={{}}
+          onClick={handleSubmit}
         >
-          <p style={{}}>제출하기</p>
+          <p>제출하기</p>
         </button>
       </div>
     </div>

@@ -14,6 +14,8 @@ import { PlanType } from '../../types/plan.type';
 import { ThemeType } from '../../types/theme.type';
 import { siteActions } from '../../features/site/siteSlice';
 import { numberWithCommas } from '../../utils';
+import { useNavigate } from 'react-router-dom';
+import { snackBarActions } from '../../components/snackbar/snackbarSlice';
 
 const useStyles = makeStyles({
     container_site: {
@@ -208,17 +210,16 @@ const useStyles = makeStyles({
 
 const SiteCreation = () => {
     const classes = useStyles();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const listPlan = useAppSelector(selectListData)
     const [open, setOpen] = useState(false);
     const [plan, setPlan] = useState<PlanType>();
     const [listTheme, setListTheme] = useState<ThemeType[]>([]);
+
     const [themeId, setThemeId] = useState('');
     const [theme, setTheme] = useState<ThemeType>({} as ThemeType)
     const [point, setPoint] = useState<number>()
-
-
-    console.log('plan', plan?._id, 'theme', theme?._id);
 
     //handle pick plan
     const handleOnClickRadio = (e: any) => {
@@ -264,16 +265,43 @@ const SiteCreation = () => {
                         //dispatch action get list website
                         dispatch(siteActions.getList({ params: undefined }))
                         console.log('create website success!', res);
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '성공',
+                            type: 'success',
+                        }))
+                    }
+                    else {
+                        console.log('create website failed!', res.message);
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '실패',
+                            type: 'error',
+                        }))
                     }
                 })
                 .catch((err) => {
                     console.log(err)
+                    dispatch(snackBarActions.setStateSnackBar({
+                        content: '실패',
+                        type: 'error',
+                    }))
                 })
         }
     }
 
     useEffect(() => {
         dispatch(planActions.getList({ params: undefined }))
+        axiosClient.get(`${THEME}/list`)
+            .then((res: any) => {
+                console.log('get theme success!')
+                if (res.statusCode === 200) {
+                    setListTheme(res.data)
+                } else {
+                    console.log('get theme failed!', res.message)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }, [])
 
     useEffect(() => {

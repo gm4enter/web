@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router'
 import { io } from "socket.io-client"
 import axiosClient from '../../apis/axiosClient'
 import { conversationApi } from '../../apis/conversationApi'
-import { CONVERSATION, MESSAGE } from '../../apis/urlConfig'
+import { CONVERSATION, MESSAGE, SYSTEM } from '../../apis/urlConfig'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import SendIcon from '../../asset/icons/send'
 import GalleryAdd from '../../asset/images/GalleryAdd.png'
@@ -321,11 +321,13 @@ const useStyles = makeStyles({
         alignItems: 'center',
         gap: '8px',
         margin: '12px 0 12px 0',
-        '&>img': {
-          height: '53px',
-          width: '44px',
-          borderRadius: '4px',
-        }
+        '&>div': {
+          '&>img': {
+            height: '53px',
+            width: '44px',
+            borderRadius: '4px',
+          }
+        },
       },
       '&>p:nth-of-type(3)': {
         // width: '70%',
@@ -458,7 +460,8 @@ const useStyles = makeStyles({
       alignItems: 'center',
       borderBottom: '1px solid #EDEDED',
       '&>textarea': {
-        width: 'calc(100% - 32px)',
+        width: 'calc(446px)',
+        // width: 'calc(100% - 34px)',
         marginTop: '16px',
         border: '1px solid #D0D5DD',
         borderRadius: '8px',
@@ -466,6 +469,7 @@ const useStyles = makeStyles({
         fontSize: '16px',
         fontWeight: 500,
         lineHeight: '24px',
+        outline: 'none',
       },
       '&>div:nth-of-type(1)': {
         '&>p': {
@@ -497,6 +501,19 @@ const useStyles = makeStyles({
       },
     },
   },
+  modalImg: {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    boxShadow: '0 0 12px 0 rgba(0, 0, 0, 0.25)',
+    border: 'none',
+    boxSizing: 'border-box',
+    '&>img': {
+      height: '550px',
+      // width: '550px',
+    },
+  },
 })
 
 export const formatDate = (date: string) => {
@@ -521,10 +538,11 @@ const CustomerCenter = () => {
   const [valueInputModal1, setValueInputModal1] = useState('')
   const [valueInputModal2, setValueInputModal2] = useState('')
   const [valueInputModal3, setValueInputModal3] = useState('')
-  const [valueImages, setValueImages] = useState<string[]>([])
+  const [valueImages, setValueImages] = useState<File[]>([]);
+
+  const [listImages, setListImages] = useState<string[]>([]);
 
   const listConversation = useAppSelector(selectListData)
-
 
   const [conversationActiveId, setConversationActiveId] = useState('')
 
@@ -534,11 +552,22 @@ const CustomerCenter = () => {
 
   const [reload, setReload] = useState(true)
   const [open, setOpen] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
 
-  const [idSocket, setIdSocket] = useState('')
+  const [openImg, setOpenImg] = useState(false)
+  const [imgShow, setImgShow] = useState('')
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  // const [idSocket, setIdSocket] = useState('')
+
+
+  const handleCloseImg = () => {
+    setOpenImg(false)
+  }
+
+  const handleClose = () => {
+    setValueImages([])
+    setOpen(false)
+  }
 
   const handleListItemClick = (item: any) => {
     if (fullScreen) {
@@ -553,8 +582,18 @@ const CustomerCenter = () => {
 
   }
 
-  const handleImageChange = (images: string[]) => {
-    setValueImages(images)
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const newImages: File[] = [];
+      for (let i = 0; i < e.target.files.length; i++) {
+        newImages.push(e.target.files[i]);
+      }
+      setValueImages([...valueImages, ...newImages]);
+    }
+  }
+
+  const handleDelImage = (images: string[]) => {
+    setListImages(images)
   }
 
   const handleOpenConversation = () => {
@@ -562,16 +601,38 @@ const CustomerCenter = () => {
       navigate(`${ROUTE.CREATECONVERSATION_ITEM}`)
     }
     else {
+      setValueInputModal1('')
+      setValueInputModal2('')
+      setValueInputModal3('')
+      setValueImages([])
+      setListImages([])
       setOpen(true)
+      setIsEdit(false)
     }
   }
-  const handleCreateConversation = () => {
+  const handleCreateConversation = async () => {
     if (valueInputModal1 !== '' && valueInputModal2 !== '' && valueInputModal3 !== '' && valueImages.length > 0) {
+
+      const formData = new FormData();
+      for (let i = 0; i < valueImages.length; i++) {
+        formData.append('files', valueImages[i]);
+      }
+
+      const resImg = await axiosClient.post(`${SYSTEM}/multiple-upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      const dataImg = (resImg.data || []).map((item: any) => {
+        return item.filename
+      })
+
       const data = {
         mobileNumber: valueInputModal1,
         title: valueInputModal2,
         description: valueInputModal3,
-        thumbnail: valueImages
+        thumbnail: dataImg
       }
       conversationApi.create(data)
         .then((res: any) => {
@@ -586,7 +647,7 @@ const CustomerCenter = () => {
             setValueInputModal1('')
             setValueInputModal2('')
             setValueInputModal3('')
-            setValueImages([])
+            setListImages([])
             handleClose()
           }
           else {
@@ -610,6 +671,84 @@ const CustomerCenter = () => {
     }
   }
 
+  const handleOpenEdit = () => {
+    setOpen(true)
+    setIsEdit(true)
+
+    setValueInputModal1(conversationDetail?.mobileNumber || '')
+    setValueInputModal2(conversationDetail?.title || '')
+    setValueInputModal3(conversationDetail?.description || '')
+    setListImages(conversationDetail?.thumbnail || [])
+  }
+
+  const handleEditConversation = async () => {
+    if (valueInputModal1 !== '' && valueInputModal2 !== '' && valueInputModal3 !== '' && (valueImages.length > 0 || listImages.length > 0)) {
+
+      const dataImg = listImages
+
+      if (valueImages.length > 0) {
+        const formData = new FormData();
+        for (let i = 0; i < valueImages.length; i++) {
+          formData.append('files', valueImages[i]);
+        }
+
+        const resImg = await axiosClient.post(`${SYSTEM}/multiple-upload`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+
+        resImg && (resImg.data || []).map((item: any) => {
+          dataImg.push(item.filename)
+        })
+      }
+
+      const dataUpdate = {
+        id: conversationActiveId,
+        data: {
+          mobileNumber: valueInputModal1,
+          title: valueInputModal2,
+          description: valueInputModal3,
+          thumbnail: dataImg
+        }
+      }
+      conversationApi.update(dataUpdate)
+        .then((res: any) => {
+          if (res.statusCode === 200) {
+            console.log('Edit conversation success');
+            handleClose()
+            dispatch(conversationActions.getList({ params: undefined }))
+            dispatch(snackBarActions.setStateSnackBar({
+              content: '성공',
+              type: 'success',
+            }))
+            setReload(true)
+          }
+          else {
+            console.log('message: ', res.message);
+            dispatch(snackBarActions.setStateSnackBar({
+              content: '실패',
+              type: 'error',
+            }))
+          }
+        })
+        .catch((error: any) => {
+          console.log(error)
+          dispatch(snackBarActions.setStateSnackBar({
+            content: '실패',
+            type: 'error',
+          }))
+        })
+    }
+    else {
+      alert('내용을 입력해주세요')
+    }
+  }
+
+  const showImg = (image: string) => {
+    setImgShow(image)
+    setOpenImg(true)
+  }
 
   const handleMessage = async () => {
     try {
@@ -662,9 +801,9 @@ const CustomerCenter = () => {
       }
     })
 
-    socketRef.current.on('getId', (data: string) => {
-      setIdSocket(data)
-    })
+    // socketRef.current.on('getId', (data: string) => {
+    //   setIdSocket(data)
+    // })
 
     socketRef.current.on('createMessage', (dataGot: ConversationDetailMessageType) => {
       setConversationDetailMessage(oldMsgs => [...oldMsgs, dataGot])
@@ -732,7 +871,7 @@ const CustomerCenter = () => {
               </div>
               <p>{conversationDetail?.title}</p>
             </div>
-            <img src={MenuDots} alt='' />
+            <img src={MenuDots} alt='' onClick={handleOpenEdit} />
           </div>
 
           <div>
@@ -749,10 +888,9 @@ const CustomerCenter = () => {
                     <p>{formatDate(conversationDetail?.createdAt || '')}</p>
                     <div>
                       {(conversationDetail?.thumbnail || []).map((item, index) => (
-                        <img
-                          src={item}
-                          alt=''
-                        />
+                        <div key={index} onClick={() => showImg(item)}>
+                          <img src={item} alt='' />
+                        </div>
                       ))}
                     </div>
                     <p>{conversationDetail?.description}</p>
@@ -790,7 +928,7 @@ const CustomerCenter = () => {
 
           <div>
             <button>
-              <img src={GalleryAdd} alt='' />
+              {/* <img src={GalleryAdd} alt='' /> */}
             </button>
             <input
               placeholder='Type here.......'
@@ -847,12 +985,18 @@ const CustomerCenter = () => {
               }} />
             <div>
               <p>캡처이미지 & 이미지 자료</p>
-              <InputImage onImageChange={handleImageChange} />
+              <InputImage onImageChange={handleImageChange} listImages={listImages} onDelImage={handleDelImage} />
             </div>
           </div>
-          <button onClick={handleCreateConversation}>
+          <button onClick={isEdit ? handleEditConversation : handleCreateConversation}>
             <p>완료</p>
           </button>
+        </div>
+      </Modal>
+
+      <Modal open={openImg} onClose={handleCloseImg} disableAutoFocus>
+        <div className={classes.modalImg}>
+          <img src={imgShow} alt='' />
         </div>
       </Modal>
     </div >

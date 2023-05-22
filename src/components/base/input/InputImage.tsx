@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import closeBoldIcon from '../../../asset/images/iconCloseBold.png'
 import addImage from '../../../asset/images/addImage.png'
 import { makeStyles } from '@mui/styles';
@@ -42,15 +42,22 @@ const useStyles = makeStyles({
 
 interface Iprops {
     type?: string;
-    onImageChange?: (images: string[]) => void;
+    onImageChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     containerStyle?: React.CSSProperties;
+    listImages?: string[]
+    onDelImage?: (images: string[]) => void
+
 }
 
 export const InputImage = (props: Iprops) => {
-    const { type, onImageChange, containerStyle, ...restProps } = props;
+    const { type, containerStyle, listImages, onImageChange, onDelImage, ...restProps } = props;
     const classes = useStyles();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [images, setImages] = useState<string[]>([]);
+
+    console.log('images', images);
+    console.log('listImages', listImages);
+
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         if (event.target.files) {
@@ -59,13 +66,14 @@ export const InputImage = (props: Iprops) => {
                 newImages.push(URL.createObjectURL(event.target.files[i]));
             }
             setImages([...images, ...newImages]);
-            onImageChange && onImageChange([...images, ...newImages]);
+            onImageChange && onImageChange(event);
         }
     };
 
     const handleImageDelete = (image: string): void => {
         const newImages = images.filter((img) => img !== image);
         setImages(newImages);
+        onDelImage && onDelImage(newImages);
     };
 
     const handleAddImageClick = (): void => {
@@ -74,9 +82,15 @@ export const InputImage = (props: Iprops) => {
         }
     };
 
+    useEffect(() => {
+        if (listImages) {
+            setImages(listImages)
+        }
+    }, [listImages])
+
     return (
         <div className={classes.container} style={containerStyle}>
-            <img src={addImage} onClick={(images.length < 3) ? handleAddImageClick : () => { }} alt='' />
+            <img src={addImage} onClick={(images.length < 4) ? handleAddImageClick : () => { }} alt='' />
             <input hidden type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} {...restProps} />
 
             {images.map((image) => (

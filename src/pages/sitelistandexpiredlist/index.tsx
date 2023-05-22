@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import AppleIcon from '../../asset/images/AppleLogo.png'
 import CHPlay from '../../asset/images/CHPlayIcon.png'
 import plusIcon from '../../asset/images/plusIcon.png'
+import noDataIcon from '../../asset/images/ListNone.png'
 import searchIcon from '../../asset/images/searchIcon.png'
 import MenuDots from '../../asset/images/MenuDots.png'
 import { ROUTE } from '../../router/routes'
@@ -49,6 +50,25 @@ const useStyles = makeStyles({
         alignItems: 'center',
         height: '28px',
       },
+    },
+  },
+  no_data: {
+    height: 'calc(100vh - 258px - 24px) ',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '12px',
+    '&>img': {
+      height: '240px',
+      width: '240px',
+    },
+    '&>p': {
+      margin: 0,
+      padding: 0,
+      fontSize: '18px',
+      fontWeight: 500,
+      color: '#70777F',
     },
   },
   cell_action: {
@@ -266,7 +286,11 @@ const SiteListAndExpiredList = () => {
                 borderColor: '#D0D5DD',
                 fontSize: '16px',
                 fontWeight: 400,
+                height: '44px',
               },
+            }}
+            sx={{
+              width: '240px',
             }}
           />
           <Select
@@ -296,7 +320,7 @@ const SiteListAndExpiredList = () => {
             >
               생성한 사이트
             </p>
-            <div
+            {listDataWebsite?.length ? <div
               style={{
                 height: '28px',
                 width: '28px',
@@ -319,7 +343,7 @@ const SiteListAndExpiredList = () => {
               >
                 {listDataWebsite?.length}
               </p>
-            </div>
+            </div> : <div />}
           </div>
           <button
             onClick={() => { navigate(ROUTE.SITECREATION) }}
@@ -347,29 +371,36 @@ const SiteListAndExpiredList = () => {
             </p>
           </button>
         </div>
-        {rows.length > 0 && <DataGrid
-          rows={rows}
-          columns={columns}
-          // columnStyles={columnStyles}
-          checkboxSelection
-          disableRowSelectionOnClick
-          hideFooter
-          sx={{
-            '& .MuiDataGrid-main': {
-              display: 'flex',
-              '& .MuiDataGrid-columnHeaders': {
-                borderColor: '#D0D5DD',
-                backgroundColor: '#F1F1F1',
-                color: '#000',
-                fontSize: '16px',
-                fontWeight: 700,
-              },
-              '&>div: nth-child(2)': {
-                overflow: 'initial !important',
-              },
-            },
-          }}
-        />
+        {rows.length > 0 ?
+          <div>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              // columnStyles={columnStyles}
+              checkboxSelection
+              disableRowSelectionOnClick
+              hideFooter
+              sx={{
+                '& .MuiDataGrid-main': {
+                  display: 'flex',
+                  '& .MuiDataGrid-columnHeaders': {
+                    borderColor: '#D0D5DD',
+                    backgroundColor: '#F1F1F1',
+                    color: '#000',
+                    fontSize: '16px',
+                    fontWeight: 700,
+                  },
+                  '&>div: nth-child(2)': {
+                    overflow: 'initial !important',
+                  },
+                },
+              }}
+            />
+          </div>
+          : <div className={classes.no_data}>
+            <img src={noDataIcon} alt='' />
+            <p>내역이 없습니다</p>
+          </div>
         }
       </div>
       <SiteListMobile />

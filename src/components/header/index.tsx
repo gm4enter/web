@@ -11,6 +11,8 @@ import { LOGIN, USER } from '../../apis/urlConfig'
 import axiosClient, { setTokens } from '../../apis/axiosClient'
 import { UserType } from '../../types/user.type'
 import { Modal } from '@mui/material'
+import { snackBarActions } from '../snackbar/snackbarSlice'
+import { useAppDispatch } from '../../app/hooks'
 
 const useStyles = makeStyles({
   container_header: {
@@ -241,6 +243,8 @@ const Header = (props: IProps) => {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const dispatch = useAppDispatch()
+
   const { handleButtonShow } = props
   const [isShowSideBar, setIsShowSideBar] = useState(false)
   const [tokenFirebase, setTokenFirebase] = useState('')
@@ -257,17 +261,21 @@ const Header = (props: IProps) => {
   const handleCloseModal = () => setOpenModal(false);
 
   const handleLogin = () => {
-    signInWithPopup(auth, provider)
-      .then((data: any) => {
-        setTokenFirebase(data.user.accessToken)
-      })
-      .catch((error: any) => {
-        console.log(error)
-      })
+    if (!localStorage.getItem('accessToken')) {
+      signInWithPopup(auth, provider)
+        .then((data: any) => {
+          setTokenFirebase(data.user.accessToken)
+        })
+        .catch((error: any) => {
+          console.log(error)
+        })
+    }
+
   }
   const handleLogout = () => {
     localStorage.removeItem('accessToken')
     setOpenModal(false)
+    setUser(undefined)
     navigate(ROUTE.HOME)
   }
   const handleClickSolution = () => {
@@ -296,15 +304,27 @@ const Header = (props: IProps) => {
           console.log('res: ', res);
           if (res.statusCode === 200) {
             console.log('message: ', res.message);
-            setStatusLogin(true)
+            setStatusLogin(!statusLogin)
             localStorage.setItem('accessToken', res.data?.accessToken)
+            dispatch(snackBarActions.setStateSnackBar({
+              content: '성공',
+              type: 'success',
+          }))
           }
           else {
             console.log('message: ', res.message);
+            dispatch(snackBarActions.setStateSnackBar({
+              content: '실패',
+              type: 'error',
+          }))
           }
         })
         .catch((error: any) => {
           console.log(error)
+          dispatch(snackBarActions.setStateSnackBar({
+              content: '실패',
+              type: 'error',
+          }))
         })
     }
   }, [tokenFirebase])
@@ -316,6 +336,7 @@ const Header = (props: IProps) => {
         .then((res: { data: UserType }) => {
           if (res.data) {
             setUser(res.data)
+            console.log('getDataUser: ', res.data);
           }
         })
         .catch((error: any) => {

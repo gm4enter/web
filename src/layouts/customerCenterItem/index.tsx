@@ -400,7 +400,7 @@ const CustomerCenterItem = () => {
 
         <div>
           <button>
-            <img src={GalleryAdd} alt='' />
+            {/* <img src={GalleryAdd} alt='' /> */}
           </button>
           <input
             placeholder='Type here.......'

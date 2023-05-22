@@ -133,7 +133,7 @@ export const HistoryTable = () => {
                       <TableCell>{numberWithCommas(item1.value)}</TableCell>
                       <TableCell>{ }</TableCell>
                       <TableCell>
-                        {item1.amountAvailable &&
+                        {item1.status === 'PENDING' ? <p style={{ color: '#FBBC05', padding: 0, margin: 0, }}>확인중</p> :
                           numberWithCommas(item1.amountAvailable)}
                       </TableCell>
                     </TableRow>
