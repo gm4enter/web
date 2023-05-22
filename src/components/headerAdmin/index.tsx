@@ -146,51 +146,61 @@ const HeaderAdmin = (props: IProps) => {
         handleButtonShow(isShowSideBar)
     }
     const handleLogin = () => {
-        signInWithPopup(auth, provider)
-            .then((data: any) => {
-                setTokenFirebase(data.user.accessToken)
-            })
-            .catch((error: any) => {
-                console.log(error)
-            })
+        // signInWithPopup(auth, provider)
+        //     .then((data: any) => {
+        //         setTokenFirebase(data.user.accessToken)
+        //     })
+        //     .catch((error: any) => {
+        //         console.log(error)
+        //     })
     }
-    useEffect(() => {
-        if (tokenFirebase) {
-            const data = {
-                firebaseToken: tokenFirebase,
-            }
-            axiosClient.post(LOGIN, data)
-                .then((res: any) => {
-                    if (res.statusCode === 200) {
-                        console.log('message: ', res.message);
-                        setStatusLogin(true)
-                        localStorage.setItem('accessToken', res.data?.accessToken)
-                    }
-                    else {
-                        console.log('message: ', res.message);
-                    }
-                })
-                .catch((error: any) => {
-                    console.log(error)
-                })
-        }
-    }, [tokenFirebase])
+    // useEffect(() => {
+    //     if (tokenFirebase) {
+    //         const data = {
+    //             firebaseToken: tokenFirebase,
+    //         }
+    //         axiosClient.post(LOGIN, data)
+    //             .then((res: any) => {
+    //                 if (res.statusCode === 200) {
+    //                     console.log('message: ', res.message);
+    //                     setStatusLogin(true)
+    //                     localStorage.setItem('accessToken', res.data?.accessToken)
+    //                 }
+    //                 else {
+    //                     console.log('message: ', res.message);
+    //                 }
+    //             })
+    //             .catch((error: any) => {
+    //                 console.log(error)
+    //             })
+    //     }
+    // }, [tokenFirebase])
+
+    // useEffect(() => {
+    //     if (localStorage.getItem('accessToken')) {
+    //         setTokens()
+    //         axiosClient.get(USER)
+    //             .then((res: { data: UserType }) => {
+    //                 if (res.data) {
+    //                     setUser(res.data)
+    //                 }
+    //             })
+    //             .catch((error: any) => {
+    //                 console.log(error)
+    //             })
+
+    //     }
+    // }, [statusLogin])
 
     useEffect(() => {
-        if (localStorage.getItem('accessToken')) {
-            setTokens()
-            axiosClient.get(USER)
-                .then((res: { data: UserType }) => {
-                    if (res.data) {
-                        setUser(res.data)
-                    }
-                })
-                .catch((error: any) => {
-                    console.log(error)
-                })
-
+        const getProfile = async () => {
+          const res = await axiosClient.get(USER)
+          console.log('profile', res)
+          setUser(res.data)
         }
-    }, [statusLogin])
+        getProfile()
+      }, [])
+
     return (
         <div
             className={classes.container_header}

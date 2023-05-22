@@ -1,12 +1,20 @@
 import { makeStyles } from '@mui/styles'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import closeBoldIcon from '../../../asset/images/cancel.png'
+import axiosClient from '../../../apis/axiosClient'
+import { SYSTEM } from '../../../apis/urlConfig'
 
 const useStyles = makeStyles({
   container: {
     width: '100%',
-    display: 'inherit',
+    display: 'block',
+    flexDirection: 'column',
+
+    '&>div:nth-of-type(1)': {
+      width: '100%',
+    },
     '&>button': {
+      marginRight: 'auto',
       borderRadius: '2px',
       border: '.5px solid #6B7280',
       backgroundColor: '#fff',
@@ -101,22 +109,26 @@ const useStyles = makeStyles({
 
 interface Iprops {
   type?: string
-  onChange?: (images: string[]) => void
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  images?: string
   containerStyle?: React.CSSProperties
 }
 
 export const InputuploadImage = (props: Iprops) => {
-  const {type, onChange, containerStyle, ...restProps} = props
+  const { type, onChange, containerStyle, images, ...restProps } = props
   const classes = useStyles()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [image, setImage] = useState<string | null>(null)
+
+  console.log('imageComponent', image);
 
   const handleImageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     if (event.target.files) {
       setImage(URL.createObjectURL(event.target.files[0]))
+      onChange && onChange(event)
     }
   }
 
@@ -129,6 +141,12 @@ export const InputuploadImage = (props: Iprops) => {
       fileInputRef.current.click()
     }
   }
+
+  useEffect(() => {
+    if (images) {
+      setImage(images)
+    }
+  }, [images])
 
   const checkType = (type: string | undefined) => {
     switch (type) {
@@ -146,6 +164,7 @@ export const InputuploadImage = (props: Iprops) => {
         return classes.img512
     }
   }
+
   return (
     <div className={classes.container} style={containerStyle}>
       {image && (

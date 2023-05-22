@@ -25,7 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function CustomizedSnackbars() {
   const classes = useStyles()
   const snackbar = useAppSelector(SelectSnackBar)
+
   const [open, setOpen] = React.useState(false);
+
   React.useEffect(() => {
     setOpen(snackbar.open)
   }, [snackbar])
@@ -41,7 +43,7 @@ export default function CustomizedSnackbars() {
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Snackbar
         open={open}
-        autoHideDuration={4000}
+        autoHideDuration={2000}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >

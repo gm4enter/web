@@ -182,7 +182,7 @@ const CreateConversationMb = () => {
                     }} />
                 <div>
                     <p>캡처이미지 & 이미지 자료</p>
-                    <InputImage onImageChange={handleImageChange} />
+                    {/* <InputImage onImageChange={handleImageChange} /> */}
                 </div>
             </div>
             <button onClick={handleCreateConversation}>

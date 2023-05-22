@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { MuiColorInput, MuiColorInputColors } from 'mui-color-input'
 import styled from '@emotion/styled'
 import { makeStyles } from '@mui/styles'
@@ -35,18 +35,25 @@ const useStyles = makeStyles({
 
 interface Iprops {
     style?: any
+    onChange?: (color: string, colors?: MuiColorInputColors) => void
+    value?: string
 }
 export const InputColor = (props: Iprops) => {
-    const { style } = props
+    const { style, onChange, value } = props
     const [color, setColor] = React.useState('#000')
     const classes = useStyles()
 
 
     const handleChange = (color: string, colors: MuiColorInputColors) => {
         setColor(color)
+        if (onChange)
+        onChange(color, colors)
     }
+    useEffect(() => {
+        value && setColor(value)
+    }, [value])
 
     return (
-        <MuiColorInput className={classes.muiColorInput_container} format='hex' value={color} fallbackValue="#000" onChange={handleChange} />
+        <MuiColorInput className={classes.muiColorInput_container} style={style} format='hex' value={color} fallbackValue="#000" onChange={handleChange} />
     )
 }

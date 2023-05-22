@@ -1,10 +1,11 @@
-import {makeStyles} from '@mui/styles'
-import React, {useState} from 'react'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { makeStyles } from '@mui/styles'
+import React, { useEffect, useState } from 'react'
 
 const useStyles = makeStyles({
   container: {
     width: '100%',
-    '&>div': {
+    '&>div:nth-of-type(1)': {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -17,14 +18,27 @@ const useStyles = makeStyles({
         padding: 0,
       },
     },
-    '&>input': {
-      width: '656px',
+    '&>div:nth-of-type(2)': {
+      display: 'flex',
+      // width: '656px',
       border: '1px solid #D0D5DD',
       borderRadius: '8px',
-      padding: '10px 16px',
-      fontSize: '16px',
-      fontWeight: 500,
-      lineHeight: '24px',
+      alignItems: 'center',
+      gap: '8px',
+      
+      '&>input': {
+        flex: 1,
+        border: 'none',
+        outline: 'none',
+        borderRadius: '8px',
+        padding: '10px 16px',
+        fontSize: '16px',
+        fontWeight: 500,
+        lineHeight: '24px',
+      },
+      '&>div': {
+        marginRight: '8px',
+      }
     },
     '@media (max-width: 768px)': {
       '&>input': {
@@ -53,6 +67,7 @@ interface Iprops {
   countStyle?: React.CSSProperties
   inputStyle?: React.CSSProperties
   disabled?: boolean
+  isPassword?: boolean
 }
 
 export const Input = (props: Iprops) => {
@@ -70,13 +85,55 @@ export const Input = (props: Iprops) => {
     isCountValueLength,
     maxLength,
     disabled,
+    isPassword,
     ...restProps
   } = props
   const classes = useStyles()
+  const [showPassword, setShowPassword] = useState(false)
+  const [typeInput, setTypeInput] = useState('text')
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword)
+  }
+
+
+  const styleInput = {
+    ...inputStyle,
+  }
+  const checkLength = (maxLengths?: number) => {
+      if(maxLengths){
+        if (value.length > (maxLengths)) {
+          styleInput.border = '1px solid red'
+        }
+      }
+  }
+  checkLength(maxLength)
+
+  
+  const checkType = (inputType: any) => {
+    if (inputType) {
+      setTypeInput(inputType)
+      if (isPassword) {
+        showPassword ? setTypeInput('inputType') : setTypeInput('password')
+      }
+    }
+    else {
+      if (isPassword) {
+        showPassword ? setTypeInput('text') : setTypeInput('password')
+      }
+      else {
+        setTypeInput('text')
+      }
+    }
+  }
+
+  useEffect(() => {
+    checkType(type)
+  }, [type, isPassword, showPassword])
 
   return (
     <div className={classes.container} style={containerStyle}>
-      {(label || isCountValueLength) && (
+      {(label || isCountValueLength) ? (
         <div style={labelContainerStyle}>
           {label && <p style={labelStyle}>{label}</p>}
           {isCountValueLength && (
@@ -85,17 +142,19 @@ export const Input = (props: Iprops) => {
             </p>
           )}
         </div>
-      )}
-      <input
-        type={type || 'text'}
-        value={value}
-        onChange={(text) => onChange(text)}
-        placeholder={placeholder}
-        style={inputStyle}
-        {...value.length > (maxLength || 40) && {border: '1px solid red'}}
-        {...restProps}
-        disabled={disabled}
-      />
+      ) : <div />}
+      <div>
+        <input
+          type={typeInput}
+          value={value}
+          onChange={(text) => onChange(text)}
+          placeholder={placeholder}
+          style={styleInput}
+          {...restProps}
+          disabled={disabled}
+        />
+        {isPassword && <div onClick={handleShowPassword}>{showPassword ? <Visibility style={{ height: '22px', width: '22px' }} /> : <VisibilityOff style={{ height: '22px', width: '22px' }} />}</div>}
+      </div>
     </div>
   )
 }

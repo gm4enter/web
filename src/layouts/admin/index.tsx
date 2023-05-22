@@ -65,7 +65,22 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
       )
     }
   }
-  return checkLayout()
+
+  return (
+    <div className={location.pathname === '/' ? classes.container_layout : classes.container_admin_layout}>
+      {location.pathname === '/' ? <Header handleButtonShow={handleButtonShow} /> : <HeaderAdmin handleButtonShow={handleButtonShow} />}
+      <div style={{ display: 'flex' }}>
+        <div className="sidebar">
+          {!(location.pathname === '/') && <Sidebar isOpen={isShowSidebar} />}
+          <SidebarMobile isOpen={isShowSidebar} dataHeader={location.pathname === '/' ? true : false} />
+        </div>
+        <div style={{ flex: 1 }}>
+          {children}
+        </div>
+      </div>
+      {!!(location.pathname === '/') && <Footer />}
+    </div>
+  )
 }
 
 export default AdminLayout

@@ -1,5 +1,5 @@
 import { width } from '@mui/system';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import iconBack from '../../asset/images/iconBack.png';
 import iconQuestion from '../../asset/images/iconQuestion.png';
@@ -7,6 +7,11 @@ import { ROUTE } from '../../router/routes';
 import { InputuploadImage } from '../../components/base/input/InputuploadImage';
 import { makeStyles } from '@mui/styles';
 import { Input } from '../../components/base/input/Input';
+import axiosClient from '../../apis/axiosClient';
+import { SITE, SYSTEM } from '../../apis/urlConfig';
+import { DataWebType, SiteType } from '../../types/site.type';
+import { snackBarActions } from '../../components/snackbar/snackbarSlice';
+import { useAppDispatch } from '../../app/hooks';
 
 const useStyles = makeStyles({
     container: {
@@ -86,20 +91,129 @@ const useStyles = makeStyles({
 function InfoWebsite() {
     const navigate = useNavigate()
     const classes = useStyles()
-    const {id} = useParams()
-    console.log('id cehcec', id);
-    
-    
-    const [value, setValue] = useState('')
-    const [value2, setValue2] = useState('')
-    const [value3, setValue3] = useState('')
-    const [value4, setValue4] = useState('')
-    const [value5, setValue5] = useState('')
-    const [value6, setValue6] = useState('')
+    const dispatch = useAppDispatch()
+    const { id } = useParams()
 
-    useEffect(() => {
+    const [reload, setReload] = useState(false)
+    const [site, setSite] = useState<SiteType>()
 
-    }, [])
+    const [domainUser, setDomainUser] = useState('')
+    const [domainPassword, setDomainPassword] = useState('')
+    const [domainName, setDomainName] = useState('')
+
+    const [value4, setValue4] = useState<File | null>(null);
+    const [value5, setValue5] = useState<File | null>(null);
+    const [value6, setValue6] = useState<File | null>(null);
+
+    const [favicon, setFavicon] = useState('')
+    const [thumb, setThumb] = useState('')
+    const [notificationIcon, setNotificationIcon] = useState('')
+
+    const handleFavicon = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file: File = e.target.files[0];
+            setValue4(file);
+          }
+    }
+    const handleThumb = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file: File = e.target.files[0];
+            setValue5(file);
+          }
+    }
+    const handleNotificationIcon = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file: File = e.target.files[0];
+            setValue4(file);
+          }
+    }
+
+    const handleSubmit = async () => {
+        try {
+            const formData = new FormData()
+            const formData2 = new FormData()
+            const formData3 = new FormData()
+
+            value4 && formData.append('file', value4)
+
+            value5 && formData2.append('file', value5)
+
+            value6 && formData3.append('file', value6)
+
+            const [resFavicon, resThumb, resNotiIcon] = await Promise.all([
+                value4 && axiosClient.post(`${SYSTEM}/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }),
+                value5 && axiosClient.post(`${SYSTEM}/upload`, formData2, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }),
+                value6 && axiosClient.post(`${SYSTEM}/upload`, formData3, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+            ])
+
+            resFavicon && setFavicon(resFavicon.data.filename)
+            resThumb && setThumb(resThumb.data.filename)
+            resNotiIcon && setNotificationIcon(resNotiIcon.data.filename)
+
+            const dataPut: DataWebType = {
+                webInfo: {
+                    domainUser: domainUser,
+                    domainName: domainName,
+                    domainPassword: domainPassword,
+                    favicon: favicon,
+                    thumbnail: thumb,
+                    notificationIcon: notificationIcon,
+                },
+            }
+            resFavicon && (dataPut.webInfo.favicon = resFavicon.data.filename)
+            resThumb && (dataPut.webInfo.thumbnail = resThumb.data.filename)
+            resNotiIcon && (dataPut.webInfo.notificationIcon = resNotiIcon.data.filename)
+
+            await axiosClient.put(`${SITE}/update/${id}`, dataPut)
+            dispatch(snackBarActions.setStateSnackBar({
+                content: '성공',
+                type: 'success',
+            }))
+            setReload(!reload)
+            navigate(ROUTE.SITELISTANDEXPIREDLIST)
+
+        } catch (error) {
+            console.log('error:', error)
+            dispatch(snackBarActions.setStateSnackBar({
+                content: '실패',
+                type: 'error',
+            }))
+        }
+    }
+
+    useLayoutEffect(() => {
+        if (id) {
+            axiosClient.get(`${SITE}/get/${id}`)
+
+                .then((res: { data: SiteType }) => {
+                    setSite(res.data)
+                    if (res.data.webInfo) {
+                        setDomainUser(res.data.webInfo.domainUser)
+                        setDomainPassword(res.data.webInfo.domainPassword)
+                        setDomainName(res.data.webInfo.domainName)
+
+                        setFavicon(res.data.webInfo.favicon)
+                        setThumb(res.data.webInfo.thumbnail)
+                        setNotificationIcon(res.data.webInfo.notificationIcon)
+                    }
+                })
+                .catch((error: any) => {
+                    console.log(error)
+                })
+        }
+    }, [id, reload])
     return (
         <div className={classes.container} >
             <div>
@@ -112,24 +226,25 @@ function InfoWebsite() {
                 <Input
                     label='아이디'
                     placeholder='입력해주세요.'
-                    value={value}
-                    onChange={(e) => { setValue(e.target.value) }}
+                    value={domainUser}
+                    onChange={(e) => { setDomainUser(e.target.value) }}
                     containerStyle={{ width: 'calc(50% + 32px)', marginTop: '16px' }}
                     inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
                 />
                 <Input
                     label='비밀번호'
                     placeholder='입력해주세요.'
-                    value={value2}
-                    onChange={(e) => { setValue2(e.target.value) }}
+                    value={domainPassword}
+                    onChange={(e) => { setDomainPassword(e.target.value) }}
                     containerStyle={{ width: 'calc(50% + 32px)', marginTop: '16px' }}
                     inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    isPassword
                 />
                 <Input
                     label='구입한 도메인'
                     placeholder='URL입력해주세요.'
-                    value={value3}
-                    onChange={(e) => { setValue3(e.target.value) }}
+                    value={domainName}
+                    onChange={(e) => { setDomainName(e.target.value) }}
                     containerStyle={{ width: 'calc(50% + 32px)', marginTop: '16px' }}
                     inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
                 />
@@ -169,7 +284,7 @@ function InfoWebsite() {
                             <img src={iconQuestion} alt='' />
                         </div>
                         <p>고해상도 아이콘: 512x512 / 32비트 PNG(알파 있음)</p>
-                        <InputuploadImage type='550' containerStyle={{ marginTop: '16px' }} />
+                        <InputuploadImage type='550' containerStyle={{ marginTop: '16px' }} onChange={handleFavicon} images={favicon} />
                     </div>
 
                     <div>
@@ -178,7 +293,7 @@ function InfoWebsite() {
                             <img src={iconQuestion} alt='' />
                         </div>
                         <p>가로x세로 1440x2960 JPG또는 24비트 PNG(알파 없음)</p>
-                        <InputuploadImage type='1440' containerStyle={{ marginTop: '16px' }} />
+                        <InputuploadImage type='1440' containerStyle={{ marginTop: '16px' }} onChange={handleThumb} images={thumb} />
                     </div>
                 </div>
 
@@ -194,12 +309,12 @@ function InfoWebsite() {
                         <a href="#">자세히 알아보기</a>
                     </p>
 
-                    <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} />
+                    <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} onChange={handleNotificationIcon} images={notificationIcon} />
 
                     <p>*알림 아이콘은 앱에서 알림이 왔을때 상단에 보여지는 아이콘입니다.</p>
                 </div>
 
-                <button onClick={() => { navigate(ROUTE.SITELISTANDEXPIREDLIST) }}>
+                <button onClick={handleSubmit}>
                     <p>제출하기</p>
                 </button>
             </div>
