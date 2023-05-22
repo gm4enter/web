@@ -442,8 +442,8 @@ function RegisterAndModifyAppleStore() {
             setSelectedValue(res.data.iosInfo.textColor)
             setColor(res.data.iosInfo.backgroundColor)
 
-            setIcon(res.data.androidInfo.icon)
-            setHomeScreen(res.data.androidInfo.homeScreen)
+            setIcon(res.data.iosInfo.icon)
+            setHomeScreen(res.data.iosInfo.homeScreen)
 
           }
         })

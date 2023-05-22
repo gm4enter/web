@@ -39,7 +39,7 @@ export interface SiteType {
   _id: string;
   name: string;
   adminEmail: string;
-  androidInfo: {
+  androidInfo?: {
     user: string;
     password: string;
     appName: string;
@@ -47,7 +47,7 @@ export interface SiteType {
     homeScreen: string;
     notificationIcon: string;
   };
-  iosInfo: {
+  iosInfo?: {
     user: string;
     password: string;
     appName: string;
@@ -59,7 +59,7 @@ export interface SiteType {
     textColor: string;
     backgroundColor: string;
   };
-  webInfo: {
+  webInfo?: {
     domainUser: string;
     domainName: string;
     domainPassword: string;
