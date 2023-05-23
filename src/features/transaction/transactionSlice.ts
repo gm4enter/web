@@ -27,14 +27,12 @@ const transactionSlice = createSlice({
       }>
     ) => {
       if (action.payload.page) {
-        console.log(999, action.payload.listData, state.listData)
         state.listData = mereListById(
           state.listData,
           action.payload.listData
         ) as any
       }
       state.totalData = action.payload.totalData
-      console.log(6766, state.listData)
     },
   },
 })

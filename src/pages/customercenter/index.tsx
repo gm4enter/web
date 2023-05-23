@@ -20,12 +20,15 @@ import iconPlusBlue from '../../asset/images/iconPlusBlue.png'
 import { Input } from '../../components/base/input/Input'
 import { InputImage } from '../../components/base/input/InputImage'
 import { loadingActions } from '../../components/loading/loadingSlice'
-import { conversationActions, selectListData } from '../../features/conversation/conversationSlice'
+import { conversationActions, selectListData, selectTotalData } from '../../features/conversation/conversationSlice'
 import { ROUTE } from '../../router/routes'
 import { ConversationDetailType } from '../../types/conversationDetail.type'
 import { ConversationDetailMessageType } from '../../types/conversationDetailMessage.type'
 import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import moment from 'moment'
+import { ConversationType } from '../../types/conversation.type'
+
 
 const useStyles = makeStyles({
   container: {
@@ -71,56 +74,56 @@ const useStyles = makeStyles({
           },
         },
       },
-      '&>div:nth-of-type(2)': {
-        marginLeft: '16px',
-        flex: 1,
-        overflow: 'auto',
-        '&>div': {
-          '&>img': {
-            height: '110px',
-            width: '92px',
-            boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.12)',
-            borderRadius: '8px',
-          },
-          '&>div': {
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            '&>p': {
-              padding: 0,
-              margin: 0,
-              fontSize: '16px',
-              fontWeight: 400,
-              maxWidth: '100%',
-              display: '-webkit-box',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 2,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            },
-            '&>div': {
-              display: 'flex',
-              gap: '8px',
-              alignItems: 'center',
-              '&>p:nth-of-type(1)': {
-                padding: 0,
-                margin: 0,
-                fontSize: '14px',
-                fontWeight: 400,
-                color: '#70777F',
-              },
-              '&>p:nth-of-type(2)': {
-                padding: '4px 8px',
-                margin: 0,
-                fontSize: '12px',
-                fontWeight: 500,
-                backgroundColor: '#FFE7E4',
-                borderRadius: '10px',
-              },
-            },
-          },
-        },
-      },
+      // '&>div:nth-of-type(2)': {
+      //   marginLeft: '16px',
+      //   flex: 1,
+      //   overflow: 'auto',
+      //   '&>div': {
+      //     '&>img': {
+      //       height: '110px',
+      //       width: '92px',
+      //       boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.12)',
+      //       borderRadius: '8px',
+      //     },
+      //     '&>div': {
+      //       display: 'flex',
+      //       flexDirection: 'column',
+      //       justifyContent: 'space-between',
+      //       '&>p': {
+      //         padding: 0,
+      //         margin: 0,
+      //         fontSize: '16px',
+      //         fontWeight: 400,
+      //         maxWidth: '100%',
+      //         display: '-webkit-box',
+      //         WebkitBoxOrient: 'vertical',
+      //         WebkitLineClamp: 2,
+      //         overflow: 'hidden',
+      //         textOverflow: 'ellipsis',
+      //       },
+      //       '&>div': {
+      //         display: 'flex',
+      //         gap: '8px',
+      //         alignItems: 'center',
+      //         '&>p:nth-of-type(1)': {
+      //           padding: 0,
+      //           margin: 0,
+      //           fontSize: '14px',
+      //           fontWeight: 400,
+      //           color: '#70777F',
+      //         },
+      //         '&>p:nth-of-type(2)': {
+      //           padding: '4px 8px',
+      //           margin: 0,
+      //           fontSize: '12px',
+      //           fontWeight: 500,
+      //           backgroundColor: '#FFE7E4',
+      //           borderRadius: '10px',
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
       '@media (max-width: 768px)': {
         width: '100%',
         marginRight: '0',
@@ -354,6 +357,62 @@ const useStyles = makeStyles({
       width: '20px',
     },
   },
+
+  conversation_area: {
+    marginLeft: '16px',
+    flex: 1,
+    overflow: 'auto',
+    '&>div:nth-of-type(1)': {
+      '&>div:nth-of-type(1)': {
+        '&>div': {
+          '&>img': {
+            height: '110px',
+            width: '92px',
+            boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.12)',
+            borderRadius: '8px',
+          },
+          '&>div': {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            '&>p': {
+              padding: 0,
+              margin: 0,
+              fontSize: '16px',
+              fontWeight: 400,
+              maxWidth: '100%',
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            },
+            '&>div': {
+              display: 'flex',
+              gap: '8px',
+              alignItems: 'center',
+              '&>p:nth-of-type(1)': {
+                padding: 0,
+                margin: 0,
+                fontSize: '14px',
+                fontWeight: 400,
+                color: '#70777F',
+              },
+              '&>p:nth-of-type(2)': {
+                padding: '4px 8px',
+                margin: 0,
+                fontSize: '12px',
+                fontWeight: 500,
+                backgroundColor: '#FFE7E4',
+                borderRadius: '10px',
+              },
+            },
+          },
+        },
+      },
+    },
+
+  },
   total_message: {
     fontWeight: 700,
     color: '#262626',
@@ -542,6 +601,7 @@ const CustomerCenter = () => {
 
   const [listImages, setListImages] = useState<string[]>([]);
 
+  const totalData = useAppSelector(selectTotalData)
   const listConversation = useAppSelector(selectListData)
 
   const [conversationActiveId, setConversationActiveId] = useState('')
@@ -638,7 +698,7 @@ const CustomerCenter = () => {
         .then((res: any) => {
           if (res.statusCode === 201) {
             console.log('create conversation success');
-            dispatch(conversationActions.getList({ params: undefined }))
+            dispatch(conversationActions.getList({ params: { page } }))
             dispatch(snackBarActions.setStateSnackBar({
               content: '성공',
               type: 'success',
@@ -717,7 +777,7 @@ const CustomerCenter = () => {
           if (res.statusCode === 200) {
             console.log('Edit conversation success');
             handleClose()
-            dispatch(conversationActions.getList({ params: undefined }))
+            dispatch(conversationActions.getList({ params: { page } }))
             dispatch(snackBarActions.setStateSnackBar({
               content: '성공',
               type: 'success',
@@ -762,18 +822,21 @@ const CustomerCenter = () => {
     }
   }
 
-
+  const handleNextPage = () => {
+    setPage(page + 1)
+  }
+  //get list conversation
   useEffect(() => {
     dispatch(conversationActions.getList({ params: { page } }))
   }, [dispatch, page])
 
-
+  //get conversation active
   useEffect(() => {
     listConversation.length > 0 &&
       setConversationActiveId(listConversation[0]._id)
   }, [listConversation])
 
-
+  //get conversation detail
   useEffect(() => {
     const getDetailConversation = async () => {
       try {
@@ -832,32 +895,39 @@ const CustomerCenter = () => {
             <p>문의작성</p>
           </button>
         </div>
-        <div
-        >
-          {
-            listConversation.length > 0 ? listConversation.map((item, index) => (
-              <div
-                className={conversationActiveId === item._id ? classes.active : classes.inActive}
-                onClick={() => handleListItemClick(item)}
-              >
-                <img src={item.thumbnail[0]} alt='' />
-                <div>
-                  <p>{item.title}</p>
+        <div id='conversationArea' className={classes.conversation_area}>
+          <InfiniteScroll
+            dataLength={totalData || 0}
+            next={() => { setPage(page + 1) }}
+            hasMore={true}
+            loader={<></>}
+            scrollableTarget='conversationArea'
+          >
+            {
+              listConversation.length > 0 ? listConversation.map((item, index) => (
+                <div
+                  className={conversationActiveId === item._id ? classes.active : classes.inActive}
+                  onClick={() => handleListItemClick(item)}
+                >
+                  <img src={item.thumbnail[0]} alt='' />
                   <div>
-                    <p>연락처: </p>
-                    <div >
-                      <p>{item.mobileNumber}</p>
+                    <p>{item.title}</p>
+                    <div>
+                      <p>연락처: </p>
+                      <div >
+                        <p>{item.mobileNumber}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
-              :
-              <div className={classes.noneConversasion}>
-                <img src={noneConversation} alt='' />
-                <p>내역이 없습니다</p>
-              </div>
-          }
+              ))
+                :
+                <div className={classes.noneConversasion}>
+                  <img src={noneConversation} alt='' />
+                  <p>내역이 없습니다</p>
+                </div>
+            }
+          </InfiniteScroll>
         </div>
       </div>
 

@@ -6,16 +6,32 @@ import { SiteType } from "../../types/site.type";
 import { siteActions } from "./siteSlice";
 
 function* getList(action: PayloadAction<{ params?: any }>) {
+  // try {
+  //   // yield put(loadingActions.openLoading());
+  //   const data: { data: SiteType[] } = yield call(
+  //     siteApi.getList,
+  //     action.payload.params
+  //   );
+  //   yield put(siteActions.getListSuccess({ listData: data.data }));
+  //   // yield put(loadingActions.loadingSuccess());
+  // } catch (error) {
+  //   console.log(error);
+  // }
+
   try {
-    // yield put(loadingActions.openLoading());
-    const data: { data: SiteType[] } = yield call(
+    const res: {data: SiteType[]; totalData: number} = yield call(
       siteApi.getList,
       action.payload.params
-    );
-    yield put(siteActions.getListSuccess({ listData: data.data }));
-    // yield put(loadingActions.loadingSuccess());
+    )
+    yield put(
+      siteActions.getListSuccess({
+        listData: res.data,
+        page: action.payload.params.page,
+        totalData: res.totalData,
+      })
+    )
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 

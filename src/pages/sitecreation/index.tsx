@@ -263,7 +263,7 @@ const SiteCreation = () => {
                 .then((res: any) => {
                     if (res.statusCode === 201) {
                         //dispatch action get list website
-                        dispatch(siteActions.getList({ params: undefined }))
+                        // dispatch(siteActions.getList({ params: undefined }))
                         console.log('create website success!', res);
                         dispatch(snackBarActions.setStateSnackBar({
                             content: '성공',

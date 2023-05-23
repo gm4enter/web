@@ -16,9 +16,10 @@ import { DropDownInput } from '../../components/base/input/DropdownInput'
 import { MenuItem, Select } from '@mui/material'
 import SiteListMobile from '../siteListMobile'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { selectListData, siteActions } from '../../features/site/siteSlice'
+import { selectListData, selectTotalData, siteActions } from '../../features/site/siteSlice'
 import { SiteType } from '../../types/site.type'
 import { formatDate } from '../customercenter'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 const useStyles = makeStyles({
   container: {
@@ -116,6 +117,11 @@ const SiteListAndExpiredList = () => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const listDataWebsite = useAppSelector(selectListData)
+  const totalData = useAppSelector(selectTotalData)
+
+  const [page, setPage] = useState<number>(1)
+
+  const perPage = 13
 
   const [rows, setRows] = useState<any>([{
     id: '',
@@ -237,8 +243,8 @@ const SiteListAndExpiredList = () => {
   ]
 
   useEffect(() => {
-    dispatch(siteActions.getList({ params: undefined }))
-  }, [dispatch])
+    dispatch(siteActions.getList({ params: { page, perPage } }))
+  }, [dispatch, page])
 
   useEffect(() => {
     if (!listDataWebsite) return;
@@ -373,29 +379,36 @@ const SiteListAndExpiredList = () => {
         </div>
         {rows.length > 0 ?
           <div>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              // columnStyles={columnStyles}
-              checkboxSelection
-              disableRowSelectionOnClick
-              hideFooter
-              sx={{
-                '& .MuiDataGrid-main': {
-                  display: 'flex',
-                  '& .MuiDataGrid-columnHeaders': {
-                    borderColor: '#D0D5DD',
-                    backgroundColor: '#F1F1F1',
-                    color: '#000',
-                    fontSize: '16px',
-                    fontWeight: 700,
+            <InfiniteScroll
+              dataLength={totalData || 0}
+              next={() => setPage(page + 1)}
+              hasMore={true}
+              loader={<></>}
+            >
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                // columnStyles={columnStyles}
+                checkboxSelection
+                disableRowSelectionOnClick
+                hideFooter
+                sx={{
+                  '& .MuiDataGrid-main': {
+                    display: 'flex',
+                    '& .MuiDataGrid-columnHeaders': {
+                      borderColor: '#D0D5DD',
+                      backgroundColor: '#F1F1F1',
+                      color: '#000',
+                      fontSize: '16px',
+                      fontWeight: 700,
+                    },
+                    '&>div: nth-child(2)': {
+                      overflow: 'initial !important',
+                    },
                   },
-                  '&>div: nth-child(2)': {
-                    overflow: 'initial !important',
-                  },
-                },
-              }}
-            />
+                }}
+              />
+            </InfiniteScroll>
           </div>
           : <div className={classes.no_data}>
             <img src={noDataIcon} alt='' />

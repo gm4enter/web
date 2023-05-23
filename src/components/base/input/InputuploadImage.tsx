@@ -121,8 +121,6 @@ export const InputuploadImage = (props: Iprops) => {
 
   const [image, setImage] = useState<string | null>(null)
 
-  console.log('imageComponent', image);
-
   const handleImageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {

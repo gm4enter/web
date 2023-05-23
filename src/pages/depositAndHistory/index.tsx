@@ -3,7 +3,6 @@ import { makeStyles } from '@mui/styles'
 import { useState, useEffect } from 'react'
 import infoCircle from '../../asset/images/iconInfoCircle.png'
 import timeHistory from '../../asset/images/TimeHistory.png'
-import noDataIcon from '../../asset/images/ListNone.png'
 import { Input } from '../../components/base/input/Input'
 import { HistoryTable } from './components/HistoryTable'
 import { ROUTE } from '../../router/routes'
@@ -382,17 +381,7 @@ const DespositAndHistory = () => {
 
       <div>
         <p>예치금 내역</p>
-        {/* {listTransaction.length > 0
-          ?
-          <HistoryTable />
-          :
-          <div className={classes.no_data}>
-            <img src={noDataIcon} alt='' />
-            <p>내역이 없습니다</p>
-          </div>
-        } */}
         <HistoryTable />
-
       </div>
     </div>
   )

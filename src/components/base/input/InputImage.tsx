@@ -55,10 +55,6 @@ export const InputImage = (props: Iprops) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [images, setImages] = useState<string[]>([]);
 
-    console.log('images', images);
-    console.log('listImages', listImages);
-
-
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         if (event.target.files) {
             const newImages: string[] = [];
