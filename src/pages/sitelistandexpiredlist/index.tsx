@@ -380,7 +380,7 @@ const SiteListAndExpiredList = () => {
         {rows.length > 0 ?
           <div>
             <InfiniteScroll
-              dataLength={totalData || 0}
+              dataLength={listDataWebsite.length || 0}
               next={() => setPage(page + 1)}
               hasMore={true}
               loader={<></>}
