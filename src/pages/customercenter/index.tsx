@@ -897,7 +897,7 @@ const CustomerCenter = () => {
         </div>
         <div id='conversationArea' className={classes.conversation_area}>
           <InfiniteScroll
-            dataLength={totalData || 0}
+            dataLength={listConversation.length || 0}
             next={() => { setPage(page + 1) }}
             hasMore={true}
             loader={<></>}

@@ -112,7 +112,7 @@ export const HistoryTable = () => {
     <div>
       {listData.length > 0 ?
         <InfiniteScroll
-          dataLength={totalData || 0}
+          dataLength={listData.length || 0}
           next={() => setPage(page + 1)}
           hasMore={true}
           loader={<></>}
