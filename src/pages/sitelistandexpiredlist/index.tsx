@@ -1,25 +1,24 @@
+import { MenuItem, Select } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
 import { SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
+import { makeStyles } from '@mui/styles'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import AppleIcon from '../../asset/images/AppleLogo.png'
 import CHPlay from '../../asset/images/CHPlayIcon.png'
-import plusIcon from '../../asset/images/plusIcon.png'
 import noDataIcon from '../../asset/images/ListNone.png'
-import searchIcon from '../../asset/images/searchIcon.png'
 import MenuDots from '../../asset/images/MenuDots.png'
-import { ROUTE } from '../../router/routes'
-import { makeStyles } from '@mui/styles'
-import { DropDownInput } from '../../components/base/input/DropdownInput'
-import { MenuItem, Select } from '@mui/material'
-import SiteListMobile from '../siteListMobile'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import plusIcon from '../../asset/images/plusIcon.png'
+import searchIcon from '../../asset/images/searchIcon.png'
 import { selectListData, selectTotalData, siteActions } from '../../features/site/siteSlice'
+import { ROUTE } from '../../router/routes'
 import { SiteType } from '../../types/site.type'
 import { formatDate } from '../customercenter'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import SiteListMobile from '../siteListMobile'
 
 const useStyles = makeStyles({
   container: {
@@ -121,7 +120,7 @@ const SiteListAndExpiredList = () => {
 
   const [page, setPage] = useState<number>(1)
 
-  const perPage = 13
+  const perPage = 15
 
   const [rows, setRows] = useState<any>([{
     id: '',
@@ -253,7 +252,7 @@ const SiteListAndExpiredList = () => {
       listDataWebsite?.forEach((item: SiteType, index) => {
         const transformedData = {
           id: item._id,
-          address: 'VN추가 \n도메인 미정',
+          address: `${item.name || '사이트 이름 미정'} \n${item.webInfo?.domainName || '도메인 미정'}`,
           endDate: `${Math.floor(item.remainingDays)}일 남음`,
           startDate: formatDate(item.createdAt || ''),
           director: item.adminEmail,
@@ -404,6 +403,12 @@ const SiteListAndExpiredList = () => {
                     },
                     '&>div: nth-child(2)': {
                       overflow: 'initial !important',
+                    },
+                    '& .MuiDataGrid-cell:focus': {
+                      outline: 'none', // Remove the outline on focus
+                    },
+                    '& .MuiDataGrid-withBorderColor': {
+                      outline: 'none',
                     },
                   },
                 }}

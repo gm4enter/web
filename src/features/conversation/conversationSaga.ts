@@ -1,9 +1,8 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { call, put, takeEvery } from "redux-saga/effects";
 import { conversationApi } from "../../apis/conversationApi";
-import { conversationActions } from "./conversationSlice";
 import { ConversationType } from "../../types/conversation.type";
-import { loadingActions } from "../../components/loading/loadingSlice";
+import { conversationActions } from "./conversationSlice";
 
 function* getList(action: PayloadAction<{ params?: any }>) {
   // try {
@@ -27,6 +26,7 @@ function* getList(action: PayloadAction<{ params?: any }>) {
       conversationActions.getListSuccess({
         listData: res.data,
         page: action.payload.params.page,
+        _sort: action.payload.params._sort,
         totalData: res.totalData,
       })
     );

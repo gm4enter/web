@@ -1,17 +1,17 @@
-import { width } from '@mui/system';
-import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
-import iconBack from '../../asset/images/iconBack.png';
-import iconQuestion from '../../asset/images/iconQuestion.png';
-import { ROUTE } from '../../router/routes';
-import { InputuploadImage } from '../../components/base/input/InputuploadImage';
 import { makeStyles } from '@mui/styles';
-import { Input } from '../../components/base/input/Input';
+import React, { useLayoutEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import axiosClient from '../../apis/axiosClient';
 import { SITE, SYSTEM } from '../../apis/urlConfig';
-import { DataWebType, SiteType } from '../../types/site.type';
-import { snackBarActions } from '../../components/snackbar/snackbarSlice';
 import { useAppDispatch } from '../../app/hooks';
+import iconBack from '../../asset/images/iconBack.png';
+import iconQuestion from '../../asset/images/iconQuestion.png';
+import { Input } from '../../components/base/input/Input';
+import { InputuploadImage } from '../../components/base/input/InputuploadImage';
+import { snackBarActions } from '../../components/snackbar/snackbarSlice';
+import { siteActions } from '../../features/site/siteSlice';
+import { ROUTE } from '../../router/routes';
+import { DataWebType, SiteType } from '../../types/site.type';
 
 const useStyles = makeStyles({
     container: {
@@ -44,7 +44,7 @@ const useStyles = makeStyles({
             borderRadius: '12px',
             border: '1px solid #D0D5DD',
             '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, },
-            '&>div:nth-of-type(1)': {
+            '&>div:nth-of-type(2)': {
                 display: 'flex', gap: '16px', marginTop: '20px',
                 '&>div': {
                     width: '50%',
@@ -57,7 +57,7 @@ const useStyles = makeStyles({
 
                 },
             },
-            '&>div:nth-of-type(2)': {
+            '&>div:nth-of-type(3)': {
                 marginTop: '24px',
                 '&>div': {
                     display: 'flex', gap: '4px', alignItems: 'center',
@@ -97,9 +97,11 @@ function InfoWebsite() {
     const [reload, setReload] = useState(false)
     const [site, setSite] = useState<SiteType>()
 
+    const [domainProvider, setDomainProvider] = useState('')
     const [domainUser, setDomainUser] = useState('')
     const [domainPassword, setDomainPassword] = useState('')
     const [domainName, setDomainName] = useState('')
+    const [nameSite, setNameSite] = useState('')
 
     const [value4, setValue4] = useState<File | null>(null);
     const [value5, setValue5] = useState<File | null>(null);
@@ -113,19 +115,19 @@ function InfoWebsite() {
         if (e.target.files && e.target.files.length > 0) {
             const file: File = e.target.files[0];
             setValue4(file);
-          }
+        }
     }
     const handleThumb = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file: File = e.target.files[0];
             setValue5(file);
-          }
+        }
     }
     const handleNotificationIcon = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file: File = e.target.files[0];
             setValue4(file);
-          }
+        }
     }
 
     const handleSubmit = async () => {
@@ -162,8 +164,10 @@ function InfoWebsite() {
             resThumb && setThumb(resThumb.data.filename)
             resNotiIcon && setNotificationIcon(resNotiIcon.data.filename)
 
-            const dataPut: DataWebType = {
+            const dataPut: { name: string, webInfo: DataWebType } = {
+                name: nameSite,
                 webInfo: {
+                    domainProvider: domainProvider,
                     domainUser: domainUser,
                     domainName: domainName,
                     domainPassword: domainPassword,
@@ -176,13 +180,33 @@ function InfoWebsite() {
             resThumb && (dataPut.webInfo.thumbnail = resThumb.data.filename)
             resNotiIcon && (dataPut.webInfo.notificationIcon = resNotiIcon.data.filename)
 
-            await axiosClient.put(`${SITE}/update/${id}`, dataPut)
-            dispatch(snackBarActions.setStateSnackBar({
-                content: '성공',
-                type: 'success',
-            }))
-            setReload(!reload)
-            navigate(ROUTE.SITELISTANDEXPIREDLIST)
+            axiosClient.put(`${SITE}/update/${id}`, dataPut)
+                .then((res) => {
+                    console.log('Site update succeed:', res)
+                    axiosClient.get(`${SITE}/get/${id}`)
+                        .then((resp: { data: SiteType }) => {
+                            console.log('res.data', resp.data);
+                            dispatch(siteActions.updateSite({ updatedData: resp.data }))
+                            // dispatch(siteActions.getList({ params: { page: 1 } }))
+                        })
+                        .catch((error: any) => {
+                            console.log(error)
+                        })
+
+                    setReload(!reload)
+                    dispatch(snackBarActions.setStateSnackBar({
+                        content: '성공',
+                        type: 'success',
+                    }))
+                    navigate(ROUTE.SITELISTANDEXPIREDLIST)
+                })
+                .catch((error: any) => {
+                    console.log(error)
+                    dispatch(snackBarActions.setStateSnackBar({
+                        content: '실패',
+                        type: 'error',
+                    }))
+                })
 
         } catch (error) {
             console.log('error:', error)
@@ -200,9 +224,11 @@ function InfoWebsite() {
                 .then((res: { data: SiteType }) => {
                     setSite(res.data)
                     if (res.data.webInfo) {
+                        setDomainProvider(res.data.webInfo.domainProvider)
                         setDomainUser(res.data.webInfo.domainUser)
                         setDomainPassword(res.data.webInfo.domainPassword)
                         setDomainName(res.data.webInfo.domainName)
+                        setNameSite(res.data.name)
 
                         setFavicon(res.data.webInfo.favicon)
                         setThumb(res.data.webInfo.thumbnail)
@@ -222,7 +248,16 @@ function InfoWebsite() {
             </div>
             <div>
                 <p>도메인 구입한 사이트</p>
-                <p>도메인 구매처링크</p>
+                {/* <p>도메인 구매처링크</p> */}
+                <Input
+                    label='도메인 회사'
+                    placeholder='URL입력해주세요.'
+                    value={domainProvider}
+                    onChange={(e) => { setDomainProvider(e.target.value) }}
+                    containerStyle={{ width: 'calc(50% + 32px)', marginTop: '16px' }}
+                    inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    labelStyle={{ fontSize: '14px', fontWeight: 500, lineHeight: '20px', color: '#272B30' }}
+                />
                 <Input
                     label='아이디'
                     placeholder='입력해주세요.'
@@ -230,6 +265,7 @@ function InfoWebsite() {
                     onChange={(e) => { setDomainUser(e.target.value) }}
                     containerStyle={{ width: 'calc(50% + 32px)', marginTop: '16px' }}
                     inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    labelStyle={{ fontSize: '14px', fontWeight: 500, lineHeight: '20px', color: '#272B30' }}
                 />
                 <Input
                     label='비밀번호'
@@ -238,6 +274,7 @@ function InfoWebsite() {
                     onChange={(e) => { setDomainPassword(e.target.value) }}
                     containerStyle={{ width: 'calc(50% + 32px)', marginTop: '16px' }}
                     inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    labelStyle={{ fontSize: '14px', fontWeight: 500, lineHeight: '20px', color: '#272B30' }}
                     isPassword
                 />
                 <Input
@@ -247,7 +284,9 @@ function InfoWebsite() {
                     onChange={(e) => { setDomainName(e.target.value) }}
                     containerStyle={{ width: 'calc(50% + 32px)', marginTop: '16px' }}
                     inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    labelStyle={{ fontSize: '14px', fontWeight: 500, lineHeight: '20px', color: '#272B30' }}
                 />
+
             </div>
             {/* <div>
                 <p>아마존 서버 계정정보</p>
@@ -276,6 +315,15 @@ function InfoWebsite() {
                 />
             </div> */}
             <div>
+                <Input
+                    label='사이트 이름'
+                    placeholder='입력해주세요.'
+                    value={nameSite}
+                    onChange={(e) => { setNameSite(e.target.value) }}
+                    containerStyle={{ width: 'calc(50% + 32px)', marginBottom: '24px', }}
+                    inputStyle={{ fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}
+                    labelStyle={{ fontSize: '14px', fontWeight: 500, lineHeight: '20px', color: '#272B30' }}
+                />
                 <p>그래픽 저작물</p>
                 <div>
                     <div>

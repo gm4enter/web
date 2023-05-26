@@ -1,8 +1,9 @@
-import { Modal, Select } from '@mui/material'
+import { Modal } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { makeStyles } from '@mui/styles'
 import { useEffect, useRef, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate } from 'react-router'
 import { io } from "socket.io-client"
 import axiosClient from '../../apis/axiosClient'
@@ -10,24 +11,21 @@ import { conversationApi } from '../../apis/conversationApi'
 import { CONVERSATION, MESSAGE, SYSTEM } from '../../apis/urlConfig'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import SendIcon from '../../asset/icons/send'
-import GalleryAdd from '../../asset/images/GalleryAdd.png'
 import MenuDots from '../../asset/images/MenuDots.png'
-import arrowIcon from '../../asset/images/arrow.png'
-import noneConversation from '../../asset/images/MessagesNone.png'
 import noneMessage from '../../asset/images/MessagesDetailNone.png'
+import noneConversation from '../../asset/images/MessagesNone.png'
+import arrowIcon from '../../asset/images/arrow.png'
 import closeIcon from '../../asset/images/cancel.png'
 import iconPlusBlue from '../../asset/images/iconPlusBlue.png'
 import { Input } from '../../components/base/input/Input'
 import { InputImage } from '../../components/base/input/InputImage'
 import { loadingActions } from '../../components/loading/loadingSlice'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 import { conversationActions, selectListData, selectTotalData } from '../../features/conversation/conversationSlice'
 import { ROUTE } from '../../router/routes'
 import { ConversationDetailType } from '../../types/conversationDetail.type'
 import { ConversationDetailMessageType } from '../../types/conversationDetailMessage.type'
-import { snackBarActions } from '../../components/snackbar/snackbarSlice'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import moment from 'moment'
-import { ConversationType } from '../../types/conversation.type'
+import { TYPE_SORT } from '../../types/enum'
 
 
 const useStyles = makeStyles({
@@ -698,7 +696,20 @@ const CustomerCenter = () => {
         .then((res: any) => {
           if (res.statusCode === 201) {
             console.log('create conversation success');
-            dispatch(conversationActions.getList({ params: { page } }))
+            axiosClient.get(
+              `${CONVERSATION}/get/${res.data._id}`
+            )
+              .then(
+                (res: any) => {
+                  if (res.statusCode === 200) {
+                    dispatch(conversationActions.createSite({ newData: res.data }))
+                  }
+                }
+              )
+              .catch((error: any) => {
+                console.log(error)
+              })
+
             dispatch(snackBarActions.setStateSnackBar({
               content: '성공',
               type: 'success',
@@ -777,7 +788,20 @@ const CustomerCenter = () => {
           if (res.statusCode === 200) {
             console.log('Edit conversation success');
             handleClose()
-            dispatch(conversationActions.getList({ params: { page } }))
+            axiosClient.get(
+              `${CONVERSATION}/get/${conversationActiveId}`
+            )
+              .then(
+                (res: any) => {
+                  if (res.statusCode === 200) {
+                    dispatch(conversationActions.updateSite({ updatedData: res.data }))
+                  }
+                }
+              )
+              .catch((error: any) => {
+                console.log(error)
+              })
+
             dispatch(snackBarActions.setStateSnackBar({
               content: '성공',
               type: 'success',
@@ -827,7 +851,7 @@ const CustomerCenter = () => {
   }
   //get list conversation
   useEffect(() => {
-    dispatch(conversationActions.getList({ params: { page } }))
+    dispatch(conversationActions.getList({ params: { page, _sort: TYPE_SORT.CREATED_AT_DESC } }))
   }, [dispatch, page])
 
   //get conversation active
