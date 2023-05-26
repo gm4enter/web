@@ -604,6 +604,7 @@ const CustomerCenter = () => {
 
   const [conversationActiveId, setConversationActiveId] = useState('')
 
+
   const [conversationDetail, setConversationDetail] = useState<ConversationDetailType>()
 
   const [conversationDetailMessage, setConversationDetailMessage] = useState<ConversationDetailMessageType[]>([])
@@ -670,6 +671,7 @@ const CustomerCenter = () => {
   }
   const handleCreateConversation = async () => {
     if (valueInputModal1 !== '' && valueInputModal2 !== '' && valueInputModal3 !== '' && valueImages.length > 0) {
+      dispatch(loadingActions.openLoading())
 
       const formData = new FormData();
       for (let i = 0; i < valueImages.length; i++) {
@@ -696,6 +698,9 @@ const CustomerCenter = () => {
         .then((res: any) => {
           if (res.statusCode === 201) {
             console.log('create conversation success');
+            dispatch(loadingActions.loadingSuccess())
+            setConversationActiveId(res.data._id)
+            setReload(true)
             axiosClient.get(
               `${CONVERSATION}/get/${res.data._id}`
             )
@@ -723,6 +728,7 @@ const CustomerCenter = () => {
           }
           else {
             console.log('message: ', res.message);
+            dispatch(loadingActions.loadingSuccess())
             dispatch(snackBarActions.setStateSnackBar({
               content: '실패',
               type: 'error',
@@ -731,6 +737,7 @@ const CustomerCenter = () => {
         })
         .catch((error: any) => {
           console.log(error)
+          dispatch(loadingActions.loadingSuccess())
           dispatch(snackBarActions.setStateSnackBar({
             content: '실패',
             type: 'error',
@@ -757,6 +764,7 @@ const CustomerCenter = () => {
 
       const dataImg = listImages
 
+      dispatch(loadingActions.openLoading())
       if (valueImages.length > 0) {
         const formData = new FormData();
         for (let i = 0; i < valueImages.length; i++) {
@@ -787,6 +795,7 @@ const CustomerCenter = () => {
         .then((res: any) => {
           if (res.statusCode === 200) {
             console.log('Edit conversation success');
+            dispatch(loadingActions.loadingSuccess())
             handleClose()
             axiosClient.get(
               `${CONVERSATION}/get/${conversationActiveId}`
@@ -810,6 +819,7 @@ const CustomerCenter = () => {
           }
           else {
             console.log('message: ', res.message);
+            dispatch(loadingActions.loadingSuccess())
             dispatch(snackBarActions.setStateSnackBar({
               content: '실패',
               type: 'error',
@@ -818,6 +828,7 @@ const CustomerCenter = () => {
         })
         .catch((error: any) => {
           console.log(error)
+          dispatch(loadingActions.loadingSuccess())
           dispatch(snackBarActions.setStateSnackBar({
             content: '실패',
             type: 'error',
@@ -825,6 +836,7 @@ const CustomerCenter = () => {
         })
     }
     else {
+      dispatch(loadingActions.loadingSuccess())
       alert('내용을 입력해주세요')
     }
   }
@@ -856,8 +868,10 @@ const CustomerCenter = () => {
 
   //get conversation active
   useEffect(() => {
-    listConversation.length > 0 &&
+    if (!conversationActiveId){
+      listConversation.length > 0 &&
       setConversationActiveId(listConversation[0]._id)
+    }
   }, [listConversation])
 
   //get conversation detail

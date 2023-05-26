@@ -112,10 +112,11 @@ interface Iprops {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   images?: string
   containerStyle?: React.CSSProperties
+  onDeleted?: () => void
 }
 
 export const InputuploadImage = (props: Iprops) => {
-  const { type, onChange, containerStyle, images, ...restProps } = props
+  const { type, onChange, containerStyle, images, onDeleted, ...restProps } = props
   const classes = useStyles()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -132,6 +133,7 @@ export const InputuploadImage = (props: Iprops) => {
 
   const handleImageDelete = () => {
     setImage(null)
+    onDeleted && onDeleted()
   }
 
   const handleAddImageClick = (): void => {

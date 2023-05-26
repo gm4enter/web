@@ -12,6 +12,7 @@ import { snackBarActions } from '../../components/snackbar/snackbarSlice';
 import { siteActions } from '../../features/site/siteSlice';
 import { ROUTE } from '../../router/routes';
 import { DataWebType, SiteType } from '../../types/site.type';
+import { loadingActions } from '../../components/loading/loadingSlice';
 
 const useStyles = makeStyles({
     container: {
@@ -117,21 +118,36 @@ function InfoWebsite() {
             setValue4(file);
         }
     }
+    const handleDelFavicon = () => {
+        setValue4(null)
+        setFavicon('')
+    }
+
     const handleThumb = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file: File = e.target.files[0];
             setValue5(file);
         }
     }
+    const handleDelThumb = () => {
+        setValue5(null)
+        setThumb('')
+    }
+
     const handleNotificationIcon = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file: File = e.target.files[0];
-            setValue4(file);
+            setValue6(file);
         }
+    }
+    const handleDelNotificationIcon = () => {
+        setValue6(null)
+        setNotificationIcon('')
     }
 
     const handleSubmit = async () => {
         try {
+            dispatch(loadingActions.openLoading())
             const formData = new FormData()
             const formData2 = new FormData()
             const formData3 = new FormData()
@@ -183,6 +199,7 @@ function InfoWebsite() {
             axiosClient.put(`${SITE}/update/${id}`, dataPut)
                 .then((res) => {
                     console.log('Site update succeed:', res)
+                    dispatch(loadingActions.loadingSuccess())
                     axiosClient.get(`${SITE}/get/${id}`)
                         .then((resp: { data: SiteType }) => {
                             console.log('res.data', resp.data);
@@ -202,6 +219,7 @@ function InfoWebsite() {
                 })
                 .catch((error: any) => {
                     console.log(error)
+                    dispatch(loadingActions.loadingSuccess())
                     dispatch(snackBarActions.setStateSnackBar({
                         content: '실패',
                         type: 'error',
@@ -210,6 +228,7 @@ function InfoWebsite() {
 
         } catch (error) {
             console.log('error:', error)
+            dispatch(loadingActions.loadingSuccess())
             dispatch(snackBarActions.setStateSnackBar({
                 content: '실패',
                 type: 'error',
@@ -332,7 +351,7 @@ function InfoWebsite() {
                             <img src={iconQuestion} alt='' />
                         </div>
                         <p>고해상도 아이콘: 512x512 / 32비트 PNG(알파 있음)</p>
-                        <InputuploadImage type='550' containerStyle={{ marginTop: '16px' }} onChange={handleFavicon} images={favicon} />
+                        <InputuploadImage type='550' containerStyle={{ marginTop: '16px' }} onChange={handleFavicon} onDeleted={handleDelFavicon} images={favicon} />
                     </div>
 
                     <div>
@@ -341,7 +360,7 @@ function InfoWebsite() {
                             <img src={iconQuestion} alt='' />
                         </div>
                         <p>가로x세로 1440x2960 JPG또는 24비트 PNG(알파 없음)</p>
-                        <InputuploadImage type='1440' containerStyle={{ marginTop: '16px' }} onChange={handleThumb} images={thumb} />
+                        <InputuploadImage type='1440' containerStyle={{ marginTop: '16px' }} onChange={handleThumb} onDeleted={handleDelThumb} images={thumb} />
                     </div>
                 </div>
 
@@ -357,7 +376,7 @@ function InfoWebsite() {
                         <a href="#">자세히 알아보기</a>
                     </p>
 
-                    <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} onChange={handleNotificationIcon} images={notificationIcon} />
+                    <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} onChange={handleNotificationIcon} onDeleted={handleDelNotificationIcon} images={notificationIcon} />
 
                     <p>*알림 아이콘은 앱에서 알림이 왔을때 상단에 보여지는 아이콘입니다.</p>
                 </div>
