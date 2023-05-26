@@ -1,13 +1,12 @@
 import { ThemeType } from "./theme.type";
 export interface DataWebType {
-  webInfo: {
-    domainUser?: string;
-    domainName?: string;
-    domainPassword?: string;
-    favicon?: string;
-    thumbnail?: string;
-    notificationIcon?: string;
-  };
+  domainProvider?: string;
+  domainUser?: string;
+  domainName?: string;
+  domainPassword?: string;
+  favicon?: string;
+  thumbnail?: string;
+  notificationIcon?: string;
 }
 export interface DataAndroidInfoType {
   androidInfo: {
@@ -60,6 +59,7 @@ export interface SiteType {
     backgroundColor: string;
   };
   webInfo?: {
+    domainProvider: string;
     domainUser: string;
     domainName: string;
     domainPassword: string;

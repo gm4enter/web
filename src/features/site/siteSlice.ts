@@ -51,6 +51,20 @@ const siteSlice = createSlice({
       }
       state.totalData = action.payload.totalData;
     },
+    updateSite: (
+      state,
+      action: PayloadAction<{
+        updatedData: SiteType;
+      }>
+    ) => {
+      const { updatedData } = action.payload;
+      state.listData = state.listData.map((item) => {
+        if (item._id === updatedData._id) {
+          return updatedData;
+        }
+        return item;
+      });
+    },
   },
 });
 

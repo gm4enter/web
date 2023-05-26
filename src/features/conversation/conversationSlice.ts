@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { ConversationType } from "../../types/conversation.type";
 import { RootState } from "../../app/store";
+import { ConversationType } from "../../types/conversation.type";
+import { TYPE_SORT } from "../../types/enum";
 import { mereListById } from "../../utils";
 
 // const initialState: { listData: ConversationType[] } = {
@@ -11,6 +12,7 @@ const initialState: {
   listData: ConversationType[];
   page?: number;
   totalData?: number;
+  _sort?: TYPE_SORT;
 } = {
   listData: [],
 };
@@ -31,6 +33,7 @@ const conversationSlice = createSlice({
   reducers: {
     getList: (state, action: PayloadAction<{ params?: any }>) => {
       state.page = Number(action.payload.params.page);
+      state._sort = action.payload.params._sort;
     },
     getListSuccess: (
       state,
@@ -38,6 +41,7 @@ const conversationSlice = createSlice({
         listData: ConversationType[];
         page: number;
         totalData: number;
+        _sort?: TYPE_SORT;
       }>
     ) => {
       if (action.payload.page) {
@@ -47,6 +51,29 @@ const conversationSlice = createSlice({
         ) as any;
       }
       state.totalData = action.payload.totalData;
+    },
+    createSite: (
+      state,
+      action: PayloadAction<{
+        newData: ConversationType;
+      }>
+    ) => {
+      const { newData } = action.payload;
+      state.listData = [newData, ...state.listData];
+    },
+    updateSite: (
+      state,
+      action: PayloadAction<{
+        updatedData: ConversationType;
+      }>
+    ) => {
+      const { updatedData } = action.payload;
+      state.listData = state.listData.map((item) => {
+        if (item._id === updatedData._id) {
+          return updatedData;
+        }
+        return item;
+      });
     },
   },
 });

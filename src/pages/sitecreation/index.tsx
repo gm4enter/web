@@ -3,19 +3,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { makeStyles } from '@mui/styles';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../apis/axiosClient';
 import { SITE, THEME, USER } from '../../apis/urlConfig';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import eyeIcon from '../../asset/images/EyeScan.png';
 import closeIcon from '../../asset/images/cancel.png';
+import { snackBarActions } from '../../components/snackbar/snackbarSlice';
 import { planActions, selectListData } from '../../features/plan/planSlice';
+import { ROUTE } from '../../router/routes';
 import { PlanType } from '../../types/plan.type';
 import { ThemeType } from '../../types/theme.type';
-import { siteActions } from '../../features/site/siteSlice';
 import { numberWithCommas } from '../../utils';
-import { useNavigate } from 'react-router-dom';
-import { snackBarActions } from '../../components/snackbar/snackbarSlice';
 
 const useStyles = makeStyles({
     container_site: {
@@ -259,7 +259,7 @@ const SiteCreation = () => {
     //handle create website
     const handleCreateWebsite = () => {
         if (plan && theme) {
-            axiosClient.post(`${SITE}/create`, { plan: plan._id, theme: theme._id, name: 'test' })
+            axiosClient.post(`${SITE}/create`, { plan: plan._id, theme: theme._id })
                 .then((res: any) => {
                     if (res.statusCode === 201) {
                         //dispatch action get list website
@@ -269,6 +269,7 @@ const SiteCreation = () => {
                             content: '성공',
                             type: 'success',
                         }))
+                        navigate(ROUTE.SITELISTANDEXPIREDLIST)
                     }
                     else {
                         console.log('create website failed!', res.message);
@@ -317,7 +318,7 @@ const SiteCreation = () => {
             <div>
                 <p>생성할 사이트 선택</p>
                 <div onClick={handleOpenModal}>
-                    <p>눌러서 선택해주세요.</p>
+                    {(Object.entries(theme).length === 0) ? <p>눌러서 선택해주세요.</p> : <p>{theme.name}</p>}
                 </div>
             </div>
 
@@ -338,7 +339,7 @@ const SiteCreation = () => {
             <div>
                 <p>개설 비용</p>
                 <div>
-                    {plan && <p>{plan.duration}년 ({numberWithCommas(plan.price || 0)}원) - VAT 포함</p>}
+                    {plan && <p>{plan.duration} {plan.typeDuration === 'year' ? '년' : '개월'} ({numberWithCommas(plan.price || 0)}원) - VAT 포함</p>}
                     <p>부가세 포함</p>
                 </div>
             </div>
