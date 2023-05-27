@@ -512,7 +512,7 @@ function RegisterAndModifyGooglePlay() {
           onChange={(e) => {
             setValue1(e.target.value)
           }}
-          containerStyle={{ maxWidth: '656px', marginTop: '20px', }}
+          containerStyle={{ width: 'calc(50% + 32px)', marginTop: '20px', }}
         />
         <Input
           label='비밀번호'
@@ -521,7 +521,7 @@ function RegisterAndModifyGooglePlay() {
           onChange={(e) => {
             setValue2(e.target.value)
           }}
-          containerStyle={{ maxWidth: '656px', marginTop: '16px' }}
+          containerStyle={{ width: 'calc(50% + 32px)', marginTop: '16px' }}
           isPassword
         />
       </div>
@@ -536,7 +536,7 @@ function RegisterAndModifyGooglePlay() {
           onChange={(e) => {
             setInputValueNameApp(e.target.value)
           }}
-          containerStyle={{ maxWidth: '656px', marginTop: '20px' }}
+          containerStyle={{ width: 'calc(50% + 32px)', marginTop: '20px' }}
           maxLength={40}
         />
         <p>* 앱 설치 후 아이콘 아래에 표시되는 이름입니다.</p>

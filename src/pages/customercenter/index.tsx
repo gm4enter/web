@@ -193,7 +193,7 @@ const useStyles = makeStyles({
         },
       },
       '&>div:nth-of-type(2)': {
-        padding: '24px 24px 0 24px',
+        padding: '24px 0px 0 24px',
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
@@ -207,9 +207,9 @@ const useStyles = makeStyles({
           color: '#262626',
           '&>span': { color: '#0078FF' },
         },
-        '&>div:nth-of-type(1)': {
-          overflowY: 'auto'
-        },
+        // '&>div:nth-of-type(1)': {
+        //   overflowY: 'auto'
+        // },
       },
       '&>div:nth-of-type(3)': {
         display: 'flex',
@@ -604,6 +604,7 @@ const CustomerCenter = () => {
 
   const [conversationActiveId, setConversationActiveId] = useState('')
 
+
   const [conversationDetail, setConversationDetail] = useState<ConversationDetailType>()
 
   const [conversationDetailMessage, setConversationDetailMessage] = useState<ConversationDetailMessageType[]>([])
@@ -670,6 +671,7 @@ const CustomerCenter = () => {
   }
   const handleCreateConversation = async () => {
     if (valueInputModal1 !== '' && valueInputModal2 !== '' && valueInputModal3 !== '' && valueImages.length > 0) {
+      dispatch(loadingActions.openLoading())
 
       const formData = new FormData();
       for (let i = 0; i < valueImages.length; i++) {
@@ -696,6 +698,9 @@ const CustomerCenter = () => {
         .then((res: any) => {
           if (res.statusCode === 201) {
             console.log('create conversation success');
+            dispatch(loadingActions.loadingSuccess())
+            setConversationActiveId(res.data._id)
+            setReload(true)
             axiosClient.get(
               `${CONVERSATION}/get/${res.data._id}`
             )
@@ -723,6 +728,7 @@ const CustomerCenter = () => {
           }
           else {
             console.log('message: ', res.message);
+            dispatch(loadingActions.loadingSuccess())
             dispatch(snackBarActions.setStateSnackBar({
               content: '실패',
               type: 'error',
@@ -731,6 +737,7 @@ const CustomerCenter = () => {
         })
         .catch((error: any) => {
           console.log(error)
+          dispatch(loadingActions.loadingSuccess())
           dispatch(snackBarActions.setStateSnackBar({
             content: '실패',
             type: 'error',
@@ -757,6 +764,7 @@ const CustomerCenter = () => {
 
       const dataImg = listImages
 
+      dispatch(loadingActions.openLoading())
       if (valueImages.length > 0) {
         const formData = new FormData();
         for (let i = 0; i < valueImages.length; i++) {
@@ -787,6 +795,7 @@ const CustomerCenter = () => {
         .then((res: any) => {
           if (res.statusCode === 200) {
             console.log('Edit conversation success');
+            dispatch(loadingActions.loadingSuccess())
             handleClose()
             axiosClient.get(
               `${CONVERSATION}/get/${conversationActiveId}`
@@ -810,6 +819,7 @@ const CustomerCenter = () => {
           }
           else {
             console.log('message: ', res.message);
+            dispatch(loadingActions.loadingSuccess())
             dispatch(snackBarActions.setStateSnackBar({
               content: '실패',
               type: 'error',
@@ -818,6 +828,7 @@ const CustomerCenter = () => {
         })
         .catch((error: any) => {
           console.log(error)
+          dispatch(loadingActions.loadingSuccess())
           dispatch(snackBarActions.setStateSnackBar({
             content: '실패',
             type: 'error',
@@ -825,6 +836,7 @@ const CustomerCenter = () => {
         })
     }
     else {
+      dispatch(loadingActions.loadingSuccess())
       alert('내용을 입력해주세요')
     }
   }
@@ -856,8 +868,10 @@ const CustomerCenter = () => {
 
   //get conversation active
   useEffect(() => {
-    listConversation.length > 0 &&
-      setConversationActiveId(listConversation[0]._id)
+    if (!conversationActiveId) {
+      listConversation.length > 0 &&
+        setConversationActiveId(listConversation[0]._id)
+    }
   }, [listConversation])
 
   //get conversation detail
@@ -968,12 +982,12 @@ const CustomerCenter = () => {
             <img src={MenuDots} alt='' onClick={handleOpenEdit} />
           </div>
 
-          <div>
+          <div ref={containerRef}>
             <p>
               피드백
               <span> ({conversationDetailMessage.length || 0})</span>
             </p>
-            <div ref={containerRef}>
+            <div>
               <div>
                 <div className={classes.message_user_container}>
                   <img src={conversationDetail?.creator?.photo} alt='' />

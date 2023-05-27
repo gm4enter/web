@@ -147,6 +147,9 @@ const useStyles = makeStyles({
           fontSize: '16px',
           fontWeight: 500,
           lineHeight: '24px',
+          '@media (max-width: 768px)': {
+            width: 'calc(100% - 32px) !important',
+          },
         }
       },
       '&>div:nth-of-type(6)': { marginTop: '16px' },
@@ -611,7 +614,7 @@ function RegisterAndModifyAppleStore() {
             onChange={(e) => {
               setValue1(e.target.value)
             }}
-            containerStyle={{ maxWidth: '522px' }}
+            containerStyle={{ width: '522px' }}
           />
         </div>
         <div>
@@ -626,7 +629,7 @@ function RegisterAndModifyAppleStore() {
               setValue2(e.target.value)
             }}
             isPassword
-            containerStyle={{ maxWidth: '522px' }}
+            containerStyle={{ width: '522px' }}
 
           />
         </div>
@@ -641,7 +644,7 @@ function RegisterAndModifyAppleStore() {
             onChange={(e) => {
               setValue3(e.target.value)
             }}
-            containerStyle={{ maxWidth: '522px' }}
+            containerStyle={{ width: '522px' }}
 
           />
         </div>
@@ -657,7 +660,7 @@ function RegisterAndModifyAppleStore() {
               setValue4(e.target.value)
             }}
             // maxLength={40}
-            containerStyle={{ maxWidth: '522px' }}
+            containerStyle={{ width: '522px' }}
 
           />
         </div>
@@ -673,7 +676,7 @@ function RegisterAndModifyAppleStore() {
             onChange={(e) => {
               setValue5(e.target.value)
             }}
-            style={{ maxWidth: 'calc(522px - 32px)' }}
+            style={{ width: 'calc(522px - 32px)' }}
           />
         </div>
         <div>
@@ -687,7 +690,7 @@ function RegisterAndModifyAppleStore() {
             onChange={(e) => {
               setValue6(e.target.value)
             }}
-            containerStyle={{ maxWidth: '522px' }}
+            containerStyle={{ width: '522px' }}
           />
         </div>
       </div>

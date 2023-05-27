@@ -12,6 +12,7 @@ import { snackBarActions } from '../../components/snackbar/snackbarSlice';
 import { siteActions } from '../../features/site/siteSlice';
 import { ROUTE } from '../../router/routes';
 import { DataWebType, SiteType } from '../../types/site.type';
+import { loadingActions } from '../../components/loading/loadingSlice';
 
 const useStyles = makeStyles({
     container: {
@@ -22,6 +23,10 @@ const useStyles = makeStyles({
             alignItems: 'center',
             '&>img': { height: '24px', width: '24px' },
             '&>p': { padding: 0, margin: 0, fontSize: '18px', fontWeight: 500, },
+            '@media (max-width: 768px)': {
+                padding: '16px',
+                borderBottom: '.5px solid #D0D5DD',
+            },
         },
         '&>div:nth-of-type(2)': {
             marginTop: '16px',
@@ -30,6 +35,13 @@ const useStyles = makeStyles({
             border: '1px solid #D0D5DD',
             '&>p:nth-of-type(1)': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, },
             '&>p:nth-of-type(2)': { padding: 0, margin: '20px 0 0 0', fontSize: '14px', fontWeight: 500, color: '#272B30' },
+            '@media (max-width: 768px)': {
+                marginTop: '0px',
+                padding: '16px',
+                border: 'none',
+                borderBottom: '.5px solid #D0D5DD',
+                borderRadius: '0px',
+            },
         },
         // '&>div:nth-of-type(3)': {
         //     marginTop: '16px',
@@ -55,6 +67,13 @@ const useStyles = makeStyles({
                     },
                     '&>p': { padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' },
 
+                },
+                '@media (max-width: 768px)': {
+                   flexDirection: 'column',
+                   gap: '24px',
+                    '&>div': {
+                        width: '100%',
+                    },
                 },
             },
             '&>div:nth-of-type(3)': {
@@ -82,9 +101,20 @@ const useStyles = makeStyles({
                 padding: '8px 12px',
                 textAlign: 'center',
                 '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' },
+                '@media (max-width: 768px)': {
+                    width: '100%',
+                },
+            },
+            '@media (max-width: 768px)': {
+                marginTop: '0px',
+                padding: '16px',
+                border: 'none',
+                borderRadius: '0px',
             },
         },
-
+        '@media (max-width: 768px)': {
+            padding: '8px 0px',
+        },
     }
 });
 
@@ -117,21 +147,36 @@ function InfoWebsite() {
             setValue4(file);
         }
     }
+    const handleDelFavicon = () => {
+        setValue4(null)
+        setFavicon('')
+    }
+
     const handleThumb = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file: File = e.target.files[0];
             setValue5(file);
         }
     }
+    const handleDelThumb = () => {
+        setValue5(null)
+        setThumb('')
+    }
+
     const handleNotificationIcon = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file: File = e.target.files[0];
-            setValue4(file);
+            setValue6(file);
         }
+    }
+    const handleDelNotificationIcon = () => {
+        setValue6(null)
+        setNotificationIcon('')
     }
 
     const handleSubmit = async () => {
         try {
+            dispatch(loadingActions.openLoading())
             const formData = new FormData()
             const formData2 = new FormData()
             const formData3 = new FormData()
@@ -183,6 +228,7 @@ function InfoWebsite() {
             axiosClient.put(`${SITE}/update/${id}`, dataPut)
                 .then((res) => {
                     console.log('Site update succeed:', res)
+                    dispatch(loadingActions.loadingSuccess())
                     axiosClient.get(`${SITE}/get/${id}`)
                         .then((resp: { data: SiteType }) => {
                             console.log('res.data', resp.data);
@@ -202,6 +248,7 @@ function InfoWebsite() {
                 })
                 .catch((error: any) => {
                     console.log(error)
+                    dispatch(loadingActions.loadingSuccess())
                     dispatch(snackBarActions.setStateSnackBar({
                         content: '실패',
                         type: 'error',
@@ -210,6 +257,7 @@ function InfoWebsite() {
 
         } catch (error) {
             console.log('error:', error)
+            dispatch(loadingActions.loadingSuccess())
             dispatch(snackBarActions.setStateSnackBar({
                 content: '실패',
                 type: 'error',
@@ -332,7 +380,7 @@ function InfoWebsite() {
                             <img src={iconQuestion} alt='' />
                         </div>
                         <p>고해상도 아이콘: 512x512 / 32비트 PNG(알파 있음)</p>
-                        <InputuploadImage type='550' containerStyle={{ marginTop: '16px' }} onChange={handleFavicon} images={favicon} />
+                        <InputuploadImage type='550' containerStyle={{ marginTop: '16px' }} onChange={handleFavicon} onDeleted={handleDelFavicon} images={favicon} />
                     </div>
 
                     <div>
@@ -341,7 +389,7 @@ function InfoWebsite() {
                             <img src={iconQuestion} alt='' />
                         </div>
                         <p>가로x세로 1440x2960 JPG또는 24비트 PNG(알파 없음)</p>
-                        <InputuploadImage type='1440' containerStyle={{ marginTop: '16px' }} onChange={handleThumb} images={thumb} />
+                        <InputuploadImage type='1440' containerStyle={{ marginTop: '16px' }} onChange={handleThumb} onDeleted={handleDelThumb} images={thumb} />
                     </div>
                 </div>
 
@@ -357,7 +405,7 @@ function InfoWebsite() {
                         <a href="#">자세히 알아보기</a>
                     </p>
 
-                    <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} onChange={handleNotificationIcon} images={notificationIcon} />
+                    <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} onChange={handleNotificationIcon} onDeleted={handleDelNotificationIcon} images={notificationIcon} />
 
                     <p>*알림 아이콘은 앱에서 알림이 왔을때 상단에 보여지는 아이콘입니다.</p>
                 </div>
