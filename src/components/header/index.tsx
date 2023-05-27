@@ -251,7 +251,6 @@ const Header = (props: IProps) => {
   const [isShowSideBar, setIsShowSideBar] = useState(false)
   const [tokenFirebase, setTokenFirebase] = useState('')
   const [statusLogin, setStatusLogin] = useState(false)
-  const [user, setUser] = useState<UserType>()
   const [openModal, setOpenModal] = useState(false)
   const handleClick = () => {
     setIsShowSideBar(!isShowSideBar)
@@ -276,8 +275,8 @@ const Header = (props: IProps) => {
   }
   const handleLogout = () => {
     localStorage.removeItem('accessToken')
+    setTokenFirebase('')
     setOpenModal(false)
-    setUser(undefined)
     navigate(ROUTE.HOME)
   }
   const handleClickSolution = () => {
@@ -336,9 +335,6 @@ const Header = (props: IProps) => {
     }
   }, [statusLogin])
 
-  useLayoutEffect(() => {
-    userProfile && setUser(userProfile)
-  }, [userProfile])
 
   const [scroll, setScroll] = useState(false)
   useEffect(() => {
@@ -381,7 +377,7 @@ const Header = (props: IProps) => {
           <div onClick={handleClickMenuUser}>
             <img
               src={
-                user?.photo
+                userProfile?.photo
               }
               alt=''
             />
@@ -410,10 +406,10 @@ const Header = (props: IProps) => {
             <img src={polygon} alt='' />
           </div>
           <div>
-            <img src={user?.photo} alt='' />
+            <img src={userProfile?.photo} alt='' />
             <div>
-              <p>{user?.firstName} {user?.lastName}</p>
-              <p>{user?.email}</p>
+              <p>{userProfile?.firstName} {userProfile?.lastName}</p>
+              <p>{userProfile?.email}</p>
             </div>
           </div>
           <p>파트너 관리</p>

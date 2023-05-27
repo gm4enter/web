@@ -10,8 +10,8 @@ import { LOGIN, USER } from '../../apis/urlConfig'
 import { auth, provider } from '../../services/firebase'
 import axiosClient, { setTokens } from '../../apis/axiosClient'
 import { UserType } from '../../types/user.type'
-import { useAppSelector } from '../../app/hooks'
-import { selectUserData } from '../../features/user/userSlice'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { selectUserData, userActions } from '../../features/user/userSlice'
 
 const useStyles = makeStyles({
     container_header: {
@@ -137,6 +137,7 @@ interface IProps {
 const HeaderAdmin = (props: IProps) => {
     const classes = useStyles()
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
     const userProfile = useAppSelector(selectUserData)
     const { handleButtonShow } = props
     const [isShowSideBar, setIsShowSideBar] = useState(false)
@@ -196,7 +197,9 @@ const HeaderAdmin = (props: IProps) => {
     // }, [statusLogin])
 
     useLayoutEffect(() => {
-        userProfile && setUser(userProfile)
+        userProfile ?
+            setUser(userProfile) :
+            dispatch(userActions.getUser({ params: undefined }))
     }, [userProfile])
 
     return (
