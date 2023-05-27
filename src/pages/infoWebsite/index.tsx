@@ -231,7 +231,6 @@ function InfoWebsite() {
                     dispatch(loadingActions.loadingSuccess())
                     axiosClient.get(`${SITE}/get/${id}`)
                         .then((resp: { data: SiteType }) => {
-                            console.log('res.data', resp.data);
                             dispatch(siteActions.updateSite({ updatedData: resp.data }))
                             // dispatch(siteActions.getList({ params: { page: 1 } }))
                         })

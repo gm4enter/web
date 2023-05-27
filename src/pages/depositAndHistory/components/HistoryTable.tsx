@@ -107,7 +107,6 @@ export const HistoryTable = () => {
     })
     setListData([...dataNew])
   }, [listTransaction, page])
-  console.log(888, listTransaction)
   return (
     <div>
       {listData.length > 0 ?
@@ -144,8 +143,6 @@ export const HistoryTable = () => {
                 </TableHead>
                 <TableBody>
                   {item.listData.map((item1) => {
-                    console.log('````999````', item1);
-
                     return (
                       <TableRow>
                         <TableCell>

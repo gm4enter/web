@@ -1,6 +1,6 @@
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect } from 'react'
 import infoCircle from '../../asset/images/iconInfoCircle.png'
 import timeHistory from '../../asset/images/TimeHistory.png'
 import { Input } from '../../components/base/input/Input'
@@ -14,6 +14,7 @@ import { PAYMENT_METHOD } from '../../types/enum'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { loadingActions } from '../../components/loading/loadingSlice'
 import { selectListTransaction } from '../../features/transaction/transactionSlice'
+import { selectUserData } from '../../features/user/userSlice'
 
 const useStyles = makeStyles({
   container_deposit: {
@@ -247,8 +248,7 @@ const DespositAndHistory = () => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const listTransaction = useAppSelector(selectListTransaction)
-
-  console.log('listTransaction', listTransaction);
+  const userProfile = useAppSelector(selectUserData)
 
   const [paymentMethod, setPaymentMethod] = useState<PAYMENT_METHOD>(
     PAYMENT_METHOD.CREDIT_CARD
@@ -261,14 +261,9 @@ const DespositAndHistory = () => {
   const handleChangePaymentMethod = (event: any) => {
     setPaymentMethod(event.target.value)
   }
-  useEffect(() => {
-    const getProfile = async () => {
-      const res = await axiosClient.get(USER)
-      console.log('profile', res)
-      setPoint(res.data.wallet.balance)
-    }
-    getProfile()
-  }, [])
+  useLayoutEffect(() => {
+    userProfile && setPoint(userProfile.wallet.balance)
+  }, [userProfile])
 
   const createDeposit = async () => {
     try {
@@ -282,7 +277,6 @@ const DespositAndHistory = () => {
       dispatch(loadingActions.loadingSuccess())
     }
   }
-  console.log(677, paymentMethod)
   return (
     <div className={classes.container_deposit}>
       <div>

@@ -697,7 +697,6 @@ const CustomerCenter = () => {
       conversationApi.create(data)
         .then((res: any) => {
           if (res.statusCode === 201) {
-            console.log('create conversation success');
             dispatch(loadingActions.loadingSuccess())
             setConversationActiveId(res.data._id)
             setReload(true)
@@ -794,7 +793,6 @@ const CustomerCenter = () => {
       conversationApi.update(dataUpdate)
         .then((res: any) => {
           if (res.statusCode === 200) {
-            console.log('Edit conversation success');
             dispatch(loadingActions.loadingSuccess())
             handleClose()
             axiosClient.get(
