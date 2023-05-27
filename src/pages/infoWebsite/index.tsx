@@ -23,6 +23,10 @@ const useStyles = makeStyles({
             alignItems: 'center',
             '&>img': { height: '24px', width: '24px' },
             '&>p': { padding: 0, margin: 0, fontSize: '18px', fontWeight: 500, },
+            '@media (max-width: 768px)': {
+                padding: '16px',
+                borderBottom: '.5px solid #D0D5DD',
+            },
         },
         '&>div:nth-of-type(2)': {
             marginTop: '16px',
@@ -31,6 +35,13 @@ const useStyles = makeStyles({
             border: '1px solid #D0D5DD',
             '&>p:nth-of-type(1)': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, },
             '&>p:nth-of-type(2)': { padding: 0, margin: '20px 0 0 0', fontSize: '14px', fontWeight: 500, color: '#272B30' },
+            '@media (max-width: 768px)': {
+                marginTop: '0px',
+                padding: '16px',
+                border: 'none',
+                borderBottom: '.5px solid #D0D5DD',
+                borderRadius: '0px',
+            },
         },
         // '&>div:nth-of-type(3)': {
         //     marginTop: '16px',
@@ -56,6 +67,13 @@ const useStyles = makeStyles({
                     },
                     '&>p': { padding: 0, margin: '8px 0 0 0', fontSize: '14px', fontWeight: 400, color: '#70777F' },
 
+                },
+                '@media (max-width: 768px)': {
+                   flexDirection: 'column',
+                   gap: '24px',
+                    '&>div': {
+                        width: '100%',
+                    },
                 },
             },
             '&>div:nth-of-type(3)': {
@@ -83,9 +101,20 @@ const useStyles = makeStyles({
                 padding: '8px 12px',
                 textAlign: 'center',
                 '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' },
+                '@media (max-width: 768px)': {
+                    width: '100%',
+                },
+            },
+            '@media (max-width: 768px)': {
+                marginTop: '0px',
+                padding: '16px',
+                border: 'none',
+                borderRadius: '0px',
             },
         },
-
+        '@media (max-width: 768px)': {
+            padding: '8px 0px',
+        },
     }
 });
 

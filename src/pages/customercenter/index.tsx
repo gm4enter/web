@@ -193,7 +193,7 @@ const useStyles = makeStyles({
         },
       },
       '&>div:nth-of-type(2)': {
-        padding: '24px 24px 0 24px',
+        padding: '24px 0px 0 24px',
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
@@ -207,9 +207,9 @@ const useStyles = makeStyles({
           color: '#262626',
           '&>span': { color: '#0078FF' },
         },
-        '&>div:nth-of-type(1)': {
-          overflowY: 'auto'
-        },
+        // '&>div:nth-of-type(1)': {
+        //   overflowY: 'auto'
+        // },
       },
       '&>div:nth-of-type(3)': {
         display: 'flex',
@@ -868,9 +868,9 @@ const CustomerCenter = () => {
 
   //get conversation active
   useEffect(() => {
-    if (!conversationActiveId){
+    if (!conversationActiveId) {
       listConversation.length > 0 &&
-      setConversationActiveId(listConversation[0]._id)
+        setConversationActiveId(listConversation[0]._id)
     }
   }, [listConversation])
 
@@ -982,12 +982,12 @@ const CustomerCenter = () => {
             <img src={MenuDots} alt='' onClick={handleOpenEdit} />
           </div>
 
-          <div>
+          <div ref={containerRef}>
             <p>
               피드백
               <span> ({conversationDetailMessage.length || 0})</span>
             </p>
-            <div ref={containerRef}>
+            <div>
               <div>
                 <div className={classes.message_user_container}>
                   <img src={conversationDetail?.creator?.photo} alt='' />

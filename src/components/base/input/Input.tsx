@@ -41,6 +41,7 @@ const useStyles = makeStyles({
       }
     },
     '@media (max-width: 768px)': {
+      width: '100% !important',
       '&>input': {
         width: '100%',
         boxSizing: 'border-box',
