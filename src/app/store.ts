@@ -13,6 +13,7 @@ import { transactionReducer } from "../features/transaction/transactionSlice";
 import { planReducer } from "../features/plan/planSlice";
 import { siteReducer } from "../features/site/siteSlice";
 import { snackBarReducer } from "../components/snackbar/snackbarSlice";
+import { userReducer } from "../features/user/userSlice";
 
 const rootReducer = combineReducers({
   siteReducer: siteReducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   loadingReducer: loadingReducer,
   snackBarReducer: snackBarReducer,
   transactionReducer: transactionReducer,
+  userReducer: userReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();

@@ -138,7 +138,6 @@ const CreateConversationMb = () => {
             conversationApi.create(data)
                 .then((res: any) => {
                     if (res.statusCode === 201) {
-                        console.log('create conversation success');
                         dispatch(snackBarActions.setStateSnackBar({
                             content: '성공',
                             type: 'success',

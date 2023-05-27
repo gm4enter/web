@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import logo from '../../asset/images/logo.png'
 import hamburgerMenu from '../../asset/images/HamburgerMenu.png'
@@ -10,6 +10,8 @@ import { LOGIN, USER } from '../../apis/urlConfig'
 import { auth, provider } from '../../services/firebase'
 import axiosClient, { setTokens } from '../../apis/axiosClient'
 import { UserType } from '../../types/user.type'
+import { useAppSelector } from '../../app/hooks'
+import { selectUserData } from '../../features/user/userSlice'
 
 const useStyles = makeStyles({
     container_header: {
@@ -135,6 +137,7 @@ interface IProps {
 const HeaderAdmin = (props: IProps) => {
     const classes = useStyles()
     const navigate = useNavigate()
+    const userProfile = useAppSelector(selectUserData)
     const { handleButtonShow } = props
     const [isShowSideBar, setIsShowSideBar] = useState(false)
     const [tokenFirebase, setTokenFirebase] = useState('')
@@ -192,14 +195,9 @@ const HeaderAdmin = (props: IProps) => {
     //     }
     // }, [statusLogin])
 
-    useEffect(() => {
-        const getProfile = async () => {
-          const res = await axiosClient.get(USER)
-          console.log('profile', res)
-          setUser(res.data)
-        }
-        getProfile()
-      }, [])
+    useLayoutEffect(() => {
+        userProfile && setUser(userProfile)
+    }, [userProfile])
 
     return (
         <div

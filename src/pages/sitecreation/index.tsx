@@ -235,7 +235,6 @@ const SiteCreation = () => {
         setOpen(true)
         axiosClient.get(`${THEME}/list`)
             .then((res: any) => {
-                console.log('get theme success!')
                 if (res.statusCode === 200) {
                     setListTheme(res.data)
                 } else {
@@ -264,7 +263,6 @@ const SiteCreation = () => {
                     if (res.statusCode === 201) {
                         //dispatch action get list website
                         // dispatch(siteActions.getList({ params: undefined }))
-                        console.log('create website success!', res);
                         dispatch(snackBarActions.setStateSnackBar({
                             content: '성공',
                             type: 'success',
@@ -293,7 +291,6 @@ const SiteCreation = () => {
         dispatch(planActions.getList({ params: undefined }))
         axiosClient.get(`${THEME}/list`)
             .then((res: any) => {
-                console.log('get theme success!')
                 if (res.statusCode === 200) {
                     setListTheme(res.data)
                 } else {
