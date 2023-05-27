@@ -142,9 +142,9 @@ export const HistoryTable = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {item.listData.map((item1) => {
+                  {item.listData.map((item1, index) => {
                     return (
-                      <TableRow>
+                      <TableRow key={index}>
                         <TableCell>
                           {moment(item1.createdAt).format('YYYY-MM-DD')}
                         </TableCell>

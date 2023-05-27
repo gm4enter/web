@@ -14,7 +14,7 @@ import { PAYMENT_METHOD } from '../../types/enum'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { loadingActions } from '../../components/loading/loadingSlice'
 import { selectListTransaction } from '../../features/transaction/transactionSlice'
-import { selectUserData } from '../../features/user/userSlice'
+import { selectUserData, userActions } from '../../features/user/userSlice'
 
 const useStyles = makeStyles({
   container_deposit: {
@@ -262,7 +262,9 @@ const DespositAndHistory = () => {
     setPaymentMethod(event.target.value)
   }
   useLayoutEffect(() => {
-    userProfile && setPoint(userProfile.wallet.balance)
+    (Object.entries(userProfile).length === 0) ?
+      dispatch(userActions.getUser({ params: undefined })) :
+      setPoint(userProfile.wallet?.balance)
   }, [userProfile])
 
   const createDeposit = async () => {
