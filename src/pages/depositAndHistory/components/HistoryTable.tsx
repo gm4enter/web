@@ -149,10 +149,29 @@ export const HistoryTable = () => {
                           {moment(item1.createdAt).format('YYYY-MM-DD')}
                         </TableCell>
                         <TableCell>{ }</TableCell>
-                        <TableCell>{numberWithCommas(item1.value)}</TableCell>
-                        <TableCell>{ }</TableCell>
                         <TableCell>
-                          {item1.status === 'PENDING' ? <p style={{ color: '#FBBC05', padding: 0, margin: 0, }}>확인중</p> :
+                          {(item1.typeTransaction === 'deposit') &&
+                            (item1.status === 'PENDING' ?
+                              <div>
+                                <p style={{ color: '#343941', padding: 0, margin: 0, }}>입금확인중... </p>
+                                {numberWithCommas(item1.value)}원
+                              </div> :
+                              numberWithCommas(item1.value))}
+                        </TableCell>
+                        <TableCell>
+                        {(item1.typeTransaction === 'payment') &&
+                            (item1.status === 'PENDING' ?
+                              <div>
+                                <p style={{ color: '#343941', padding: 0, margin: 0, }}>입금확인중... </p>
+                                {numberWithCommas(item1.value)}원
+                              </div> :
+                              numberWithCommas(item1.value))}
+                        </TableCell>
+                        <TableCell>
+                          {item1.status === 'PENDING' ?
+                            (item1.typeTransaction === 'deposit' ?
+                              <p style={{ color: '#FBBC05', padding: 0, margin: 0, }}>확인중</p> :
+                              numberWithCommas(item1.amountAvailable)) :
                             numberWithCommas(item1.amountAvailable)}
                         </TableCell>
                       </TableRow>
