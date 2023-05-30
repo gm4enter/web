@@ -12,6 +12,9 @@ import axiosClient, { setTokens } from '../../apis/axiosClient'
 import { UserType } from '../../types/user.type'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { selectUserData, userActions } from '../../features/user/userSlice'
+import { Modal } from '@mui/material'
+import polygon from '../../asset/images/polygon.png'
+
 
 const useStyles = makeStyles({
     container_header: {
@@ -128,6 +131,68 @@ const useStyles = makeStyles({
         },
 
     },
+    modal: {
+        position: 'absolute',
+        right: '44px',
+        top: '96px',
+        width: '308px',
+        padding: '16px 20px',
+        backgroundColor: '#fff',
+        borderRadius: '10px',
+        boxShadow: '0px 2px 16px rgba(0, 0, 0, 0.25)',
+        '&>div:nth-of-type(1)': {
+            '&>img': {
+                position: 'absolute',
+                right: '16px ',
+                top: '-12px',
+                width: '12px',
+                height: '12px',
+            },
+        },
+        '&>div:nth-of-type(2)': {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            '&>img:nth-of-type(1)': {
+                width: '54px',
+                height: '54px',
+                borderRadius: '50%',
+            },
+            '&>div': {
+                '&>p': {
+                    padding: 0,
+                    margin: 0,
+                },
+                '&>p:nth-of-type(1)': {
+                    fontWeight: 700,
+                    fontSize: '16px',
+                },
+                '&>p:nth-of-type(2)': {
+                    fontWeight: 400,
+                    fontSize: '14px',
+                },
+            },
+        },
+        '&>p:nth-of-type(1)': {
+            padding: 0,
+            margin: '24px 0 12px 0',
+            fontWeight: 500,
+            fontSize: '16px',
+            cursor: 'pointer',
+        },
+        '&>p:nth-of-type(2)': {
+            padding: 0,
+            margin: 0,
+            fontWeight: 400,
+            fontSize: '16px',
+            color: '#272B30',
+            cursor: 'pointer',
+
+        },
+        '@media (max-width: 768px)': {
+            right: '16px',
+        },
+    },
 })
 
 interface IProps {
@@ -144,11 +209,18 @@ const HeaderAdmin = (props: IProps) => {
     const [tokenFirebase, setTokenFirebase] = useState('')
     const [statusLogin, setStatusLogin] = useState(false)
     const [user, setUser] = useState<UserType>()
+    const [openModal, setOpenModal] = useState(false)
+
 
     const handleClick = () => {
         setIsShowSideBar(!isShowSideBar)
         handleButtonShow(isShowSideBar)
     }
+    const handleClickMenuUser = () => {
+        setOpenModal(!openModal)
+    }
+    const handleCloseModal = () => setOpenModal(false);
+
     const handleLogin = () => {
         // signInWithPopup(auth, provider)
         //     .then((data: any) => {
@@ -158,6 +230,11 @@ const HeaderAdmin = (props: IProps) => {
         //         console.log(error)
         //     })
     }
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken')
+        navigate(ROUTE.HOME)
+    }
+
     // useEffect(() => {
     //     if (tokenFirebase) {
     //         const data = {
@@ -221,7 +298,7 @@ const HeaderAdmin = (props: IProps) => {
             </div>
             <div>
                 {localStorage.getItem('accessToken') ? (
-                    <div>
+                    <div onClick={handleClickMenuUser}>
                         <img
                             src={
                                 user?.photo
@@ -235,6 +312,34 @@ const HeaderAdmin = (props: IProps) => {
                     </button>
                 )}
             </div>
+
+            <Modal
+                open={openModal}
+                onClose={handleCloseModal}
+                disableAutoFocus
+                sx={
+                    {
+                        '.MuiModal-backdrop': {
+                            backgroundColor: 'transparent',
+                        },
+                    }
+                }
+            >
+                <div className={classes.modal}>
+                    <div>
+                        <img src={polygon} alt='' />
+                    </div>
+                    <div>
+                        <img src={user?.photo} alt='' />
+                        <div>
+                            <p>{user?.firstName} {userProfile?.lastName}</p>
+                            <p>{user?.email}</p>
+                        </div>
+                    </div>
+                    <p>파트너 관리</p>
+                    <p onClick={handleLogout}>로그아웃</p>
+                </div>
+            </Modal>
 
         </div>
     )
