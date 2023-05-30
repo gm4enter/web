@@ -10,11 +10,13 @@ import { useNavigate } from 'react-router-dom'
 import axiosClient from '../../apis/axiosClient'
 import { TRANSACTION, USER } from '../../apis/urlConfig'
 import { numberWithCommas } from '../../utils'
-import { PAYMENT_METHOD } from '../../types/enum'
+import { PAYMENT_METHOD, TYPE_SORT } from '../../types/enum'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { loadingActions } from '../../components/loading/loadingSlice'
-import { selectListTransaction } from '../../features/transaction/transactionSlice'
+import { selectListTransaction, transactionActions } from '../../features/transaction/transactionSlice'
 import { selectUserData, userActions } from '../../features/user/userSlice'
+import { TransactionType } from '../../types/transaction.type'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 
 const useStyles = makeStyles({
   container_deposit: {
@@ -274,9 +276,28 @@ const DespositAndHistory = () => {
         value: deposit,
         paymentMethod: paymentMethod,
       })
+        .then((res) => {
+          dispatch(transactionActions.createTransaction({ newData: res }))
+          dispatch(loadingActions.loadingSuccess())
+          dispatch(snackBarActions.setStateSnackBar({
+            content: '성공',
+            type: 'success',
+          }))
+        })
+        .catch((err) => {
+          console.log(err);
+          dispatch(loadingActions.loadingSuccess())
+          dispatch(snackBarActions.setStateSnackBar({
+            content: '실패',
+            type: 'error',
+          }))
+        })
+    } catch (error) { 
       dispatch(loadingActions.loadingSuccess())
-    } catch (error) {
-      dispatch(loadingActions.loadingSuccess())
+      dispatch(snackBarActions.setStateSnackBar({
+        content: '실패',
+        type: 'error',
+      }))
     }
   }
   return (

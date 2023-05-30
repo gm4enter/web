@@ -12,6 +12,7 @@ import { TransactionType } from '../../../types/transaction.type'
 import { numberWithCommas } from '../../../utils'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import noDataIcon from '../../../asset/images/ListNone.png'
+import { TYPE_SORT } from '../../../types/enum'
 
 
 const useStyles = makeStyles({
@@ -51,7 +52,7 @@ export const HistoryTable = () => {
     { createdAt: string; listData: TransactionType[] }[]
   >([])
   useEffect(() => {
-    dispatch(transactionActions.getList({ params: { page } }))
+    dispatch(transactionActions.getList({ params: { page, _sort: TYPE_SORT.CREATED_AT_DESC } }))
   }, [dispatch, page])
   // const formatListTransaction = () => {
   //   const listData = listTransaction.map((item) => {
