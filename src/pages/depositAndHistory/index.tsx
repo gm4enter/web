@@ -398,7 +398,7 @@ const DespositAndHistory = () => {
 
       <div>
         <p>예치금 내역</p>
-        <HistoryTable />
+        <HistoryTable point={Number(point)} />
       </div>
     </div>
   )

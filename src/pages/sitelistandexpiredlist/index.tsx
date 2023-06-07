@@ -1,10 +1,10 @@
-import { MenuItem, Select } from '@mui/material'
+import { MenuItem, Modal, Select } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
 import { SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import { makeStyles } from '@mui/styles'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
@@ -19,6 +19,10 @@ import { ROUTE } from '../../router/routes'
 import { SiteType } from '../../types/site.type'
 import { formatDate } from '../customercenter'
 import SiteListMobile from '../siteListMobile'
+import { io } from "socket.io-client"
+import closeIcon from '../../asset/images/cancel.png';
+import changePoint from '../../asset/images/ChangePoint.png';
+import { selectUserData } from '../../features/user/userSlice'
 
 const useStyles = makeStyles({
   container: {
@@ -108,8 +112,67 @@ const useStyles = makeStyles({
       },
     },
   },
+  modal: {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    boxShadow: '0 0 12px 0 rgba(0, 0, 0, 0.25)',
+    border: 'none',
+    width: '396px',
+    // padding: '4px',
+    '&>div:nth-of-type(1)': {
+      display: 'flex', padding: '16px 24px 0px 32px', justifyContent: 'space-between', alignItems: 'center', textAlign: 'center',
+      '&>p': { padding: 0, margin: 0, fontSize: '20px', fontWeight: 500, textAlign: 'center', },
+      '&>img': { cursor: 'pointer', height: '24px', width: '24px' },
+    },
+    '&>div:nth-of-type(2)': {
+      padding: '0px 24px 16px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '16px',
+      justifyContent: 'center',
+      alignItems: 'center',
+      '&>img': { height: '160px', width: '160px' },
+      '&>div': {
+        '&>p:nth-of-type(1)': {
+          padding: 0, margin: '0 0 8px 0', fontSize: '18px', fontWeight: 700, color: '#111315', textAlign: 'center',
+        },
+        '&>p:nth-of-type(2)': {
+          padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, color: '#272B30', textAlign: 'center',
+        }
+      },
+    },
+    '&>div:nth-of-type(3)': {
+      display: 'flex', padding: ' 0 24px 24px', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: '16px',
+      '&>button:nth-of-type(1)': {
+        display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', borderRadius: '8px', backgroundColor: '#EBF3FF', padding: '10px 24px', textAlign: 'center',
+        '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 700, color: '#2B83FE' },
+      },
+    },
+  },
 })
 
+const CustomEndDateCell = (props: any) => {
+  const { params } = props;
+  const [showValue, setShowValue] = useState(true);
+
+  const handleClick = () => {
+    setShowValue(!showValue);
+  };
+
+  return (
+    <div style={{cursor: 'pointer'}} onClick={handleClick}>
+      {showValue ? (
+        <p style={{}}>{params.value}</p>
+      ) : (
+        <p>{params.row.expirationDate}</p>
+      )}
+    </div>
+  );
+};
 
 const SiteListAndExpiredList = () => {
   const navigate = useNavigate()
@@ -117,6 +180,10 @@ const SiteListAndExpiredList = () => {
   const dispatch = useAppDispatch()
   const listDataWebsite = useAppSelector(selectListData)
   const totalData = useAppSelector(selectTotalData)
+  const socketRef = useRef<any>(null)
+  const [openModal, setOpenModal] = useState(false);
+  const userProfile = useAppSelector(selectUserData)
+  const point = userProfile?.wallet?.balance || 0
 
   const [page, setPage] = useState<number>(1)
 
@@ -126,28 +193,26 @@ const SiteListAndExpiredList = () => {
     id: '',
     address: '',
     endDate: '',
+    expirationDate: '',
     startDate: '',
     director: '',
   },]);
-  const [age, setAge] = React.useState('')
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value)
+  
+  const handleCloseModal = () => {
+    setOpenModal(false)
   }
+  const handleClickModal = () => {
+    setOpenModal(false)
+    window.location.reload()
+  }
+
+
+
   const [paymentMethod, setPaymentMethod] = useState('1')
   const handleChangePaymentMethod = (event: SelectChangeEvent) => {
     setPaymentMethod(event.target.value)
   }
 
-  const rows2 = [
-    {
-      id: '',
-      address: '',
-      endDate: '',
-      startDate: '',
-      director: '',
-    },
-  ]
   const columns = [
     {
       field: 'address',
@@ -171,6 +236,7 @@ const SiteListAndExpiredList = () => {
       headerName: '만료일',
       disableColumnMenu: true,
       sortable: false,
+      renderCell: (params: any) => <CustomEndDateCell params={params} />,
     },
     {
       field: 'startDate',
@@ -254,6 +320,7 @@ const SiteListAndExpiredList = () => {
           id: item._id,
           address: `${item.name || '사이트 이름 미정'} \n${item.webInfo?.domainName || '도메인 미정'}`,
           endDate: `${Math.floor(item.remainingDays)}일 남음`,
+          expirationDate: formatDate(item.expirationDate || ''),
           startDate: formatDate(item.createdAt || ''),
           director: item.adminEmail,
         };
@@ -262,6 +329,30 @@ const SiteListAndExpiredList = () => {
       setRows(data);
     }
   }, [listDataWebsite])
+
+  
+  useEffect(() => {
+    socketRef.current = io('https://server.gmapps.net', {
+      extraHeaders: {
+        Authorization: "Bearer " + localStorage.getItem('accessToken'),
+      }
+    })
+
+    // socketRef.current.on('getId', (data: string) => {
+    //   setIdSocket(data)
+    // })
+
+    socketRef.current.on('adminApprove', (Price: any) => {
+      if (Price && Price.wallet.balance !== point) {
+        setOpenModal(true)
+      }
+      // return Price
+    })
+    return () => {
+      socketRef.current.disconnect();
+    };
+
+  }, []);
 
   return (
     <>
@@ -313,9 +404,8 @@ const SiteListAndExpiredList = () => {
             }}
             inputProps={{ 'aria-label': 'Without label' }}
           >
-            <MenuItem value={1}>신용카드</MenuItem>
-            <MenuItem value={2}>신용카드</MenuItem>
-            <MenuItem value={3}>신용카드</MenuItem>
+            <MenuItem value={1}>활성화</MenuItem>
+            <MenuItem value={2}>비활성화</MenuItem>
           </Select>
         </div>
         <div>
@@ -422,6 +512,30 @@ const SiteListAndExpiredList = () => {
         }
       </div>
       <SiteListMobile />
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        disableAutoFocus
+      >
+        <div className={classes.modal}>
+          <div>
+            <p></p>
+            <img src={closeIcon} alt="close" onClick={handleCloseModal} />
+          </div>
+          <div>
+            <img src={changePoint} alt="" />
+            <div>
+              <p>성공적으로 입금되었습니다</p>
+              <p>잔액을 확인해주세요</p>
+            </div>
+          </div>
+          <div>
+            <button onClick={handleClickModal}>
+              <p>오케</p>
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   )
 }

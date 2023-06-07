@@ -11,4 +11,5 @@ export interface TransactionType {
   createdAt: string
   updatedAt: string
   amountAvailable: number
+  description: string
 }
