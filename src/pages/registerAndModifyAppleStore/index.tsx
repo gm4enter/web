@@ -1,14 +1,14 @@
-import {FormControlLabel, Radio, RadioGroup} from '@mui/material'
-import {makeStyles} from '@mui/styles'
-import {useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { useLayoutEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import iconBack from '../../asset/images/iconBack.png'
 import infoCircle from '../../asset/images/iconInfoCircle.png'
 import iconQuestion from '../../asset/images/iconQuestion.png'
-import {InputColor} from '../../components/base/InputColor'
-import {Input} from '../../components/base/input/Input'
-import {InputuploadImage} from '../../components/base/input/InputuploadImage'
-import {ROUTE} from '../../router/routes'
+import { InputColor } from '../../components/base/InputColor'
+import { Input } from '../../components/base/input/Input'
+import { InputuploadImage } from '../../components/base/input/InputuploadImage'
+import { ROUTE } from '../../router/routes'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Accordion,
@@ -16,6 +16,11 @@ import {
   AccordionSummary,
   Typography,
 } from '@mui/material'
+import { SITE, SYSTEM } from '../../apis/urlConfig'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
+import { useAppDispatch } from '../../app/hooks'
+import { DataIosInfoType, SiteType } from '../../types/site.type'
+import axiosClient from '../../apis/axiosClient'
 
 const useStyles = makeStyles({
   container: {
@@ -27,9 +32,9 @@ const useStyles = makeStyles({
       display: 'flex',
       gap: '8px',
       alignItems: 'center',
-      '&>img': {height: '24px', width: '24px'},
-      '&>p': {padding: 0, margin: 0, fontSize: '18px', fontWeight: 500},
-      '@media (max-width: 768px)': {'&>p': {fontSize: '16px'}},
+      '&>img': { height: '24px', width: '24px' },
+      '&>p': { padding: 0, margin: 0, fontSize: '18px', fontWeight: 500 },
+      '@media (max-width: 768px)': { '&>p': { fontSize: '16px' } },
     },
     '&>div:nth-of-type(2)': {
       backgroundColor: 'rgba(235, 243, 255, 0.24)',
@@ -42,8 +47,8 @@ const useStyles = makeStyles({
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          '&>img': {height: '24px', width: '24px'},
-          '&>p': {padding: 0, margin: 0, fontSize: '16px', fontWeight: 500},
+          '&>img': { height: '24px', width: '24px' },
+          '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500 },
         },
         '&>p:nth-of-type(1)': {
           padding: 0,
@@ -62,7 +67,7 @@ const useStyles = makeStyles({
           margin: 0,
           fontSize: '14px',
           fontWeight: 400,
-          '&>a': {textDecoration: 'none', color: '#2B83FE'},
+          '&>a': { textDecoration: 'none', color: '#2B83FE' },
         },
       },
       '&>div:nth-of-type(2)': {
@@ -84,7 +89,7 @@ const useStyles = makeStyles({
       borderLeft: '3px solid #2B83FE',
       padding: '24px',
       marginTop: '16px',
-      '&>p': {padding: 0, margin: 0, fontSize: '14px', fontWeight: 400},
+      '&>p': { padding: 0, margin: 0, fontSize: '14px', fontWeight: 400 },
       '@media (max-width: 768px)': {
         padding: '12px',
         '&>p': {
@@ -112,10 +117,10 @@ const useStyles = makeStyles({
         marginTop: '24px',
         '&>div:nth-of-type(1)': {
           display: 'flex',
-          width: '190px',
+          width: '220px',
           gap: '4px',
           alignItems: 'center',
-          // justifyContent: 'flex-end',
+          justifyContent: 'flex-end',
           '&>p': {
             padding: 0,
             margin: 0,
@@ -123,26 +128,46 @@ const useStyles = makeStyles({
             fontWeight: 500,
             color: '#272B30',
           },
-          '&>img': {height: '16px', width: '16px'},
+          '&>img': { height: '16px', width: '16px' },
         },
       },
-      '&>div:nth-of-type(1)': {marginTop: '24px'},
-      '&>div:nth-of-type(2)': {marginTop: '24px'},
-      '&>div:nth-of-type(3)': {marginTop: '16px'},
-      '&>div:nth-of-type(4)': {marginTop: '16px'},
-      '&>div:nth-of-type(5)': {marginTop: '16px'},
-      '&>div:nth-of-type(6)': {marginTop: '16px'},
+      '&>div:nth-of-type(1)': { marginTop: '24px' },
+      '&>div:nth-of-type(2)': { marginTop: '24px' },
+      '&>div:nth-of-type(3)': { marginTop: '16px' },
+      '&>div:nth-of-type(4)': { marginTop: '16px' },
+      '&>div:nth-of-type(5)': {
+        marginTop: '16px',
+        '&>textarea': {
+          width: 'calc(100% - 32px)',
+          height: '100px',
+          padding: '10px 16px',
+          outline: 'none',
+          border: '1px solid #D0D5DD',
+          borderRadius: '8px',
+          fontSize: '16px',
+          fontWeight: 500,
+          lineHeight: '24px',
+          '@media (max-width: 768px)': {
+            width: 'calc(100% - 32px) !important',
+          },
+        }
+      },
+      '&>div:nth-of-type(6)': { marginTop: '16px' },
       '@media (max-width: 768px)': {
         padding: '0',
         border: 'none',
         '&>div': {
           display: 'initial',
+          justifyContent: 'flex-start',
+
           // '&>div:nth-of-type(1)': {
           //   display: 'initial',
           // },
           '&>div:nth-of-type(1)': {
-            // display: 'initial',
-            // justifyContent: 'start',
+            display: 'flex',
+            gap: '4px',
+            alignItems: 'center',
+            justifyContent: 'flex-start !important',
             marginBottom: '6px',
           },
         },
@@ -176,7 +201,7 @@ const useStyles = makeStyles({
               fontWeight: 500,
               color: '#272B30',
             },
-            '&>img': {height: '18px', width: '18px'},
+            '&>img': { height: '18px', width: '18px' },
           },
           '&>p': {
             padding: 0,
@@ -279,7 +304,7 @@ const useStyles = makeStyles({
       margin: 0,
       fontSize: '12px',
       fontWeight: 400,
-      '&>a': {textDecoration: 'none', color: '#2B83FE'},
+      '&>a': { textDecoration: 'none', color: '#2B83FE' },
     },
   },
 })
@@ -287,12 +312,149 @@ const useStyles = makeStyles({
 function RegisterAndModifyAppleStore() {
   const navigate = useNavigate()
   const classes = useStyles()
+  const dispatch = useAppDispatch()
+  const { id } = useParams()
+
+  const [reload, setReload] = useState(false)
+
+  const [site, setSite] = useState<SiteType>()
+
+  //user
   const [value1, setValue1] = useState('')
+
+  //password
   const [value2, setValue2] = useState('')
+
+  //contactInfo
   const [value3, setValue3] = useState('')
+
+  //appName
   const [value4, setValue4] = useState('')
+
+  //description
   const [value5, setValue5] = useState('')
+
+  //keywords
   const [value6, setValue6] = useState('')
+
+  //color and radio
+  const [selectedValue, setSelectedValue] = useState('WHITE')
+  const [color, setColor] = useState('#000')
+
+  //image
+  const [value7, setValue7] = useState<File | null>(null);
+  const [value8, setValue8] = useState<File | null>(null);
+
+  const [icon, setIcon] = useState('')
+  const [homeScreen, setHomeScreen] = useState('')
+
+
+  const handleIcon = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file: File = e.target.files[0];
+      setValue7(file);
+    }
+  }
+  const handleHomeScreen = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file: File = e.target.files[0];
+      setValue8(file);
+    }
+  }
+
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedValue(event.target.value);
+  };
+
+  const handleColorChange = (color: string) => {
+    setColor(color);
+  }
+
+  const handleSubmit = async () => {
+    try {
+
+      const formData = new FormData()
+      const formData2 = new FormData()
+
+      value7 && formData.append('file', value7)
+
+      value8 && formData2.append('file', value8)
+
+      const [resIcon, resHomeScreen] = await Promise.all([
+        value7 && axiosClient.post(`${SYSTEM}/upload`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }),
+        value8 && axiosClient.post(`${SYSTEM}/upload`, formData2, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }),
+      ])
+
+      resIcon && setIcon(resIcon.data.filename)
+      resHomeScreen && setHomeScreen(resHomeScreen.data.filename)
+
+      const dataPut: DataIosInfoType = {
+        iosInfo: {
+          user: value1,
+          password: value2,
+          contactInfo: value3,
+          appName: value4,
+          description: value5,
+          keyword: value6,
+          icon: icon,
+          homeScreen: homeScreen,
+          textColor: selectedValue,
+          backgroundColor: color,
+        }
+      }
+      resIcon && (dataPut.iosInfo.icon = resIcon.data.filename)
+      resHomeScreen && (dataPut.iosInfo.homeScreen = resHomeScreen.data.filename)
+
+      await axiosClient.put(`${SITE}/update/${id}`, dataPut)
+      dispatch(snackBarActions.setStateSnackBar({
+        content: '성공',
+        type: 'success',
+      }))
+      setReload(!reload)
+      navigate(ROUTE.SITELISTANDEXPIREDLIST)
+
+    } catch (error) {
+      console.log('error:', error)
+      dispatch(snackBarActions.setStateSnackBar({
+        content: '실패',
+        type: 'error',
+      }))
+    }
+  }
+
+  useLayoutEffect(() => {
+    if (id) {
+      axiosClient.get(`${SITE}/get/${id}`)
+        .then((res: { data: SiteType }) => {
+          setSite(res.data)
+          if (res.data.iosInfo) {
+            setValue1(res.data.iosInfo.user)
+            setValue2(res.data.iosInfo.password)
+            setValue3(res.data.iosInfo.contactInfo)
+            setValue4(res.data.iosInfo.appName)
+            setValue5(res.data.iosInfo.description)
+            setValue6(res.data.iosInfo.keyword)
+            setSelectedValue(res.data.iosInfo.textColor)
+            setColor(res.data.iosInfo.backgroundColor)
+
+            setIcon(res.data.iosInfo.icon)
+            setHomeScreen(res.data.iosInfo.homeScreen)
+
+          }
+        })
+        .catch((error: any) => {
+          console.log(error)
+        })
+    }
+  }, [id, reload])
   return (
     <div className={classes.container}>
       <div>
@@ -369,7 +531,7 @@ function RegisterAndModifyAppleStore() {
               fontSize={'14px'}
             >
               <img
-                style={{width: '20x', height: '20px'}}
+                style={{ width: '20x', height: '20px' }}
                 src={infoCircle}
                 alt=''
               />
@@ -452,6 +614,7 @@ function RegisterAndModifyAppleStore() {
             onChange={(e) => {
               setValue1(e.target.value)
             }}
+            containerStyle={{ width: '522px' }}
           />
         </div>
         <div>
@@ -465,6 +628,9 @@ function RegisterAndModifyAppleStore() {
             onChange={(e) => {
               setValue2(e.target.value)
             }}
+            isPassword
+            containerStyle={{ width: '522px' }}
+
           />
         </div>
         <div>
@@ -478,6 +644,8 @@ function RegisterAndModifyAppleStore() {
             onChange={(e) => {
               setValue3(e.target.value)
             }}
+            containerStyle={{ width: '522px' }}
+
           />
         </div>
         <div>
@@ -491,6 +659,9 @@ function RegisterAndModifyAppleStore() {
             onChange={(e) => {
               setValue4(e.target.value)
             }}
+            // maxLength={40}
+            containerStyle={{ width: '522px' }}
+
           />
         </div>
         <div>
@@ -498,12 +669,14 @@ function RegisterAndModifyAppleStore() {
             <p>앱 설명</p>
             <img src={iconQuestion} alt='' />
           </div>
-          <Input
-            placeholder='입력해주세요.'
+          <textarea
+            rows={5}
+            placeholder='입력해주세요'
             value={value5}
             onChange={(e) => {
               setValue5(e.target.value)
             }}
+            style={{ width: 'calc(522px - 32px)' }}
           />
         </div>
         <div>
@@ -517,6 +690,7 @@ function RegisterAndModifyAppleStore() {
             onChange={(e) => {
               setValue6(e.target.value)
             }}
+            containerStyle={{ width: '522px' }}
           />
         </div>
       </div>
@@ -531,7 +705,8 @@ function RegisterAndModifyAppleStore() {
             <p>32비트 PNG(알파 없음), 모서리는 자동으로 둥글게 처리됩니다.</p>
             <InputuploadImage
               type='1024'
-              containerStyle={{marginTop: '16px'}}
+              containerStyle={{ marginTop: '16px' }}
+              onChange={handleIcon} images={icon}
             />
           </div>
 
@@ -541,7 +716,7 @@ function RegisterAndModifyAppleStore() {
               <img src={iconQuestion} alt='' />
             </div>
             <p>JPG또는 24비트 PNG(알파 없음)</p>
-            <InputuploadImage type='640' containerStyle={{marginTop: '16px'}} />
+            <InputuploadImage type='640' containerStyle={{ marginTop: '16px' }} onChange={handleHomeScreen} images={homeScreen} />
           </div>
         </div>
       </div>
@@ -549,8 +724,10 @@ function RegisterAndModifyAppleStore() {
         <p>상단 상태바 글자색상</p>
         <RadioGroup
           aria-labelledby='demo-radio-buttons-group-label'
-          defaultValue='흰색'
+          defaultValue='WHITE'
           name='radio-buttons-group'
+          value={selectedValue}
+          onChange={handleRadioChange}
           sx={{
             display: 'flex',
             gap: '16px',
@@ -559,17 +736,19 @@ function RegisterAndModifyAppleStore() {
           }}
           row
         >
-          <FormControlLabel value='흰색' control={<Radio />} label='흰색' />
-          <FormControlLabel value='검정색' control={<Radio />} label='검정색' />
+          <FormControlLabel value='WHITE' control={<Radio />} label='흰색' />
+          <FormControlLabel value='BLACK' control={<Radio />} label='검정색' />
         </RadioGroup>
-        <div style={{}}>
-          <p style={{}}>상단 상태바 배경색</p>
-          <InputColor style={{border: 'none'}} />
+        <div>
+          <p>상단 상태바 배경색</p>
+          <InputColor
+            style={{ border: 'none' }}
+            onChange={handleColorChange}
+            value={color}
+          />
         </div>
         <button
-          onClick={() => {
-            navigate(ROUTE.SITELISTANDEXPIREDLIST)
-          }}
+          onClick={handleSubmit}
         >
           <p>완료</p>
         </button>

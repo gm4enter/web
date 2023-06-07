@@ -1,12 +1,19 @@
 import { makeStyles } from '@mui/styles'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import closeBoldIcon from '../../../asset/images/cancel.png'
+import closeWhiteIcon from '../../../asset/images/cancelWhite.png'
 
 const useStyles = makeStyles({
   container: {
     width: '100%',
-    display: 'inherit',
+    display: 'block',
+    flexDirection: 'column',
+
+    '&>div:nth-of-type(1)': {
+      width: '100%',
+    },
     '&>button': {
+      marginRight: 'auto',
       borderRadius: '2px',
       border: '.5px solid #6B7280',
       backgroundColor: '#fff',
@@ -41,6 +48,33 @@ const useStyles = makeStyles({
       height: '24px',
       width: '24px',
     },
+    '&>div': {
+      display: 'none',
+    },
+    '@media (max-width: 768px)': {
+      display: 'flex',
+      marginBottom: '16px',
+      '&>img:nth-of-type(2)': {
+        display: 'none',
+      },
+      '&>div': {
+        display: 'flex',
+        position: 'absolute',
+        left: '82px',
+        marginTop: '4px',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        width: '24px',
+        height: '24px',
+        borderRadius: '50%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        '&>img': {
+          width: '10px',
+          height: '10px',
+        },
+      },
+
+    },
   },
   img512: {
     display: 'flex',
@@ -54,6 +88,36 @@ const useStyles = makeStyles({
     '&>img:nth-of-type(2)': {
       height: '24px',
       width: '24px',
+    },
+    '&>img:nth-of-type(3)': {
+      display: 'none',
+    },
+    '@media (max-width: 768px)': {
+      display: 'flex',
+      marginBottom: '16px',
+      '&>img:nth-of-type(1)': {
+        height: '343px',
+        width: '343px',
+      },
+      '&>img:nth-of-type(2)': {
+        display: 'none',
+      },
+      '&>div': {
+        display: 'flex',
+        position: 'absolute',
+        left: '323px',
+        marginTop: '8px',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        width: '24px',
+        height: '24px',
+        borderRadius: '50%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        '&>img': {
+          width: '10px',
+          height: '10px',
+        },
+      },
     },
   },
   img640: {
@@ -69,6 +133,32 @@ const useStyles = makeStyles({
       height: '24px',
       width: '24px',
     },
+    '&>img:nth-of-type(3)': {
+      display: 'none',
+    },
+    '@media (max-width: 768px)': {
+      display: 'flex',
+      marginBottom: '16px',
+      '&>img:nth-of-type(2)': {
+        display: 'none',
+      },
+      '&>div': {
+        display: 'flex',
+        position: 'absolute',
+        left: '223px',
+        marginTop: '8px',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        width: '24px',
+        height: '24px',
+        borderRadius: '50%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        '&>img': {
+          width: '10px',
+          height: '10px',
+        },
+      },
+    },
   },
   img1024: {
     display: 'flex',
@@ -83,6 +173,36 @@ const useStyles = makeStyles({
       height: '24px',
       width: '24px',
     },
+    '&>img:nth-of-type(3)': {
+      display: 'none',
+    },
+    '@media (max-width: 768px)': {
+      display: 'flex',
+      marginBottom: '16px',
+      '&>img:nth-of-type(1)': {
+        height: '343px',
+        width: '343px',
+      },
+      '&>img:nth-of-type(2)': {
+        display: 'none',
+      },
+      '&>div': {
+        display: 'flex',
+        position: 'absolute',
+        left: '323px',
+        marginTop: '8px',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        width: '24px',
+        height: '24px',
+        borderRadius: '50%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        '&>img': {
+          width: '10px',
+          height: '10px',
+        },
+      },
+    },
   },
   img1440: {
     display: 'flex',
@@ -96,17 +216,45 @@ const useStyles = makeStyles({
       height: '24px',
       width: '24px',
     },
+    '&>img:nth-of-type(3)': {
+      display: 'none',
+    },
+    '@media (max-width: 768px)': {
+      display: 'flex',
+      marginBottom: '16px',
+      '&>img:nth-of-type(2)': {
+        display: 'none',
+      },
+      '&>div': {
+        display: 'flex',
+        position: 'absolute',
+        left: '156px',
+        marginTop: '8px',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        width: '24px',
+        height: '24px',
+        borderRadius: '50%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        '&>img': {
+          width: '10px',
+          height: '10px',
+        },
+      },
+    },
   },
 })
 
 interface Iprops {
   type?: string
-  onChange?: (images: string[]) => void
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  images?: string
   containerStyle?: React.CSSProperties
+  onDeleted?: () => void
 }
 
 export const InputuploadImage = (props: Iprops) => {
-  const {type, onChange, containerStyle, ...restProps} = props
+  const { type, onChange, containerStyle, images, onDeleted, ...restProps } = props
   const classes = useStyles()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -117,11 +265,13 @@ export const InputuploadImage = (props: Iprops) => {
   ): void => {
     if (event.target.files) {
       setImage(URL.createObjectURL(event.target.files[0]))
+      onChange && onChange(event)
     }
   }
 
   const handleImageDelete = () => {
     setImage(null)
+    onDeleted && onDeleted()
   }
 
   const handleAddImageClick = (): void => {
@@ -129,6 +279,12 @@ export const InputuploadImage = (props: Iprops) => {
       fileInputRef.current.click()
     }
   }
+
+  useEffect(() => {
+    if (images) {
+      setImage(images)
+    }
+  }, [images])
 
   const checkType = (type: string | undefined) => {
     switch (type) {
@@ -146,12 +302,16 @@ export const InputuploadImage = (props: Iprops) => {
         return classes.img512
     }
   }
+
   return (
     <div className={classes.container} style={containerStyle}>
       {image && (
         <div className={checkType(type)}>
           <img src={image} alt='selected' />
           <img src={closeBoldIcon} alt='close' onClick={handleImageDelete} />
+          <div onClick={handleImageDelete}>
+            <img src={closeWhiteIcon} alt='close' />
+          </div>
         </div>
       )}
       <button onClick={handleAddImageClick}>

@@ -1,15 +1,15 @@
 import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import { makeStyles } from '@mui/styles'
-import { useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axiosClient from '../../apis/axiosClient'
 import { conversationApi } from '../../apis/conversationApi'
+import { SYSTEM } from '../../apis/urlConfig'
 import { useAppDispatch } from '../../app/hooks'
 import iconBack from '../../asset/images/iconBack.png'
 import { Input } from '../../components/base/input/Input'
 import { InputImage } from '../../components/base/input/InputImage'
-import { conversationActions } from '../../features/conversation/conversationSlice'
-import { loadingActions } from '../../components/loading/loadingSlice'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 
 const useStyles = makeStyles({
     container_create_conversation: {
@@ -91,42 +91,77 @@ const CreateConversationMb = () => {
     const theme = useTheme()
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const { id } = useParams()
 
     const [valueInputModal1, setValueInputModal1] = useState('')
     const [valueInputModal2, setValueInputModal2] = useState('')
     const [valueInputModal3, setValueInputModal3] = useState('')
-    const [valueImages, setValueImages] = useState<string[]>([])
+    const [valueImages, setValueImages] = useState<File[]>([]);
+    const [listImages, setListImages] = useState<string[]>([]);
 
 
-    const handleImageChange = (images: string[]) => {
-        setValueImages(images)
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const newImages: File[] = [];
+            for (let i = 0; i < e.target.files.length; i++) {
+                newImages.push(e.target.files[i]);
+            }
+            setValueImages([...valueImages, ...newImages]);
+        }
     }
-    const handleCreateConversation = () => {
+    const handleDelImage = (images: string[]) => {
+        setListImages(images)
+    }
+    const handleCreateConversation = async () => {
         if (valueInputModal1 !== '' && valueInputModal2 !== '' && valueInputModal3 !== '' && valueImages.length > 0) {
+
+            const formData = new FormData();
+            for (let i = 0; i < valueImages.length; i++) {
+                formData.append('files', valueImages[i]);
+            }
+
+            const resImg = await axiosClient.post(`${SYSTEM}/multiple-upload`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+
+            const dataImg = (resImg.data || []).map((item: any) => {
+                return item.filename
+            })
+
             const data = {
-                topic: valueInputModal1,
+                mobileNumber: valueInputModal1,
                 title: valueInputModal2,
                 description: valueInputModal3,
-                thumbnail: valueImages
+                thumbnail: dataImg
             }
-            dispatch(loadingActions.openLoading())
             conversationApi.create(data)
                 .then((res: any) => {
                     if (res.statusCode === 201) {
-                        console.log('create conversation success');
-                        dispatch(conversationActions.getList({ params: undefined }))
-                        dispatch(loadingActions.loadingSuccess())
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '성공',
+                            type: 'success',
+                        }))
+                        setValueInputModal1('')
+                        setValueInputModal2('')
+                        setValueInputModal3('')
+                        setListImages([])
                         navigate(-1)
                     }
                     else {
                         console.log('message: ', res.message);
-                        dispatch(loadingActions.loadingSuccess())
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '실패',
+                            type: 'error',
+                        }))
                     }
                 })
                 .catch((error: any) => {
                     console.log(error)
-                    dispatch(loadingActions.loadingSuccess())
+                    dispatch(snackBarActions.setStateSnackBar({
+                        content: '실패',
+                        type: 'error',
+                    }))
                 })
         }
         else {
@@ -161,7 +196,7 @@ const CreateConversationMb = () => {
                         setValueInputModal2(e.target.value)
                     }}
                     label='제목'
-                    placeholder='입력해주세요.'
+                    placeholder='제목을 입력해주세요.'
                 />
                 <textarea
                     rows={5}
@@ -172,7 +207,8 @@ const CreateConversationMb = () => {
                     }} />
                 <div>
                     <p>캡처이미지 & 이미지 자료</p>
-                    <InputImage onImageChange={handleImageChange} />
+                    <InputImage onImageChange={handleImageChange} listImages={listImages} onDelImage={handleDelImage} />
+
                 </div>
             </div>
             <button onClick={handleCreateConversation}>

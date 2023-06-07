@@ -11,6 +11,9 @@ import { LOGIN, USER } from '../../apis/urlConfig'
 import axiosClient, { setTokens } from '../../apis/axiosClient'
 import { UserType } from '../../types/user.type'
 import { Modal } from '@mui/material'
+import { snackBarActions } from '../snackbar/snackbarSlice'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { selectUserData, userActions } from '../../features/user/userSlice'
 
 const useStyles = makeStyles({
   container_header: {
@@ -241,11 +244,13 @@ const Header = (props: IProps) => {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const dispatch = useAppDispatch()
+
+  const userProfile = useAppSelector(selectUserData)
   const { handleButtonShow } = props
   const [isShowSideBar, setIsShowSideBar] = useState(false)
   const [tokenFirebase, setTokenFirebase] = useState('')
   const [statusLogin, setStatusLogin] = useState(false)
-  const [user, setUser] = useState<UserType>()
   const [openModal, setOpenModal] = useState(false)
   const handleClick = () => {
     setIsShowSideBar(!isShowSideBar)
@@ -257,22 +262,34 @@ const Header = (props: IProps) => {
   const handleCloseModal = () => setOpenModal(false);
 
   const handleLogin = () => {
-    signInWithPopup(auth, provider)
-      .then((data: any) => {
-        setTokenFirebase(data.user.accessToken)
-      })
-      .catch((error: any) => {
-        console.log(error)
-      })
+    if (!localStorage.getItem('accessToken')) {
+      signInWithPopup(auth, provider)
+        .then((data: any) => {
+          setTokenFirebase(data.user.accessToken)
+        })
+        .catch((error: any) => {
+          console.log(error)
+        })
+    }
+
   }
   const handleLogout = () => {
     localStorage.removeItem('accessToken')
+    setTokenFirebase('')
     setOpenModal(false)
     navigate(ROUTE.HOME)
   }
   const handleClickSolution = () => {
     if (!!localStorage.getItem('accessToken')) {
       navigate(ROUTE.DEPOSITANDHISTORY)
+    }
+    else {
+      alert('이 기능을 사용하려면 로그인해야 합니다.')
+    }
+  }
+  const handleClickContact = () => {
+    if (!!localStorage.getItem('accessToken')) {
+      navigate(ROUTE.CUSTOMERCENTER)
     }
     else {
       alert('이 기능을 사용하려면 로그인해야 합니다.')
@@ -286,15 +303,27 @@ const Header = (props: IProps) => {
       axiosClient.post(LOGIN, data)
         .then((res: any) => {
           if (res.statusCode === 200) {
-            setStatusLogin(true)
+            setStatusLogin(!statusLogin)
             localStorage.setItem('accessToken', res.data?.accessToken)
+            dispatch(snackBarActions.setStateSnackBar({
+              content: '성공',
+              type: 'success',
+            }))
           }
           else {
             console.log('message: ', res.message);
+            dispatch(snackBarActions.setStateSnackBar({
+              content: '실패',
+              type: 'error',
+            }))
           }
         })
         .catch((error: any) => {
           console.log(error)
+          dispatch(snackBarActions.setStateSnackBar({
+            content: '실패',
+            type: 'error',
+          }))
         })
     }
   }, [tokenFirebase])
@@ -302,15 +331,7 @@ const Header = (props: IProps) => {
   useLayoutEffect(() => {
     if (localStorage.getItem('accessToken')) {
       setTokens()
-      axiosClient.get(USER)
-        .then((res: { data: UserType }) => {
-          if (res.data) {
-            setUser(res.data)
-          }
-        })
-        .catch((error: any) => {
-          console.log(error)
-        })
+      dispatch(userActions.getUser({ params: undefined }))
     }
   }, [statusLogin])
 
@@ -349,14 +370,14 @@ const Header = (props: IProps) => {
         <li onClick={() => console.log("ROUTE.HOME")}>About</li>
         <li onClick={handleClickSolution}>Solution</li>
         <li onClick={() => console.log("ROUTE.PRICE")}>Price</li>
-        <li onClick={() => navigate(ROUTE.CUSTOMERCENTER)}>Contact</li>
+        <li onClick={handleClickContact}>Contact</li>
       </ul>
       <div>
         {localStorage.getItem('accessToken') ? (
           <div onClick={handleClickMenuUser}>
             <img
               src={
-                user?.photo
+                userProfile?.photo
               }
               alt=''
             />
@@ -385,10 +406,10 @@ const Header = (props: IProps) => {
             <img src={polygon} alt='' />
           </div>
           <div>
-            <img src={user?.photo} alt='' />
+            <img src={userProfile?.photo} alt='' />
             <div>
-              <p>{user?.firstName} {user?.lastName}</p>
-              <p>{user?.email}</p>
+              <p>{userProfile?.firstName} {userProfile?.lastName}</p>
+              <p>{userProfile?.email}</p>
             </div>
           </div>
           <p>파트너 관리</p>

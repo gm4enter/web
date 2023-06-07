@@ -1,14 +1,15 @@
 import React from 'react'
-import {createRoot} from 'react-dom/client'
-import {BrowserRouter} from 'react-router-dom'
-import {Provider} from 'react-redux'
-import {store} from './app/store'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { store } from './app/store'
 import reportWebVitals from './reportWebVitals'
 import './index.css'
 import Router from './router'
 import BaseAdminLayout from './layouts/admin'
-import {createTheme, ThemeProvider} from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material'
 import Loading from './components/loading'
+import CustomizedSnackbars from './components/snackbar'
 const container = document.getElementById('root')!
 const root = createRoot(container)
 
@@ -25,6 +26,7 @@ root.render(
         <ThemeProvider theme={theme}>
           <BaseAdminLayout>
             <Loading />
+            <CustomizedSnackbars />
             <Router />
           </BaseAdminLayout>
         </ThemeProvider>

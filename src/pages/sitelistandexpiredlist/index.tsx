@@ -1,19 +1,28 @@
+import { MenuItem, Modal, Select } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
 import { SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
+import { makeStyles } from '@mui/styles'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import AppleIcon from '../../asset/images/AppleLogo.png'
 import CHPlay from '../../asset/images/CHPlayIcon.png'
+import noDataIcon from '../../asset/images/ListNone.png'
+import MenuDots from '../../asset/images/MenuDots.png'
 import plusIcon from '../../asset/images/plusIcon.png'
 import searchIcon from '../../asset/images/searchIcon.png'
-import MenuDots from '../../asset/images/MenuDots.png'
+import { selectListData, selectTotalData, siteActions } from '../../features/site/siteSlice'
 import { ROUTE } from '../../router/routes'
-import { makeStyles } from '@mui/styles'
-import { DropDownInput } from '../../components/base/input/DropdownInput'
-import { MenuItem, Select } from '@mui/material'
+import { SiteType } from '../../types/site.type'
+import { formatDate } from '../customercenter'
 import SiteListMobile from '../siteListMobile'
+import { io } from "socket.io-client"
+import closeIcon from '../../asset/images/cancel.png';
+import changePoint from '../../asset/images/ChangePoint.png';
+import { selectUserData } from '../../features/user/userSlice'
 
 const useStyles = makeStyles({
   container: {
@@ -45,6 +54,25 @@ const useStyles = makeStyles({
         alignItems: 'center',
         height: '28px',
       },
+    },
+  },
+  no_data: {
+    height: 'calc(100vh - 258px - 24px) ',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '12px',
+    '&>img': {
+      height: '240px',
+      width: '240px',
+    },
+    '&>p': {
+      margin: 0,
+      padding: 0,
+      fontSize: '18px',
+      fontWeight: 500,
+      color: '#70777F',
     },
   },
   cell_action: {
@@ -84,104 +112,102 @@ const useStyles = makeStyles({
       },
     },
   },
+  modal: {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    boxShadow: '0 0 12px 0 rgba(0, 0, 0, 0.25)',
+    border: 'none',
+    width: '396px',
+    // padding: '4px',
+    '&>div:nth-of-type(1)': {
+      display: 'flex', padding: '16px 24px 0px 32px', justifyContent: 'space-between', alignItems: 'center', textAlign: 'center',
+      '&>p': { padding: 0, margin: 0, fontSize: '20px', fontWeight: 500, textAlign: 'center', },
+      '&>img': { cursor: 'pointer', height: '24px', width: '24px' },
+    },
+    '&>div:nth-of-type(2)': {
+      padding: '0px 24px 16px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '16px',
+      justifyContent: 'center',
+      alignItems: 'center',
+      '&>img': { height: '160px', width: '160px' },
+      '&>div': {
+        '&>p:nth-of-type(1)': {
+          padding: 0, margin: '0 0 8px 0', fontSize: '18px', fontWeight: 700, color: '#111315', textAlign: 'center',
+        },
+        '&>p:nth-of-type(2)': {
+          padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, color: '#272B30', textAlign: 'center',
+        }
+      },
+    },
+    '&>div:nth-of-type(3)': {
+      display: 'flex', padding: ' 0 24px 24px', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: '16px',
+      '&>button:nth-of-type(1)': {
+        display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', borderRadius: '8px', backgroundColor: '#EBF3FF', padding: '10px 24px', textAlign: 'center',
+        '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 700, color: '#2B83FE' },
+      },
+    },
+  },
 })
 
-const rows = [
-  {
-    id: 1,
-    address: 'VN추가 \n도메인 미정',
-    endDate: '130일 남음',
-    startDate: '2023.01.01',
-    director: 'tiendatnguyenitnguyen@123.com',
-  },
-  {
-    id: 2,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.02',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 3,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.12',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 4,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.03',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 5,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.04',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 6,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.05',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 7,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.06',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 8,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.07',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 9,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.08',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 10,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.09',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 11,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.10',
-    director: 'redjword@naver.com',
-  },
-  {
-    id: 12,
-    address: 'VN추가 \n onjob (world1.shop)',
-    endDate: '130일 남음',
-    startDate: '2023.01.11',
-    director: 'redjword@naver.com',
-  },
-]
+const CustomEndDateCell = (props: any) => {
+  const { params } = props;
+  const [showValue, setShowValue] = useState(true);
+
+  const handleClick = () => {
+    setShowValue(!showValue);
+  };
+
+  return (
+    <div style={{cursor: 'pointer'}} onClick={handleClick}>
+      {showValue ? (
+        <p style={{}}>{params.value}</p>
+      ) : (
+        <p>{params.row.expirationDate}</p>
+      )}
+    </div>
+  );
+};
 
 const SiteListAndExpiredList = () => {
   const navigate = useNavigate()
   const classes = useStyles()
+  const dispatch = useAppDispatch()
+  const listDataWebsite = useAppSelector(selectListData)
+  const totalData = useAppSelector(selectTotalData)
+  const socketRef = useRef<any>(null)
+  const [openModal, setOpenModal] = useState(false);
+  const userProfile = useAppSelector(selectUserData)
+  const point = userProfile?.wallet?.balance || 0
 
-  const [age, setAge] = React.useState('')
+  const [page, setPage] = useState<number>(1)
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value)
+  const perPage = 15
+
+  const [rows, setRows] = useState<any>([{
+    id: '',
+    address: '',
+    endDate: '',
+    expirationDate: '',
+    startDate: '',
+    director: '',
+  },]);
+  
+  const handleCloseModal = () => {
+    setOpenModal(false)
   }
+  const handleClickModal = () => {
+    setOpenModal(false)
+    window.location.reload()
+  }
+
+
+
   const [paymentMethod, setPaymentMethod] = useState('1')
   const handleChangePaymentMethod = (event: SelectChangeEvent) => {
     setPaymentMethod(event.target.value)
@@ -210,6 +236,7 @@ const SiteListAndExpiredList = () => {
       headerName: '만료일',
       disableColumnMenu: true,
       sortable: false,
+      renderCell: (params: any) => <CustomEndDateCell params={params} />,
     },
     {
       field: 'startDate',
@@ -231,52 +258,107 @@ const SiteListAndExpiredList = () => {
       sortable: false,
       disableColumnMenu: true,
       flex: 1,
+      minWidth: 340,
+      // maxWidth: 890,
       renderCell: (params: any) => {
         return (
           <div className={classes.cell_action}>
             <button>
               <p>관리</p>
             </button>
+
             <button
               onClick={() => {
-                navigate(ROUTE.INFOWEBSITE)
+                navigate(`${ROUTE.INFOWEBSITE}/${params.id}`)
               }}
             >
               <p>정보</p>
             </button>
+
             <button>
               <p>결제</p>
             </button>
+
             <button
               onClick={() => {
-                navigate(ROUTE.REGISTERANDMODIFYGOOGLEPLAY)
+                navigate(`${ROUTE.REGISTERANDMODIFYGOOGLEPLAY}/${params.id}`)
               }}
             >
               <img src={CHPlay} />
               <p>신청</p>
             </button>
+
             <button
               onClick={() => {
-                navigate(ROUTE.REGISTERANDMODIFYAPPLESTORE)
+                navigate(`${ROUTE.REGISTERANDMODIFYAPPLESTORE}/${params.id}`)
               }}
             >
               <img src={AppleIcon} />
               <p>신청</p>
             </button>
+
             <button onClick={() => { }}>
               <img src={MenuDots} />
             </button>
+
           </div>
         )
       },
     },
   ]
 
+  useEffect(() => {
+    dispatch(siteActions.getList({ params: { page, perPage } }))
+  }, [dispatch, page])
+
+  useEffect(() => {
+    if (!listDataWebsite) return;
+    else {
+      const data: any = [];
+      listDataWebsite?.forEach((item: SiteType, index) => {
+        const transformedData = {
+          id: item._id,
+          address: `${item.name || '사이트 이름 미정'} \n${item.webInfo?.domainName || '도메인 미정'}`,
+          endDate: `${Math.floor(item.remainingDays)}일 남음`,
+          expirationDate: formatDate(item.expirationDate || ''),
+          startDate: formatDate(item.createdAt || ''),
+          director: item.adminEmail,
+        };
+        data.push(transformedData);
+      });
+      setRows(data);
+    }
+  }, [listDataWebsite])
+
+  
+  useEffect(() => {
+    socketRef.current = io('https://server.gmapps.net', {
+      extraHeaders: {
+        Authorization: "Bearer " + localStorage.getItem('accessToken'),
+      }
+    })
+
+    // socketRef.current.on('getId', (data: string) => {
+    //   setIdSocket(data)
+    // })
+
+    socketRef.current.on('adminApprove', (Price: any) => {
+      if (Price && Price.wallet.balance !== point) {
+        setOpenModal(true)
+      }
+      // return Price
+    })
+    return () => {
+      socketRef.current.disconnect();
+    };
+
+  }, []);
+
   return (
     <>
-      <div className={classes.container} style={{}}>
-        <p style={{}}>분류</p>
-        <div style={{}}>
+      <div className={classes.container}>
+        <p>분류</p>
+        <div>
           <TextField
             id='outlined-start-adornment'
             placeholder='Search bar...'
@@ -300,7 +382,11 @@ const SiteListAndExpiredList = () => {
                 borderColor: '#D0D5DD',
                 fontSize: '16px',
                 fontWeight: 400,
+                height: '44px',
               },
+            }}
+            sx={{
+              width: '240px',
             }}
           />
           <Select
@@ -318,19 +404,18 @@ const SiteListAndExpiredList = () => {
             }}
             inputProps={{ 'aria-label': 'Without label' }}
           >
-            <MenuItem value={1}>신용카드</MenuItem>
-            <MenuItem value={2}>신용카드</MenuItem>
-            <MenuItem value={3}>신용카드</MenuItem>
+            <MenuItem value={1}>활성화</MenuItem>
+            <MenuItem value={2}>비활성화</MenuItem>
           </Select>
         </div>
-        <div style={{}}>
-          <div style={{}}>
+        <div>
+          <div>
             <p
               style={{ padding: 0, margin: 0, fontSize: '18px', fontWeight: 500 }}
             >
               생성한 사이트
             </p>
-            <div
+            {listDataWebsite?.length ? <div
               style={{
                 height: '28px',
                 width: '28px',
@@ -351,12 +436,12 @@ const SiteListAndExpiredList = () => {
                   color: '#fff',
                 }}
               >
-                2
+                {listDataWebsite?.length}
               </p>
-            </div>
+            </div> : <div />}
           </div>
           <button
-            onClick={() => { }}
+            onClick={() => { navigate(ROUTE.SITECREATION) }}
             style={{
               display: 'flex',
               justifyContent: 'center',
@@ -381,31 +466,76 @@ const SiteListAndExpiredList = () => {
             </p>
           </button>
         </div>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          // columnStyles={columnStyles}
-          checkboxSelection
-          disableRowSelectionOnClick
-          hideFooter
-          sx={{
-            '& .MuiDataGrid-main': {
-              // display: 'flex',
-              '& .MuiDataGrid-columnHeaders': {
-                borderColor: '#D0D5DD',
-                backgroundColor: '#F1F1F1',
-                color: '#000',
-                fontSize: '16px',
-                fontWeight: 700,
-              },
-              '&>div: nth-child(2)': {
-                overflow: 'initial !important',
-              },
-            },
-          }}
-        />
+        {rows.length > 0 ?
+          <div>
+            <InfiniteScroll
+              dataLength={listDataWebsite.length || 0}
+              next={() => setPage(page + 1)}
+              hasMore={true}
+              loader={<></>}
+            >
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                // columnStyles={columnStyles}
+                checkboxSelection
+                disableRowSelectionOnClick
+                hideFooter
+                sx={{
+                  '& .MuiDataGrid-main': {
+                    display: 'flex',
+                    '& .MuiDataGrid-columnHeaders': {
+                      borderColor: '#D0D5DD',
+                      backgroundColor: '#F1F1F1',
+                      color: '#000',
+                      fontSize: '16px',
+                      fontWeight: 700,
+                    },
+                    '&>div: nth-child(2)': {
+                      overflow: 'initial !important',
+                    },
+                    '& .MuiDataGrid-cell:focus': {
+                      outline: 'none', // Remove the outline on focus
+                    },
+                    '& .MuiDataGrid-withBorderColor': {
+                      outline: 'none',
+                    },
+                  },
+                }}
+              />
+            </InfiniteScroll>
+          </div>
+          : <div className={classes.no_data}>
+            <img src={noDataIcon} alt='' />
+            <p>내역이 없습니다</p>
+          </div>
+        }
       </div>
       <SiteListMobile />
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        disableAutoFocus
+      >
+        <div className={classes.modal}>
+          <div>
+            <p></p>
+            <img src={closeIcon} alt="close" onClick={handleCloseModal} />
+          </div>
+          <div>
+            <img src={changePoint} alt="" />
+            <div>
+              <p>성공적으로 입금되었습니다</p>
+              <p>잔액을 확인해주세요</p>
+            </div>
+          </div>
+          <div>
+            <button onClick={handleClickModal}>
+              <p>오케</p>
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   )
 }

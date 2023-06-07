@@ -21,3 +21,6 @@ export const THEME = "/theme";
 
 //plan
 export const PLAN = "/plan";
+
+//system
+export const SYSTEM = "/system";

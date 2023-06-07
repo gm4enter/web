@@ -3,15 +3,20 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { makeStyles } from '@mui/styles';
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../apis/axiosClient';
-import { SITE, THEME } from '../../apis/urlConfig';
+import { SITE, THEME, USER } from '../../apis/urlConfig';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import eyeIcon from '../../asset/images/EyeScan.png';
 import closeIcon from '../../asset/images/cancel.png';
+import wallet02 from '../../asset/images/Wallet 02.png';
+import { snackBarActions } from '../../components/snackbar/snackbarSlice';
 import { planActions, selectListData } from '../../features/plan/planSlice';
+import { ROUTE } from '../../router/routes';
 import { PlanType } from '../../types/plan.type';
 import { ThemeType } from '../../types/theme.type';
+import { numberWithCommas } from '../../utils';
 
 const useStyles = makeStyles({
     container_site: {
@@ -113,6 +118,47 @@ const useStyles = makeStyles({
         },
     },
 
+    modalNotEnoughPoint: {
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: '#fff',
+        borderRadius: '12px',
+        boxShadow: '0 0 12px 0 rgba(0, 0, 0, 0.25)',
+        border: 'none',
+        // padding: '4px',
+        '&>div:nth-of-type(1)': {
+            display: 'flex', padding: '16px 24px 0px 32px', justifyContent: 'space-between', alignItems: 'center', textAlign: 'center',
+            '&>p': { padding: 0, margin: 0, fontSize: '20px', fontWeight: 500, textAlign: 'center', },
+            '&>img': { cursor: 'pointer', height: '24px', width: '24px' },
+        },
+        '&>div:nth-of-type(2)': {
+            padding: '0px 24px 16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            '&>img': { height: '160px', width: '160px' },
+            '&>div': {
+                '&>p:nth-of-type(1)': {
+                    padding: 0, margin: '0 0 8px 0', fontSize: '18px', fontWeight: 700, color: '#111315', textAlign: 'center',
+                },
+                '&>p:nth-of-type(2)': {
+                    padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, color: '#272B30', textAlign: 'center',
+                }
+            },
+        },
+        '&>div:nth-of-type(3)': {
+            display: 'flex', padding: ' 0 24px 24px', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: '16px',
+            '&>button:nth-of-type(1)': {
+                display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', borderRadius: '8px', backgroundColor: '#2B83FE', padding: '10px 24px', textAlign: 'center',
+                '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' },
+            },
+        },
+    },
+
     '@media (max-width: 768px)': {
         container_site: {
             height: 'calc(100vh - 108px)',
@@ -206,15 +252,17 @@ const useStyles = makeStyles({
 
 const SiteCreation = () => {
     const classes = useStyles();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const listPlan = useAppSelector(selectListData)
-    const [open, setOpen] = React.useState(false);
-    const [plan, setPlan] = React.useState<PlanType>();
-    const [listTheme, setListTheme] = React.useState<ThemeType[]>([]);
-    const [themeId, setThemeId] = React.useState('');
-    const [theme, setTheme] = React.useState<ThemeType>({} as ThemeType)
+    const [open, setOpen] = useState(false);
+    const [openModalNotEnoughPoint, setOpenModalNotEnoughPoint] = useState(false);
+    const [plan, setPlan] = useState<PlanType>();
+    const [listTheme, setListTheme] = useState<ThemeType[]>([]);
 
-    console.log('plan', plan?._id, 'theme', theme?._id);
+    const [themeId, setThemeId] = useState('');
+    const [theme, setTheme] = useState<ThemeType>({} as ThemeType)
+    const [point, setPoint] = useState<number>()
 
     //handle pick plan
     const handleOnClickRadio = (e: any) => {
@@ -230,7 +278,6 @@ const SiteCreation = () => {
         setOpen(true)
         axiosClient.get(`${THEME}/list`)
             .then((res: any) => {
-                console.log('get theme success!')
                 if (res.statusCode === 200) {
                     setListTheme(res.data)
                 } else {
@@ -250,25 +297,75 @@ const SiteCreation = () => {
         setOpen(false)
     }
 
+    //handle not enough point
+    const handleOpenModalNotEnoughPoint = () => {
+        setOpenModalNotEnoughPoint(true)
+    }
+    const handleCloseModalNotEnoughPoint = () => {
+        setOpenModalNotEnoughPoint(false)
+    }
+    const handleNotEnoughPoint = () => { }
+
 
     //handle create website
     const handleCreateWebsite = () => {
         if (plan && theme) {
-            axiosClient.post(`${SITE}/create`, { plan: plan._id, theme: theme._id, name: 'test' })
+            axiosClient.post(`${SITE}/create`, { plan: plan._id, theme: theme._id })
                 .then((res: any) => {
                     if (res.statusCode === 201) {
                         //dispatch action get list website
-                        console.log('create website success!', res);
+                        // dispatch(siteActions.getList({ params: undefined }))
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '성공',
+                            type: 'success',
+                        }))
+                        navigate(ROUTE.SITELISTANDEXPIREDLIST)
+                    }
+                    else {
+                        console.log('create website failed!', res.message);
+                        handleOpenModalNotEnoughPoint()
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '실패',
+                            type: 'error',
+                        }))
                     }
                 })
                 .catch((err) => {
-                    console.log(err)
+                    console.log('catch err', err)
+                    if (err.response.data.message === 'insufficient balance') {
+                        handleOpenModalNotEnoughPoint()
+                    }
+                    else {
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '실패',
+                            type: 'error',
+                        }))
+                    }
                 })
         }
     }
 
     useEffect(() => {
         dispatch(planActions.getList({ params: undefined }))
+        axiosClient.get(`${THEME}/list`)
+            .then((res: any) => {
+                if (res.statusCode === 200) {
+                    setListTheme(res.data)
+                } else {
+                    console.log('get theme failed!', res.message)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }, [])
+
+    useEffect(() => {
+        const getProfile = async () => {
+            const res = await axiosClient.get(USER)
+            setPoint(res.data.wallet.balance)
+        }
+        getProfile()
     }, [])
 
     return (
@@ -276,7 +373,7 @@ const SiteCreation = () => {
             <div>
                 <p>생성할 사이트 선택</p>
                 <div onClick={handleOpenModal}>
-                    <p>눌러서 선택해주세요.</p>
+                    {(Object.entries(theme).length === 0) ? <p>눌러서 선택해주세요.</p> : <p>{theme.name}</p>}
                 </div>
             </div>
 
@@ -297,14 +394,14 @@ const SiteCreation = () => {
             <div>
                 <p>개설 비용</p>
                 <div>
-                    {plan && <p>{plan.duration}년 ({plan.price}원) - VAT 포함</p>}
+                    {plan && <p>{plan.duration} {plan.typeDuration === 'year' ? '년' : '개월'} ({numberWithCommas(plan.price || 0)}원) - VAT 포함</p>}
                     <p>부가세 포함</p>
                 </div>
             </div>
 
             <div>
                 <p>예치금 잔액</p>
-                <p>196,982 원</p>
+                <p>{numberWithCommas(point || 0)} 원</p>
             </div>
 
             <div>
@@ -357,6 +454,30 @@ const SiteCreation = () => {
                         </button>
                         <button onClick={handleSubmitModal}>
                             <p>생성</p>
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal
+                open={openModalNotEnoughPoint}
+                onClose={handleCloseModalNotEnoughPoint}
+                disableAutoFocus
+            >
+                <div className={classes.modalNotEnoughPoint}>
+                    <div>
+                        <p></p>
+                        <img src={closeIcon} alt="close" onClick={handleCloseModalNotEnoughPoint} />
+                    </div>
+                    <div>
+                        <img src={wallet02} alt="" />
+                        <div>
+                            <p>잔액부족</p>
+                            <p>계정 잔액이 부족하여 이 작업을 수행할 수 없습니다.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button onClick={handleCloseModalNotEnoughPoint}>
+                            <p>충전하기</p>
                         </button>
                     </div>
                 </div>

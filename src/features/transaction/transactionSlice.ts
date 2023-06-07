@@ -2,11 +2,13 @@ import {PayloadAction, createSlice} from '@reduxjs/toolkit'
 import {TransactionType} from '../../types/transaction.type'
 import {mereListById} from '../../utils'
 import {RootState} from '../../app/store'
+import { TYPE_SORT } from '../../types/enum'
 
 const initialState: {
   listData: TransactionType[]
   page?: number
   totalData?: number
+  _sort?: TYPE_SORT
 } = {
   listData: [],
 }
@@ -17,6 +19,7 @@ const transactionSlice = createSlice({
   reducers: {
     getList: (state, action: PayloadAction<{params?: any}>) => {
       state.page = Number(action.payload.params.page)
+      state._sort = action.payload.params._sort;
     },
     getListSuccess: (
       state,
@@ -27,14 +30,21 @@ const transactionSlice = createSlice({
       }>
     ) => {
       if (action.payload.page) {
-        console.log(999, action.payload.listData, state.listData)
         state.listData = mereListById(
           state.listData,
           action.payload.listData
         ) as any
       }
       state.totalData = action.payload.totalData
-      console.log(6766, state.listData)
+    },
+    createTransaction: (
+      state,
+      action: PayloadAction<{
+        newData: TransactionType | any
+      }>
+    ) => {
+      const { newData } = action.payload;
+      state.listData = [newData, ...state.listData];
     },
   },
 })

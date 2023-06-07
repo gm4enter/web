@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import logo from '../../asset/images/logo.png'
 import hamburgerMenu from '../../asset/images/HamburgerMenu.png'
@@ -10,6 +10,11 @@ import { LOGIN, USER } from '../../apis/urlConfig'
 import { auth, provider } from '../../services/firebase'
 import axiosClient, { setTokens } from '../../apis/axiosClient'
 import { UserType } from '../../types/user.type'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { selectUserData, userActions } from '../../features/user/userSlice'
+import { Modal } from '@mui/material'
+import polygon from '../../asset/images/polygon.png'
+
 
 const useStyles = makeStyles({
     container_header: {
@@ -126,6 +131,68 @@ const useStyles = makeStyles({
         },
 
     },
+    modal: {
+        position: 'absolute',
+        right: '44px',
+        top: '96px',
+        width: '308px',
+        padding: '16px 20px',
+        backgroundColor: '#fff',
+        borderRadius: '10px',
+        boxShadow: '0px 2px 16px rgba(0, 0, 0, 0.25)',
+        '&>div:nth-of-type(1)': {
+            '&>img': {
+                position: 'absolute',
+                right: '16px ',
+                top: '-12px',
+                width: '12px',
+                height: '12px',
+            },
+        },
+        '&>div:nth-of-type(2)': {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            '&>img:nth-of-type(1)': {
+                width: '54px',
+                height: '54px',
+                borderRadius: '50%',
+            },
+            '&>div': {
+                '&>p': {
+                    padding: 0,
+                    margin: 0,
+                },
+                '&>p:nth-of-type(1)': {
+                    fontWeight: 700,
+                    fontSize: '16px',
+                },
+                '&>p:nth-of-type(2)': {
+                    fontWeight: 400,
+                    fontSize: '14px',
+                },
+            },
+        },
+        '&>p:nth-of-type(1)': {
+            padding: 0,
+            margin: '24px 0 12px 0',
+            fontWeight: 500,
+            fontSize: '16px',
+            cursor: 'pointer',
+        },
+        '&>p:nth-of-type(2)': {
+            padding: 0,
+            margin: 0,
+            fontWeight: 400,
+            fontSize: '16px',
+            color: '#272B30',
+            cursor: 'pointer',
+
+        },
+        '@media (max-width: 768px)': {
+            right: '16px',
+        },
+    },
 })
 
 interface IProps {
@@ -135,62 +202,83 @@ interface IProps {
 const HeaderAdmin = (props: IProps) => {
     const classes = useStyles()
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const userProfile = useAppSelector(selectUserData)
     const { handleButtonShow } = props
     const [isShowSideBar, setIsShowSideBar] = useState(false)
     const [tokenFirebase, setTokenFirebase] = useState('')
     const [statusLogin, setStatusLogin] = useState(false)
     const [user, setUser] = useState<UserType>()
+    const [openModal, setOpenModal] = useState(false)
+
 
     const handleClick = () => {
         setIsShowSideBar(!isShowSideBar)
         handleButtonShow(isShowSideBar)
     }
-    const handleLogin = () => {
-        signInWithPopup(auth, provider)
-            .then((data: any) => {
-                setTokenFirebase(data.user.accessToken)
-            })
-            .catch((error: any) => {
-                console.log(error)
-            })
+    const handleClickMenuUser = () => {
+        setOpenModal(!openModal)
     }
-    useEffect(() => {
-        if (tokenFirebase) {
-            const data = {
-                firebaseToken: tokenFirebase,
-            }
-            axiosClient.post(LOGIN, data)
-                .then((res: any) => {
-                    if (res.statusCode === 200) {
-                        setStatusLogin(true)
-                        localStorage.setItem('accessToken', res.data?.accessToken)
-                    }
-                    else {
-                        console.log('message: ', res.message);
-                    }
-                })
-                .catch((error: any) => {
-                    console.log(error)
-                })
-        }
-    }, [tokenFirebase])
+    const handleCloseModal = () => setOpenModal(false);
 
-    useEffect(() => {
-        if (localStorage.getItem('accessToken')) {
+    const handleLogin = () => {
+        // signInWithPopup(auth, provider)
+        //     .then((data: any) => {
+        //         setTokenFirebase(data.user.accessToken)
+        //     })
+        //     .catch((error: any) => {
+        //         console.log(error)
+        //     })
+    }
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken')
+        navigate(ROUTE.HOME)
+    }
 
-            setTokens()
-            axiosClient.get(USER)
-                .then((res: { data: UserType }) => {
-                    if (res.data) {
-                        setUser(res.data)
-                    }
-                })
-                .catch((error: any) => {
-                    console.log(error)
-                })
+    // useEffect(() => {
+    //     if (tokenFirebase) {
+    //         const data = {
+    //             firebaseToken: tokenFirebase,
+    //         }
+    //         axiosClient.post(LOGIN, data)
+    //             .then((res: any) => {
+    //                 if (res.statusCode === 200) {
+    //                     console.log('message: ', res.message);
+    //                     setStatusLogin(true)
+    //                     localStorage.setItem('accessToken', res.data?.accessToken)
+    //                 }
+    //                 else {
+    //                     console.log('message: ', res.message);
+    //                 }
+    //             })
+    //             .catch((error: any) => {
+    //                 console.log(error)
+    //             })
+    //     }
+    // }, [tokenFirebase])
 
-        }
-    }, [statusLogin])
+    // useEffect(() => {
+    //     if (localStorage.getItem('accessToken')) {
+    //         setTokens()
+    //         axiosClient.get(USER)
+    //             .then((res: { data: UserType }) => {
+    //                 if (res.data) {
+    //                     setUser(res.data)
+    //                 }
+    //             })
+    //             .catch((error: any) => {
+    //                 console.log(error)
+    //             })
+
+    //     }
+    // }, [statusLogin])
+
+    useLayoutEffect(() => {
+        userProfile ?
+            setUser(userProfile) :
+            dispatch(userActions.getUser({ params: undefined }))
+    }, [userProfile])
+
     return (
         <div
             className={classes.container_header}
@@ -210,7 +298,7 @@ const HeaderAdmin = (props: IProps) => {
             </div>
             <div>
                 {localStorage.getItem('accessToken') ? (
-                    <div>
+                    <div onClick={handleClickMenuUser}>
                         <img
                             src={
                                 user?.photo
@@ -224,6 +312,34 @@ const HeaderAdmin = (props: IProps) => {
                     </button>
                 )}
             </div>
+
+            <Modal
+                open={openModal}
+                onClose={handleCloseModal}
+                disableAutoFocus
+                sx={
+                    {
+                        '.MuiModal-backdrop': {
+                            backgroundColor: 'transparent',
+                        },
+                    }
+                }
+            >
+                <div className={classes.modal}>
+                    <div>
+                        <img src={polygon} alt='' />
+                    </div>
+                    <div>
+                        <img src={user?.photo} alt='' />
+                        <div>
+                            <p>{user?.firstName} {userProfile?.lastName}</p>
+                            <p>{user?.email}</p>
+                        </div>
+                    </div>
+                    <p>파트너 관리</p>
+                    <p onClick={handleLogout}>로그아웃</p>
+                </div>
+            </Modal>
 
         </div>
     )

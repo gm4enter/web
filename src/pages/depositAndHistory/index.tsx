@@ -1,18 +1,22 @@
-import {MenuItem, Select, SelectChangeEvent} from '@mui/material'
-import {makeStyles} from '@mui/styles'
-import {useState, useEffect} from 'react'
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { useState, useEffect, useLayoutEffect } from 'react'
 import infoCircle from '../../asset/images/iconInfoCircle.png'
 import timeHistory from '../../asset/images/TimeHistory.png'
-import {Input} from '../../components/base/input/Input'
-import {HistoryTable} from './components/HistoryTable'
-import {ROUTE} from '../../router/routes'
-import {useNavigate} from 'react-router-dom'
+import { Input } from '../../components/base/input/Input'
+import { HistoryTable } from './components/HistoryTable'
+import { ROUTE } from '../../router/routes'
+import { useNavigate } from 'react-router-dom'
 import axiosClient from '../../apis/axiosClient'
-import {TRANSACTION, USER} from '../../apis/urlConfig'
-import {numberWithCommas} from '../../utils'
-import {PAYMENT_METHOD} from '../../types/enum'
-import {useAppDispatch} from '../../app/hooks'
-import {loadingActions} from '../../components/loading/loadingSlice'
+import { TRANSACTION, USER } from '../../apis/urlConfig'
+import { numberWithCommas } from '../../utils'
+import { PAYMENT_METHOD, TYPE_SORT } from '../../types/enum'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { loadingActions } from '../../components/loading/loadingSlice'
+import { selectListTransaction, transactionActions } from '../../features/transaction/transactionSlice'
+import { selectUserData, userActions } from '../../features/user/userSlice'
+import { TransactionType } from '../../types/transaction.type'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 
 const useStyles = makeStyles({
   container_deposit: {
@@ -220,14 +224,36 @@ const useStyles = makeStyles({
       },
     },
   },
+  no_data: {
+    height: 'calc(100vh - 396px - 76px) ',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '12px',
+    '&>img': {
+      height: '240px',
+      width: '240px',
+    },
+    '&>p': {
+      margin: 0,
+      padding: 0,
+      fontSize: '18px',
+      fontWeight: 500,
+      color: '#70777F',
+    },
+  },
 })
 
 const DespositAndHistory = () => {
   const navigate = useNavigate()
   const classes = useStyles()
   const dispatch = useAppDispatch()
+  const listTransaction = useAppSelector(selectListTransaction)
+  const userProfile = useAppSelector(selectUserData)
+
   const [paymentMethod, setPaymentMethod] = useState<PAYMENT_METHOD>(
-    PAYMENT_METHOD.TRANSFER
+    PAYMENT_METHOD.CREDIT_CARD
   )
   const [deposit, setDeposit] = useState<number>(500000)
   const [point, setPoint] = useState<number>()
@@ -237,14 +263,11 @@ const DespositAndHistory = () => {
   const handleChangePaymentMethod = (event: any) => {
     setPaymentMethod(event.target.value)
   }
-  useEffect(() => {
-    const getProfile = async () => {
-      const res = await axiosClient.get(USER)
-      console.log('profile', res)
-      setPoint(res.data.wallet.balance)
-    }
-    getProfile()
-  }, [])
+  useLayoutEffect(() => {
+    (Object.entries(userProfile).length === 0) ?
+      dispatch(userActions.getUser({ params: undefined })) :
+      setPoint(userProfile.wallet?.balance)
+  }, [userProfile])
 
   const createDeposit = async () => {
     try {
@@ -253,12 +276,30 @@ const DespositAndHistory = () => {
         value: deposit,
         paymentMethod: paymentMethod,
       })
+        .then((res) => {
+          dispatch(transactionActions.createTransaction({ newData: res }))
+          dispatch(loadingActions.loadingSuccess())
+          dispatch(snackBarActions.setStateSnackBar({
+            content: '성공',
+            type: 'success',
+          }))
+        })
+        .catch((err) => {
+          console.log(err);
+          dispatch(loadingActions.loadingSuccess())
+          dispatch(snackBarActions.setStateSnackBar({
+            content: '실패',
+            type: 'error',
+          }))
+        })
+    } catch (error) { 
       dispatch(loadingActions.loadingSuccess())
-    } catch (error) {
-      dispatch(loadingActions.loadingSuccess())
+      dispatch(snackBarActions.setStateSnackBar({
+        content: '실패',
+        type: 'error',
+      }))
     }
   }
-  console.log(677, paymentMethod)
   return (
     <div className={classes.container_deposit}>
       <div>
@@ -297,9 +338,10 @@ const DespositAndHistory = () => {
             <Input
               label='예치금 잔액'
               value={numberWithCommas(Number(point))}
-              onChange={() => {}}
-              labelStyle={{fontSize: '12px'}}
+              onChange={() => { }}
+              // labelStyle={{fontSize: '12px'}}
               disabled
+            // inputStyle={{width: 'calc(100% - 32px)'}}
             />
           </div>
           <div>
@@ -315,13 +357,12 @@ const DespositAndHistory = () => {
                 fontSize: '16px',
                 fontWeight: 500,
                 lineHeight: '24px',
+                height: '46px',
               }}
-              inputProps={{'aria-label': 'Without label'}}
+              inputProps={{ 'aria-label': 'Without label' }}
             >
-              <MenuItem value={PAYMENT_METHOD.TRANSFER}>TRANSFER</MenuItem>
-              <MenuItem value={PAYMENT_METHOD.CREDIT_CARD}>
-                CREDIT CARD
-              </MenuItem>
+              <MenuItem value={PAYMENT_METHOD.CREDIT_CARD}>신용카드</MenuItem>
+              <MenuItem value={PAYMENT_METHOD.TRANSFER}>계좌이체(국민은행56690204040102이승우)</MenuItem>
             </Select>
           </div>
           <div>
@@ -336,8 +377,10 @@ const DespositAndHistory = () => {
                 borderRadius: '8px',
                 fontSize: '16px',
                 fontWeight: 500,
+                height: '46px',
+
               }}
-              inputProps={{'aria-label': 'Without label'}}
+              inputProps={{ 'aria-label': 'Without label' }}
             >
               <MenuItem value={500000}>500,000원</MenuItem>
               <MenuItem value={1000000}>1,000,000원</MenuItem>
@@ -355,7 +398,7 @@ const DespositAndHistory = () => {
 
       <div>
         <p>예치금 내역</p>
-        <HistoryTable />
+        <HistoryTable point={Number(point)} />
       </div>
     </div>
   )
