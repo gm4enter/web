@@ -164,7 +164,7 @@ const CustomEndDateCell = (props: any) => {
   };
 
   return (
-    <div style={{cursor: 'pointer'}} onClick={handleClick}>
+    <div style={{ cursor: 'pointer' }} onClick={handleClick}>
       {showValue ? (
         <p style={{}}>{params.value}</p>
       ) : (
@@ -184,6 +184,13 @@ const SiteListAndExpiredList = () => {
   const [openModal, setOpenModal] = useState(false);
   const userProfile = useAppSelector(selectUserData)
   const point = userProfile?.wallet?.balance || 0
+  const [Message, setMessage] = useState<{
+    title: string,
+    content: string,
+  }>({
+    title: '',
+    content: '',
+  })
 
   const [page, setPage] = useState<number>(1)
 
@@ -203,6 +210,7 @@ const SiteListAndExpiredList = () => {
   }
   const handleClickModal = () => {
     setOpenModal(false)
+    // dispatch(siteActions.getList({ params: { perPage } }))
     window.location.reload()
   }
 
@@ -342,11 +350,13 @@ const SiteListAndExpiredList = () => {
     //   setIdSocket(data)
     // })
 
-    socketRef.current.on('adminApprove', (Price: any) => {
-      if (Price && Price.wallet.balance !== point) {
-        setOpenModal(true)
-      }
-      // return Price
+    socketRef.current.on('adminApproveSite', (Message: {
+      title: string,
+      content: string,
+    }) => {
+      setMessage(Message)
+      setOpenModal(true)
+      
     })
     return () => {
       socketRef.current.disconnect();
@@ -525,8 +535,8 @@ const SiteListAndExpiredList = () => {
           <div>
             <img src={changePoint} alt="" />
             <div>
-              <p>성공적으로 입금되었습니다</p>
-              <p>잔액을 확인해주세요</p>
+              <p>{Message.title}</p>
+              <p>{Message.content}</p>
             </div>
           </div>
           <div>

@@ -19,8 +19,31 @@ import changePoint from '../../../asset/images/ChangePoint.png';
 
 const useStyles = makeStyles({
   tableContainer: {
-    '.MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-e66yx5-MuiTableCell-root':
-      {},
+    '&>thead': {
+      '&>tr': {
+        '&>th': {
+          padding: '12px 16px',
+          fontSize: '16px',
+          color: '#111315',
+          fontWeight: 500,
+          '&:nth-of-type(1)': { width: '20%' },
+          '&:nth-of-type(2)': { width: '40%' },
+          '&:nth-of-type(3)': { width: '20%' },
+          '&:nth-of-type(4)': { width: '20%' },
+          '&:nth-of-type(5)': { width: '20%' },
+        },
+      },
+    },
+    '&>tbody': {
+      '&>tr': {
+        '&>td': {
+          padding: '12px 16px',
+          fontSize: '16px',
+          color: '#343941',
+          fontWeight: 500,
+        }
+      }
+    }
   },
   no_data: {
     height: 'calc(100vh - 396px - 76px) ',
@@ -231,8 +254,12 @@ export const HistoryTable = (props: Iprops) => {
                         <TableCell>
                           {moment(item1.createdAt).format('YYYY-MM-DD')}
                         </TableCell>
-                        {/* <TableCell>{item1.description }</TableCell> */}
-                        <TableCell>{ }</TableCell>
+                        <TableCell>
+                          {(item1.typeTransaction === 'deposit') ?
+                            (item1.paymentMethod === "CREDIT_CARD" ? '신용카드' : '계좌이체')
+                            : item1.description
+                          }
+                        </TableCell>
                         <TableCell>
                           {(item1.typeTransaction === 'deposit') &&
                             (item1.status === 'PENDING' ?
@@ -243,13 +270,14 @@ export const HistoryTable = (props: Iprops) => {
                             )}
                         </TableCell>
                         <TableCell>
-                          {(item1.typeTransaction === 'payment') &&
-                            (item1.status === 'PENDING' ?
-                              <div>
-                                <p style={{ color: '#343941', padding: 0, margin: 0, }}>입금확인중... </p>
-                                {numberWithCommas(item1.value)}원
-                              </div> : <p style={{ color: '#2B83FE', padding: 0, margin: 0, }}>- {numberWithCommas(item1.value)}</p>
-                            )}
+                          {(item1.typeTransaction === 'payment') && <p style={{ color: '#2B83FE', padding: 0, margin: 0, }}>- {numberWithCommas(item1.value)}</p>
+
+                            // (item1.status === 'PENDING' ?
+                            // <div>
+                            //   <p style={{ color: '#343941', padding: 0, margin: 0, }}>입금확인중... </p>
+                            //   {numberWithCommas(item1.value)}원
+                            // </div> : <p style={{ color: '#2B83FE', padding: 0, margin: 0, }}>- {numberWithCommas(item1.value)}</p>)
+                          }
                         </TableCell>
                         <TableCell>
                           {/* {item1.status === 'PENDING' ?

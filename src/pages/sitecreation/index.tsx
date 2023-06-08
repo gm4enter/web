@@ -3,7 +3,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { makeStyles } from '@mui/styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../apis/axiosClient';
 import { SITE, THEME, USER } from '../../apis/urlConfig';
@@ -17,6 +17,9 @@ import { ROUTE } from '../../router/routes';
 import { PlanType } from '../../types/plan.type';
 import { ThemeType } from '../../types/theme.type';
 import { numberWithCommas } from '../../utils';
+import { transactionActions } from '../../features/transaction/transactionSlice';
+import { TYPE_SORT } from '../../types/enum';
+import { selectUserData, userActions } from '../../features/user/userSlice';
 
 const useStyles = makeStyles({
     container_site: {
@@ -255,6 +258,7 @@ const SiteCreation = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const listPlan = useAppSelector(selectListData)
+    const userProfile = useAppSelector(selectUserData)
     const [open, setOpen] = useState(false);
     const [openModalNotEnoughPoint, setOpenModalNotEnoughPoint] = useState(false);
     const [plan, setPlan] = useState<PlanType>();
@@ -315,6 +319,13 @@ const SiteCreation = () => {
                     if (res.statusCode === 201) {
                         //dispatch action get list website
                         // dispatch(siteActions.getList({ params: undefined }))
+
+                        // dispatch action update list transaction
+                        dispatch(transactionActions.createTransaction({ newData: res.data.transaction }))
+
+                        //dispatch action get user (update point)
+                        dispatch(userActions.getUser({ params: undefined }))
+                        
                         dispatch(snackBarActions.setStateSnackBar({
                             content: '성공',
                             type: 'success',
@@ -360,13 +371,12 @@ const SiteCreation = () => {
             })
     }, [])
 
-    useEffect(() => {
-        const getProfile = async () => {
-            const res = await axiosClient.get(USER)
-            setPoint(res.data.wallet.balance)
-        }
-        getProfile()
-    }, [])
+    useLayoutEffect(() => {
+        (Object.entries(userProfile).length === 0) ?
+            dispatch(userActions.getUser({ params: undefined })) :
+            setPoint(userProfile.wallet?.balance)
+    }, [userProfile])
+
 
     return (
         <div className={classes.container_site}>
