@@ -20,6 +20,7 @@ import { numberWithCommas } from '../../utils';
 import { transactionActions } from '../../features/transaction/transactionSlice';
 import { TYPE_SORT } from '../../types/enum';
 import { selectUserData, userActions } from '../../features/user/userSlice';
+import { siteActions } from '../../features/site/siteSlice';
 
 const useStyles = makeStyles({
     container_site: {
@@ -318,7 +319,7 @@ const SiteCreation = () => {
                 .then((res: any) => {
                     if (res.statusCode === 201) {
                         //dispatch action get list website
-                        // dispatch(siteActions.getList({ params: undefined }))
+                        dispatch(siteActions.getList({ params: { _sort: TYPE_SORT.CREATED_AT_DESC } }))
 
                         // dispatch action update list transaction
                         dispatch(transactionActions.createTransaction({ newData: res.data.transaction }))

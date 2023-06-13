@@ -35,6 +35,9 @@ const transactionSlice = createSlice({
           action.payload.listData
         ) as any
       }
+      else {
+        state.listData = action.payload.listData;
+      }
       state.totalData = action.payload.totalData
     },
     createTransaction: (

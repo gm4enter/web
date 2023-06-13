@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { SiteType } from "../../types/site.type";
 import { mereListById } from "../../utils";
+import { TYPE_SORT } from "../../types/enum";
 
 // const initialState: { listData: SiteType[] } = {
 //   listData: [],
@@ -12,6 +13,7 @@ const initialState: {
   page?: number;
   perPage?: number;
   totalData?: number;
+  _sort?: TYPE_SORT;
 } = {
   listData: [],
 };
@@ -33,6 +35,7 @@ const siteSlice = createSlice({
     getList: (state, action: PayloadAction<{ params?: any }>) => {
       state.page = Number(action.payload.params.page);
       state.perPage = Number(action.payload.params.perPage);
+      state._sort = action.payload.params._sort;
     },
     getListSuccess: (
       state,
@@ -49,6 +52,9 @@ const siteSlice = createSlice({
           action.payload.listData
         ) as any;
       }
+      else {
+        state.listData = action.payload.listData;
+      }
       state.totalData = action.payload.totalData;
     },
     updateSite: (
@@ -64,6 +70,15 @@ const siteSlice = createSlice({
         }
         return item;
       });
+    },
+    createSite: (
+      state,
+      action: PayloadAction<{
+        newData: SiteType | any
+      }>
+    ) => {
+      const { newData } = action.payload;
+      state.listData = [newData, ...state.listData];
     },
   },
 });

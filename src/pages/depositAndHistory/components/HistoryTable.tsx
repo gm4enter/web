@@ -26,11 +26,11 @@ const useStyles = makeStyles({
           fontSize: '16px',
           color: '#111315',
           fontWeight: 500,
-          '&:nth-of-type(1)': { width: '20%' },
+          '&:nth-of-type(1)': { width: '15%' },
           '&:nth-of-type(2)': { width: '40%' },
-          '&:nth-of-type(3)': { width: '20%' },
-          '&:nth-of-type(4)': { width: '20%' },
-          '&:nth-of-type(5)': { width: '20%' },
+          '&:nth-of-type(3)': { width: '15%', textAlign: 'center' },
+          '&:nth-of-type(4)': { width: '15%', textAlign: 'right' },
+          '&:nth-of-type(5)': { width: '15%', textAlign: 'right' },
         },
       },
     },
@@ -41,6 +41,11 @@ const useStyles = makeStyles({
           fontSize: '16px',
           color: '#343941',
           fontWeight: 500,
+          '&:nth-of-type(1)': { width: '15%' },
+          '&:nth-of-type(2)': { width: '40%' },
+          '&:nth-of-type(3)': { width: '15%', textAlign: 'center' },
+          '&:nth-of-type(4)': { width: '15%', textAlign: 'right' },
+          '&:nth-of-type(5)': { width: '15%', textAlign: 'right' },
         }
       }
     }
@@ -129,7 +134,9 @@ export const HistoryTable = (props: Iprops) => {
   }
   const handleClickModal = () => {
     setOpenModal(false)
-    window.location.reload()
+    // window.location.reload()
+    dispatch(transactionActions.getList({ params: { _sort: TYPE_SORT.CREATED_AT_DESC } }))
+
   }
 
 
@@ -217,7 +224,7 @@ export const HistoryTable = (props: Iprops) => {
     <div>
       {listData.length > 0 ?
         <InfiniteScroll
-          dataLength={listData.length || 0}
+          dataLength={listTransaction.length || 0}
           next={() => setPage(page + 1)}
           hasMore={true}
           loader={<></>}

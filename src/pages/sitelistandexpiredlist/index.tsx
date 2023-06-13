@@ -23,6 +23,7 @@ import { io } from "socket.io-client"
 import closeIcon from '../../asset/images/cancel.png';
 import changePoint from '../../asset/images/ChangePoint.png';
 import { selectUserData } from '../../features/user/userSlice'
+import { TYPE_SORT } from '../../types/enum'
 
 const useStyles = makeStyles({
   container: {
@@ -210,8 +211,8 @@ const SiteListAndExpiredList = () => {
   }
   const handleClickModal = () => {
     setOpenModal(false)
-    // dispatch(siteActions.getList({ params: { perPage } }))
-    window.location.reload()
+    // window.location.reload()
+    dispatch(siteActions.getList({ params: {perPage, _sort: TYPE_SORT.CREATED_AT_DESC } }))
   }
 
 
@@ -316,7 +317,7 @@ const SiteListAndExpiredList = () => {
   ]
 
   useEffect(() => {
-    dispatch(siteActions.getList({ params: { page, perPage } }))
+    dispatch(siteActions.getList({ params: { page, perPage, _sort: TYPE_SORT.CREATED_AT_DESC } }))
   }, [dispatch, page])
 
   useEffect(() => {
