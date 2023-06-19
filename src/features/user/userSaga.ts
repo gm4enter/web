@@ -16,6 +16,7 @@ function* getList(action: PayloadAction<{ params?: any }>) {
     yield put(loadingActions.loadingSuccess());
   } catch (error) {
     console.log(error);
+    yield put(loadingActions.loadingSuccess());
   }
 }
 

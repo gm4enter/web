@@ -14,6 +14,7 @@ import { Modal } from '@mui/material'
 import { snackBarActions } from '../snackbar/snackbarSlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { selectUserData, userActions } from '../../features/user/userSlice'
+import { loadingActions } from '../loading/loadingSlice'
 
 const useStyles = makeStyles({
   container_header: {
@@ -295,7 +296,7 @@ const Header = (props: IProps) => {
       alert('이 기능을 사용하려면 로그인해야 합니다.')
     }
   }
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (tokenFirebase) {
       const data = {
         firebaseToken: tokenFirebase,
@@ -305,6 +306,7 @@ const Header = (props: IProps) => {
           if (res.statusCode === 200) {
             setStatusLogin(!statusLogin)
             localStorage.setItem('accessToken', res.data?.accessToken)
+            dispatch(loadingActions.loadingSuccess())
             dispatch(snackBarActions.setStateSnackBar({
               content: '성공',
               type: 'success',
@@ -312,6 +314,7 @@ const Header = (props: IProps) => {
           }
           else {
             console.log('message: ', res.message);
+            dispatch(loadingActions.loadingSuccess())
             dispatch(snackBarActions.setStateSnackBar({
               content: '실패',
               type: 'error',
@@ -320,6 +323,7 @@ const Header = (props: IProps) => {
         })
         .catch((error: any) => {
           console.log(error)
+          dispatch(loadingActions.loadingSuccess())
           dispatch(snackBarActions.setStateSnackBar({
             content: '실패',
             type: 'error',
