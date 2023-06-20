@@ -25,3 +25,8 @@ export enum TYPE_SORT {
   CREATED_AT_ASC = "createdAt@asc",
   CREATED_AT_DESC = "createdAt@desc",
 }
+
+export enum STATUS_SITE_UPDATE {
+  PENDING = 'PENDING',
+  CREATED = 'CREATED',
+}

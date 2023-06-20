@@ -16,6 +16,7 @@ import { TYPE_SORT } from '../../../types/enum'
 import { io } from "socket.io-client"
 import closeIcon from '../../../asset/images/cancel.png';
 import changePoint from '../../../asset/images/ChangePoint.png';
+import { userActions } from '../../../features/user/userSlice'
 
 const useStyles = makeStyles({
   tableContainer: {
@@ -136,7 +137,7 @@ export const HistoryTable = (props: Iprops) => {
     setOpenModal(false)
     // window.location.reload()
     dispatch(transactionActions.getList({ params: { _sort: TYPE_SORT.CREATED_AT_DESC } }))
-
+    dispatch(userActions.getUser({ params: undefined }))
   }
 
 

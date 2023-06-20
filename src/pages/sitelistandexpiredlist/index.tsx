@@ -4,26 +4,26 @@ import { SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import { makeStyles } from '@mui/styles'
 import { DataGrid } from '@mui/x-data-grid'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate } from 'react-router-dom'
+import { io } from "socket.io-client"
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import AppleIcon from '../../asset/images/AppleLogo.png'
-import CHPlay from '../../asset/images/CHPlayIcon.png'
+import Apple from '../../asset/icons/apple'
+import CHPlay from '../../asset/icons/ch_play'
+import changePoint from '../../asset/images/ChangePoint.png'
 import noDataIcon from '../../asset/images/ListNone.png'
 import MenuDots from '../../asset/images/MenuDots.png'
+import closeIcon from '../../asset/images/cancel.png'
 import plusIcon from '../../asset/images/plusIcon.png'
 import searchIcon from '../../asset/images/searchIcon.png'
 import { selectListData, selectTotalData, siteActions } from '../../features/site/siteSlice'
+import { selectUserData } from '../../features/user/userSlice'
 import { ROUTE } from '../../router/routes'
+import { STATUS_SITE_UPDATE, TYPE_SORT } from '../../types/enum'
 import { SiteType } from '../../types/site.type'
 import { formatDate } from '../customercenter'
 import SiteListMobile from '../siteListMobile'
-import { io } from "socket.io-client"
-import closeIcon from '../../asset/images/cancel.png';
-import changePoint from '../../asset/images/ChangePoint.png';
-import { selectUserData } from '../../features/user/userSlice'
-import { TYPE_SORT } from '../../types/enum'
 
 const useStyles = makeStyles({
   container: {
@@ -204,15 +204,18 @@ const SiteListAndExpiredList = () => {
     expirationDate: '',
     startDate: '',
     director: '',
+    webInfo: '',
+    androidInfo: '',
+    iosInfo: '',
   },]);
-  
+
   const handleCloseModal = () => {
     setOpenModal(false)
   }
   const handleClickModal = () => {
     setOpenModal(false)
     // window.location.reload()
-    dispatch(siteActions.getList({ params: {perPage, _sort: TYPE_SORT.CREATED_AT_DESC } }))
+    dispatch(siteActions.getList({ params: { perPage, _sort: TYPE_SORT.CREATED_AT_DESC } }))
   }
 
 
@@ -277,11 +280,14 @@ const SiteListAndExpiredList = () => {
             </button>
 
             <button
+              style={((params.row.webInfo?.status || '') === STATUS_SITE_UPDATE.CREATED) ? { backgroundColor: '#3B71FE' } : {}}
               onClick={() => {
                 navigate(`${ROUTE.INFOWEBSITE}/${params.id}`)
               }}
             >
-              <p>정보</p>
+              <p
+                style={((params.row.webInfo?.status || '') === STATUS_SITE_UPDATE.CREATED) ? { color: '#fff' } : {}}
+              >정보</p>
             </button>
 
             <button>
@@ -289,21 +295,27 @@ const SiteListAndExpiredList = () => {
             </button>
 
             <button
+              style={((params.row.androidInfo?.status || '') === STATUS_SITE_UPDATE.CREATED) ? { backgroundColor: '#3B71FE' } : {}}
               onClick={() => {
                 navigate(`${ROUTE.REGISTERANDMODIFYGOOGLEPLAY}/${params.id}`)
               }}
             >
-              <img src={CHPlay} />
-              <p>신청</p>
+              <CHPlay color={((params.row.androidInfo?.status || '') === STATUS_SITE_UPDATE.CREATED) ? '#fff' : ''} />
+              <p
+                style={((params.row.androidInfo?.status || '') === STATUS_SITE_UPDATE.CREATED) ? { color: '#fff' } : {}}
+              >신청</p>
             </button>
 
             <button
+              style={((params.row.iosInfo?.status || '') === STATUS_SITE_UPDATE.CREATED) ? { backgroundColor: '#3B71FE' } : {}}
               onClick={() => {
                 navigate(`${ROUTE.REGISTERANDMODIFYAPPLESTORE}/${params.id}`)
               }}
             >
-              <img src={AppleIcon} />
-              <p>신청</p>
+              <Apple color={((params.row.iosInfo?.status || '') === STATUS_SITE_UPDATE.CREATED) ? '#fff' : ''} />
+              <p
+                style={((params.row.iosInfo?.status || '') === STATUS_SITE_UPDATE.CREATED) ? { color: '#fff' } : {}}
+              >신청</p>
             </button>
 
             <button onClick={() => { }}>
@@ -332,6 +344,9 @@ const SiteListAndExpiredList = () => {
           expirationDate: formatDate(item.expirationDate || ''),
           startDate: formatDate(item.createdAt || ''),
           director: item.adminEmail,
+          webInfo: item.webInfo || '',
+          androidInfo: item.androidInfo || '',
+          iosInfo: item.iosInfo || '',
         };
         data.push(transformedData);
       });
@@ -339,7 +354,7 @@ const SiteListAndExpiredList = () => {
     }
   }, [listDataWebsite])
 
-  
+
   useEffect(() => {
     socketRef.current = io('https://server.gmapps.net', {
       extraHeaders: {
@@ -357,7 +372,7 @@ const SiteListAndExpiredList = () => {
     }) => {
       setMessage(Message)
       setOpenModal(true)
-      
+
     })
     return () => {
       socketRef.current.disconnect();
