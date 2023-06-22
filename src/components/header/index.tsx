@@ -272,13 +272,15 @@ const Header = (props: IProps) => {
           console.log(error)
         })
     }
-
   }
   const handleLogout = () => {
-    localStorage.removeItem('accessToken')
-    setTokenFirebase('')
-    setOpenModal(false)
-    navigate(ROUTE.HOME)
+    if (window.confirm('로그아웃하시겠습니까?')) {
+      localStorage.clear()
+      dispatch(userActions.deleteUser({ params: undefined }))
+      setTokenFirebase('')
+      setOpenModal(false)
+      navigate(ROUTE.HOME)
+    }
   }
   const handleClickSolution = () => {
     if (!!localStorage.getItem('accessToken')) {
@@ -296,7 +298,7 @@ const Header = (props: IProps) => {
       alert('이 기능을 사용하려면 로그인해야 합니다.')
     }
   }
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (tokenFirebase) {
       const data = {
         firebaseToken: tokenFirebase,
@@ -333,7 +335,7 @@ const Header = (props: IProps) => {
   }, [tokenFirebase])
 
   useLayoutEffect(() => {
-    if (localStorage.getItem('accessToken')) {
+    if (!!localStorage.getItem('accessToken')) {
       setTokens()
       dispatch(userActions.getUser({ params: undefined }))
     }
@@ -341,10 +343,10 @@ const Header = (props: IProps) => {
 
 
   const [scroll, setScroll] = useState(false)
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.scrollTo(0, 0)
   }, [location.pathname])
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.addEventListener('scroll', () => {
       if (window.scrollY > 0) {
         setScroll(true)
@@ -377,7 +379,7 @@ const Header = (props: IProps) => {
         <li onClick={handleClickContact}>Contact</li>
       </ul>
       <div>
-        {localStorage.getItem('accessToken') ? (
+        {(!!localStorage.getItem('accessToken') && Object.entries(userProfile).length !== 0) ? (
           <div onClick={handleClickMenuUser}>
             <img
               src={

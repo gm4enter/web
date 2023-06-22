@@ -14,6 +14,9 @@ const userSlice = createSlice({
     getUserSuccess: (state, action: PayloadAction<{ data: UserType }>) => {
       state.data = action.payload.data;
     },
+    deleteUser: (state, action: PayloadAction<{ params?: any }>) => {
+      state.data = {} as any;
+    },
   },
 });
 

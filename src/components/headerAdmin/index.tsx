@@ -231,8 +231,13 @@ const HeaderAdmin = (props: IProps) => {
         //     })
     }
     const handleLogout = () => {
-        localStorage.removeItem('accessToken')
-        navigate(ROUTE.HOME)
+        if (window.confirm('로그아웃하시겠습니까?')) {
+            localStorage.clear()
+            dispatch(userActions.deleteUser({ params: undefined }))
+            setTokenFirebase('')
+            setOpenModal(false)
+            navigate(ROUTE.HOME)
+        }
     }
 
     // useEffect(() => {
