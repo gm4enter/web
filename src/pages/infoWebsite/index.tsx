@@ -205,10 +205,6 @@ function InfoWebsite() {
                 })
             ])
 
-            resFavicon && setFavicon(resFavicon.data.filename)
-            resThumb && setThumb(resThumb.data.filename)
-            resNotiIcon && setNotificationIcon(resNotiIcon.data.filename)
-
             const dataPut: { name: string, webInfo: DataWebType } = {
                 name: nameSite,
                 webInfo: {
@@ -216,11 +212,13 @@ function InfoWebsite() {
                     domainUser: domainUser,
                     domainName: domainName,
                     domainPassword: domainPassword,
-                    favicon: favicon,
-                    thumbnail: thumb,
-                    notificationIcon: notificationIcon,
                 },
             }
+
+            !favicon && (dataPut.webInfo.favicon = favicon)
+            !thumb && (dataPut.webInfo.thumbnail = thumb)
+            !notificationIcon && (dataPut.webInfo.notificationIcon = notificationIcon)
+
             resFavicon && (dataPut.webInfo.favicon = resFavicon.data.filename)
             resThumb && (dataPut.webInfo.thumbnail = resThumb.data.filename)
             resNotiIcon && (dataPut.webInfo.notificationIcon = resNotiIcon.data.filename)

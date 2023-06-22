@@ -277,11 +277,20 @@ function RegisterAndModifyGooglePlay() {
       setValue4(file);
     }
   }
+  const handleDelIcon = () => {
+    setValue4(null)
+    setIcon('')
+  }
+
   const handleHomeScreen = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file: File = e.target.files[0];
       setValue5(file);
     }
+  }
+  const handleDelHomeScreen = () => {
+    setValue5(null)
+    setHomeScreen('')
   }
 
   const handleNotificationIcon = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -290,6 +299,10 @@ function RegisterAndModifyGooglePlay() {
       setValue6(file);
     }
   };
+  const handleDelNotificationIcon = () => {
+    setValue6(null)
+    setNotificationIcon('')
+  }
 
   const handleSubmit = async () => {
     try {
@@ -322,20 +335,18 @@ function RegisterAndModifyGooglePlay() {
         })
       ])
 
-      resIcon && setIcon(resIcon.data.filename)
-      resHomeScreen && setHomeScreen(resHomeScreen.data.filename)
-      resNotiIcon && setNotificationIcon(resNotiIcon.data.filename)
-
       const dataPut: DataAndroidInfoType = {
         androidInfo: {
           user: value1,
           password: value2,
           appName: inputValueNameApp,
-          icon: icon,
-          homeScreen: homeScreen,
-          notificationIcon: notificationIcon,
         },
       }
+
+      !icon && (dataPut.androidInfo.icon = icon)
+      !homeScreen && (dataPut.androidInfo.homeScreen = homeScreen)
+      !notificationIcon && (dataPut.androidInfo.notificationIcon = notificationIcon)
+
       resIcon && (dataPut.androidInfo.icon = resIcon.data.filename)
       resHomeScreen && (dataPut.androidInfo.homeScreen = resHomeScreen.data.filename)
       resNotiIcon && (dataPut.androidInfo.notificationIcon = resNotiIcon.data.filename)
@@ -551,7 +562,11 @@ function RegisterAndModifyGooglePlay() {
               <img src={iconQuestion} alt='' />
             </div>
             <p>고해상도 아이콘: 512x512 / 32비트 PNG(알파 있음)</p>
-            <InputuploadImage type='512' containerStyle={{ marginTop: '16px' }} onChange={handleIcon} images={icon} />
+            <InputuploadImage type='512'
+              containerStyle={{ marginTop: '16px' }}
+              onChange={handleIcon}
+              onDeleted={handleDelIcon}
+              images={icon} />
           </div>
 
           <div>
@@ -564,6 +579,7 @@ function RegisterAndModifyGooglePlay() {
               type='1440'
               containerStyle={{ marginTop: '16px' }}
               onChange={handleHomeScreen}
+              onDeleted={handleDelHomeScreen}
               images={homeScreen}
             />
           </div>
@@ -583,7 +599,7 @@ function RegisterAndModifyGooglePlay() {
             </span>
             <a href='#'>자세히 알아보기</a>
           </p>
-          <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} onChange={handleNotificationIcon} images={notificationIcon} />
+          <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} onChange={handleNotificationIcon} onDeleted={handleDelNotificationIcon} images={notificationIcon} />
           <p>
             *알림 아이콘은 앱에서 알림이 왔을때 상단에 보여지는 아이콘입니다.
           </p>

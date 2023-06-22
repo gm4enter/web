@@ -51,9 +51,9 @@ const useStyles = makeStyles({
 })
 
 const dataDeposits = [
+    { name: '사이트 목록 및 만료목록', icon: iconSidebar3, iconActive: iconSidebar3Active, path: ROUTE.SITELISTANDEXPIREDLIST },
     { name: '예치금충전 및 내역', icon: iconSidebar1, iconActive: iconSidebar1Active, path: ROUTE.DEPOSITANDHISTORY },
     { name: '사이트생성', icon: iconSidebar2, iconActive: iconSidebar2Active, path: ROUTE.SITECREATION },
-    { name: '사이트 목록 및 만료목록', icon: iconSidebar3, iconActive: iconSidebar3Active, path: ROUTE.SITELISTANDEXPIREDLIST },
     { name: '고객센터', icon: iconSidebar4, iconActive: iconSidebar4Active, path: ROUTE.CUSTOMERCENTER },
 ];
 const dataHeaders = [

@@ -282,7 +282,7 @@ const Header = (props: IProps) => {
   }
   const handleClickSolution = () => {
     if (!!localStorage.getItem('accessToken')) {
-      navigate(ROUTE.DEPOSITANDHISTORY)
+      navigate(ROUTE.SITELISTANDEXPIREDLIST)
     }
     else {
       alert('이 기능을 사용하려면 로그인해야 합니다.')

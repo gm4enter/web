@@ -355,11 +355,20 @@ function RegisterAndModifyAppleStore() {
       setValue7(file);
     }
   }
+  const handleDelIcon = () => {
+    setValue7(null)
+    setIcon('')
+  }
+
   const handleHomeScreen = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file: File = e.target.files[0];
       setValue8(file);
     }
+  }
+  const handleDelHomeScreen = () => {
+    setValue8(null)
+    setHomeScreen('')
   }
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -393,9 +402,6 @@ function RegisterAndModifyAppleStore() {
         }),
       ])
 
-      resIcon && setIcon(resIcon.data.filename)
-      resHomeScreen && setHomeScreen(resHomeScreen.data.filename)
-
       const dataPut: DataIosInfoType = {
         iosInfo: {
           user: value1,
@@ -404,12 +410,14 @@ function RegisterAndModifyAppleStore() {
           appName: value4,
           description: value5,
           keyword: value6,
-          icon: icon,
-          homeScreen: homeScreen,
           textColor: selectedValue,
           backgroundColor: color,
         }
       }
+
+      !icon && (dataPut.iosInfo.icon = icon)
+      !homeScreen && (dataPut.iosInfo.homeScreen = homeScreen)
+
       resIcon && (dataPut.iosInfo.icon = resIcon.data.filename)
       resHomeScreen && (dataPut.iosInfo.homeScreen = resHomeScreen.data.filename)
 
@@ -706,7 +714,9 @@ function RegisterAndModifyAppleStore() {
             <InputuploadImage
               type='1024'
               containerStyle={{ marginTop: '16px' }}
-              onChange={handleIcon} images={icon}
+              onChange={handleIcon}
+              images={icon}
+              onDeleted={handleDelIcon}
             />
           </div>
 
@@ -716,7 +726,7 @@ function RegisterAndModifyAppleStore() {
               <img src={iconQuestion} alt='' />
             </div>
             <p>JPG또는 24비트 PNG(알파 없음)</p>
-            <InputuploadImage type='640' containerStyle={{ marginTop: '16px' }} onChange={handleHomeScreen} images={homeScreen} />
+            <InputuploadImage type='640' containerStyle={{ marginTop: '16px' }} onChange={handleHomeScreen} onDeleted={handleDelHomeScreen} images={homeScreen} />
           </div>
         </div>
       </div>
