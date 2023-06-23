@@ -9,6 +9,7 @@ import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../../services/firebase'
 import { LOGIN, USER } from '../../apis/urlConfig'
 import axiosClient, { setTokens } from '../../apis/axiosClient'
+import { setTokensLocalStorage } from '../../utils'
 import { UserType } from '../../types/user.type'
 import { Modal } from '@mui/material'
 import { snackBarActions } from '../snackbar/snackbarSlice'
@@ -241,25 +242,29 @@ interface IProps {
   handleButtonShow: (check: boolean) => void,
 }
 const Header = (props: IProps) => {
+  const { handleButtonShow } = props
+
   const classes = useStyles()
   const location = useLocation()
   const navigate = useNavigate()
-
   const dispatch = useAppDispatch()
-
   const userProfile = useAppSelector(selectUserData)
-  const { handleButtonShow } = props
+
   const [isShowSideBar, setIsShowSideBar] = useState(false)
   const [tokenFirebase, setTokenFirebase] = useState('')
   const [statusLogin, setStatusLogin] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [scroll, setScroll] = useState(false)
+
   const handleClick = () => {
     setIsShowSideBar(!isShowSideBar)
     handleButtonShow(isShowSideBar)
   }
+
   const handleClickMenuUser = () => {
     setOpenModal(!openModal)
   }
+
   const handleCloseModal = () => setOpenModal(false);
 
   const handleLogin = () => {
@@ -273,6 +278,7 @@ const Header = (props: IProps) => {
         })
     }
   }
+
   const handleLogout = () => {
     if (window.confirm('로그아웃하시겠습니까?')) {
       localStorage.clear()
@@ -307,7 +313,8 @@ const Header = (props: IProps) => {
         .then((res: any) => {
           if (res.statusCode === 200) {
             setStatusLogin(!statusLogin)
-            localStorage.setItem('accessToken', res.data?.accessToken)
+            // localStorage.setItem('accessToken', res.data?.accessToken)
+            setTokensLocalStorage(res.data)
             dispatch(loadingActions.loadingSuccess())
             dispatch(snackBarActions.setStateSnackBar({
               content: '성공',
@@ -339,22 +346,24 @@ const Header = (props: IProps) => {
       setTokens()
       dispatch(userActions.getUser({ params: undefined }))
     }
+    else{
+      dispatch(userActions.deleteUser({ params: undefined }))
+    }
   }, [statusLogin])
 
 
-  const [scroll, setScroll] = useState(false)
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0)
-  }, [location.pathname])
-  useLayoutEffect(() => {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 0) {
-        setScroll(true)
-      } else {
-        setScroll(false)
-      }
-    })
-  }, [])
+  // useLayoutEffect(() => {
+  //   window.scrollTo(0, 0)
+  // }, [location.pathname])
+  // useLayoutEffect(() => {
+  //   window.addEventListener('scroll', () => {
+  //     if (window.scrollY > 0) {
+  //       setScroll(true)
+  //     } else {
+  //       setScroll(false)
+  //     }
+  //   })
+  // }, [])
   return (
     <div
       className={classes.container_header}

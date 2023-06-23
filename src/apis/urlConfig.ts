@@ -24,3 +24,5 @@ export const PLAN = "/plan";
 
 //system
 export const SYSTEM = "/system";
+
+export const REFRESH_TOKEN = '/user/refresh'

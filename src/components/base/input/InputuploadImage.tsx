@@ -246,7 +246,7 @@ const useStyles = makeStyles({
 })
 
 interface Iprops {
-  type?: string
+  type: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   images?: string
   containerStyle?: React.CSSProperties
@@ -257,15 +257,110 @@ export const InputuploadImage = (props: Iprops) => {
   const { type, onChange, containerStyle, images, onDeleted, ...restProps } = props
   const classes = useStyles()
   const fileInputRef = useRef<HTMLInputElement>(null)
-
   const [image, setImage] = useState<string | null>(null)
+
+  const checkType = (type: string | undefined) => {
+    switch (type) {
+      case '96':
+        return classes.img96
+      case '512':
+        return classes.img512
+      case '640':
+        return classes.img640
+      case '1024':
+        return classes.img1024
+      case '1440':
+        return classes.img1440
+      default:
+        return classes.img512
+    }
+  }
+
+  const checkSize = (file: File, type: string): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      const imageCheck = new Image();
+
+      imageCheck.onload = () => {
+        const width = imageCheck.width;
+        const height = imageCheck.height;
+        console.log("Image width:", width);
+        console.log("Image height:", height);
+        console.log("Image type:", type);
+
+        switch (type) {
+          case '96':
+            if (width === 96 || height === 96) {
+              setImage(URL.createObjectURL(file));
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+            break;
+          case '512':
+            if (width === 512 || height === 512) {
+              setImage(URL.createObjectURL(file));
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+            break;
+          case '640':
+            if (width === 640 || height === 960) {
+              setImage(URL.createObjectURL(file));
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+            break;
+          case '1024':
+            if (width === 1024 || height === 1024) {
+              setImage(URL.createObjectURL(file));
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+            break;
+          case '1440':
+            if (width === 1440 || height === 2960) {
+              setImage(URL.createObjectURL(file));
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+            break;
+          default:
+            resolve(false);
+        }
+      };
+
+      imageCheck.onerror = () => {
+        reject(new Error('Failed to load the image.'));
+      };
+
+      imageCheck.src = URL.createObjectURL(file);
+    });
+  };
+
 
   const handleImageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     if (event.target.files) {
-      setImage(URL.createObjectURL(event.target.files[0]))
-      onChange && onChange(event)
+      const file = event.target.files[0];
+      checkSize(file, type)
+      .then(result => {
+        if (result) {
+          // Image meets the specified size requirements
+          setImage(URL.createObjectURL(file));
+          onChange && onChange(event)
+        } else {
+          // Image does not meet the specified size requirements
+          console.log('Image size does not match the specified requirements.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
     }
   }
 
@@ -285,23 +380,6 @@ export const InputuploadImage = (props: Iprops) => {
       setImage(images)
     }
   }, [images])
-
-  const checkType = (type: string | undefined) => {
-    switch (type) {
-      case '96':
-        return classes.img96
-      case '512':
-        return classes.img512
-      case '640':
-        return classes.img640
-      case '1024':
-        return classes.img1024
-      case '1440':
-        return classes.img1440
-      default:
-        return classes.img512
-    }
-  }
 
   return (
     <div className={classes.container} style={containerStyle}>

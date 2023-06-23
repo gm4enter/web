@@ -13,7 +13,7 @@ export const mereListById = (array1: TypeArray[], array2: TypeArray[]) => {
   const array3 = array2.filter((item) => !set1.has(item._id));
   return [...array1, ...array3];
 };
-export const setTokens = (token: LoginType) => {
+export const setTokensLocalStorage = (token: LoginType) => {
   localStorage.setItem("accessToken", token.accessToken);
   localStorage.setItem("refreshToken", token.refreshToken);
   localStorage.setItem("expiresIn", JSON.stringify(token.expiresIn));

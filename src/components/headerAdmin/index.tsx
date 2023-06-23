@@ -206,8 +206,6 @@ const HeaderAdmin = (props: IProps) => {
     const userProfile = useAppSelector(selectUserData)
     const { handleButtonShow } = props
     const [isShowSideBar, setIsShowSideBar] = useState(false)
-    const [tokenFirebase, setTokenFirebase] = useState('')
-    const [statusLogin, setStatusLogin] = useState(false)
     const [user, setUser] = useState<UserType>()
     const [openModal, setOpenModal] = useState(false)
 
@@ -221,20 +219,10 @@ const HeaderAdmin = (props: IProps) => {
     }
     const handleCloseModal = () => setOpenModal(false);
 
-    const handleLogin = () => {
-        // signInWithPopup(auth, provider)
-        //     .then((data: any) => {
-        //         setTokenFirebase(data.user.accessToken)
-        //     })
-        //     .catch((error: any) => {
-        //         console.log(error)
-        //     })
-    }
     const handleLogout = () => {
         if (window.confirm('로그아웃하시겠습니까?')) {
             localStorage.clear()
             dispatch(userActions.deleteUser({ params: undefined }))
-            setTokenFirebase('')
             setOpenModal(false)
             navigate(ROUTE.HOME)
         }
@@ -302,7 +290,7 @@ const HeaderAdmin = (props: IProps) => {
 
             </div>
             <div>
-                {localStorage.getItem('accessToken') ? (
+                {!!localStorage.getItem('accessToken') ? (
                     <div onClick={handleClickMenuUser}>
                         <img
                             src={
@@ -312,9 +300,7 @@ const HeaderAdmin = (props: IProps) => {
                         />
                     </div>
                 ) : (
-                    <button onClick={handleLogin}>
-                        로그인
-                    </button>
+                    <div />
                 )}
             </div>
 

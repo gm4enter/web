@@ -308,6 +308,7 @@ const SiteCreation = () => {
     }
     const handleCloseModalNotEnoughPoint = () => {
         setOpenModalNotEnoughPoint(false)
+        navigate(ROUTE.DEPOSITANDHISTORY)
     }
     const handleNotEnoughPoint = () => { }
 

@@ -20,9 +20,9 @@ export const ROUTE = {
   INFOWEBSITE_ID: '/sitelistandexpiredlist/infowebsite/:id',
   REGISTERANDMODIFYGOOGLEPLAY:
     '/sitelistandexpiredlist/registerandmodifygoogleplay',
-    REGISTERANDMODIFYGOOGLEPLAY_ID:
+  REGISTERANDMODIFYGOOGLEPLAY_ID:
     '/sitelistandexpiredlist/registerandmodifygoogleplay/:id',
-    REGISTERANDMODIFYAPPLESTORE:
+  REGISTERANDMODIFYAPPLESTORE:
     '/sitelistandexpiredlist/registerandmodifyapplestore',
   REGISTERANDMODIFYAPPLESTORE_ID:
     '/sitelistandexpiredlist/registerandmodifyapplestore/:id',
@@ -38,22 +38,24 @@ const routes: Array<MyRouteProp> = [
   { path: ROUTE.HOME, element: <Home /> },
   { path: ROUTE.ABOUT, element: <Home /> },
   { path: ROUTE.PRICE, element: <Home /> },
-  { path: ROUTE.DEPOSITANDHISTORY, element: <DepositAndHistory /> },
-  { path: ROUTE.SITECREATION, element: <SiteCreation /> },
-  { path: ROUTE.SITELISTANDEXPIREDLIST, element: <SiteListAndExpiredList /> },
-  { path: ROUTE.INFOWEBSITE_ID, element: <InfoWebsite /> },
+  { path: ROUTE.DEPOSITANDHISTORY, element: <DepositAndHistory />, private: true },
+  { path: ROUTE.SITECREATION, element: <SiteCreation />, private: true },
+  { path: ROUTE.SITELISTANDEXPIREDLIST, element: <SiteListAndExpiredList />, private: true },
+  { path: ROUTE.INFOWEBSITE_ID, element: <InfoWebsite />, private: true },
   {
     path: ROUTE.REGISTERANDMODIFYGOOGLEPLAY_ID,
     element: <RegisterAndModifyGooglePlay />,
+    private: true
   },
   {
     path: ROUTE.REGISTERANDMODIFYAPPLESTORE_ID,
     element: <RegisterAndModifyAppleStore />,
+    private: true
   },
-  { path: ROUTE.CUSTOMERCENTER, element: <CustomerCenter /> },
-  { path: ROUTE.CUSTOMERCENTER_ITEM, element: <CustomerCenterItem /> },
-  { path: ROUTE.CREATECONVERSATION_ITEM, element: <CreateConversationMb /> },
-  { path: ROUTE.REMITTANCEHISTORY, element: <RemittanceHistory /> },
+  { path: ROUTE.CUSTOMERCENTER, element: <CustomerCenter />, private: true },
+  { path: ROUTE.CUSTOMERCENTER_ITEM, element: <CustomerCenterItem />, private: true },
+  { path: ROUTE.CREATECONVERSATION_ITEM, element: <CreateConversationMb />, private: true },
+  { path: ROUTE.REMITTANCEHISTORY, element: <RemittanceHistory />, private: true },
 
 ]
 export default routes

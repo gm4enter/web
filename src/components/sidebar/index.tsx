@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { styled, Theme, CSSObject } from '@mui/material/styles';
-import iconSidebar1 from '../../asset/images/iconSidebar1.png'
-import iconSidebar2 from '../../asset/images/iconSidebar2.png'
-import iconSidebar3 from '../../asset/images/iconSidebar3.png'
-import iconSidebar4 from '../../asset/images/iconSidebar4.png'
-import iconSidebar1Active from '../../asset/images/iconSidebar1Active.png'
-import iconSidebar2Active from '../../asset/images/iconSidebar2Active.png'
-import iconSidebar3Active from '../../asset/images/iconSidebar3Active.png'
-import iconSidebar4Active from '../../asset/images/iconSidebar4Active.png'
-import iconLogoutSidebar from '../../asset/images/iconLogoutSidebar.png'
-import { useLocation, useNavigate } from 'react-router-dom';
-import { ROUTE } from '../../router/routes'
 import { makeStyles } from '@mui/styles';
-import { Drawer } from '@mui/material';
+import * as React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
+import iconLogoutSidebar from '../../asset/images/iconLogoutSidebar.png';
+import iconSidebar1 from '../../asset/images/iconSidebar1.png';
+import iconSidebar1Active from '../../asset/images/iconSidebar1Active.png';
+import iconSidebar2 from '../../asset/images/iconSidebar2.png';
+import iconSidebar2Active from '../../asset/images/iconSidebar2Active.png';
+import iconSidebar3 from '../../asset/images/iconSidebar3.png';
+import iconSidebar3Active from '../../asset/images/iconSidebar3Active.png';
+import iconSidebar4 from '../../asset/images/iconSidebar4.png';
+import iconSidebar4Active from '../../asset/images/iconSidebar4Active.png';
+import { userActions } from '../../features/user/userSlice';
+import { ROUTE } from '../../router/routes';
 
 
 
@@ -86,6 +86,7 @@ export default function SideBar(props: IProps) {
     const location = useLocation()
     const navigate = useNavigate()
     const classes = useStyles()
+    const dispatch = useAppDispatch()
     const { isOpen } = props
 
     const [state, setState] = React.useState({
@@ -106,10 +107,13 @@ export default function SideBar(props: IProps) {
             };
 
     const handleLogout = () => {
-        localStorage.removeItem('accessToken')
-        navigate(ROUTE.HOME)
+        if (window.confirm('로그아웃하시겠습니까?')) {
+            localStorage.clear()
+            dispatch(userActions.deleteUser({ params: undefined }))
+            navigate(ROUTE.HOME)
+        }
     }
-    
+
     return (
         <div className={classes.container_sidebar}>
             <div>
@@ -145,7 +149,7 @@ export default function SideBar(props: IProps) {
                     <div onClick={handleLogout}>
                         <img src={iconLogoutSidebar} />
                         {/* {!isOpen && <p>고객센터</p>} */}
-                        <p>고객센터</p>
+                        <p>로그아웃</p>
                     </div>
                 </div>
             </div>

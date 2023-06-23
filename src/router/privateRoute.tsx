@@ -5,7 +5,7 @@ interface Props {
   item: MyRouteProp
 }
 function PrivateRoute(props: Props) {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('accessToken')
   if (token) {
     if (props.item.roles && props.item.roles.length > 0) {
       return <RoleRoute item={props.item} />
@@ -13,7 +13,7 @@ function PrivateRoute(props: Props) {
       return <>{props.item.element}</>
     }
   } else {
-    return <Navigate to={{pathname: '/login'}} />
+    return <Navigate to={{pathname: '/'}} />
   }
 }
 
