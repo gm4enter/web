@@ -26,3 +26,5 @@ export const PLAN = "/plan";
 export const SYSTEM = "/system";
 
 export const REFRESH_TOKEN = '/user/refresh'
+
+export const UPDATE_PHONE_NUMBER = '/user/update'

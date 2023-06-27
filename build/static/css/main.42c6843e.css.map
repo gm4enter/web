@@ -1,1 +1,0 @@
-{"version":3,"file":"static/css/main.42c6843e.css","mappings":"gFACA,KAEE,wBAA2B,CAC3B,iBAAkB,CAFlB,QAGF","sources":["index.css"],"sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');\r\nbody {\r\n  margin: 0;\r\n  font-family: 'Noto Sans KR';\r\n  font-style: normal;\r\n}\r\n"],"names":[],"sourceRoot":""}

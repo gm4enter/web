@@ -34,7 +34,6 @@ axiosClient.interceptors.response.use(
   },
   function (error) {
     if (error.response.status === 401) {
-      console.log("refreshToken", error.response.status);
       const refreshToken = localStorage.getItem("refreshToken");
       axios
         .post(
@@ -49,7 +48,6 @@ axiosClient.interceptors.response.use(
           }
         )
         .then((res) => {
-          console.log("resAxiosClient REFRESH_TOKEN", res.data.data);
           localStorage.setItem("accessToken", res.data.data.accessToken);
           localStorage.setItem("refreshToken", res.data.data.refreshToken);
           localStorage.setItem(

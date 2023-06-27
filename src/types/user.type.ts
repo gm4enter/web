@@ -1,5 +1,4 @@
 export interface UserType{
-    id: number
     blocked: boolean
     email: string
     firstName: string
@@ -21,6 +20,7 @@ export interface UserType{
     isActive: boolean
     isGoogleUser: boolean
     signUpDate: string
+    mobileNumber?: string
     _id: string
     wallet: {
         balance: number

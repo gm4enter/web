@@ -12,6 +12,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Modal,
   Typography,
 } from '@mui/material'
 import axiosClient from '../../apis/axiosClient'
@@ -19,6 +20,9 @@ import { DataAndroidInfoType, SiteType } from '../../types/site.type'
 import { SITE, SYSTEM } from '../../apis/urlConfig'
 import { useAppDispatch } from '../../app/hooks'
 import { snackBarActions } from '../../components/snackbar/snackbarSlice'
+import { IMAGE_SITE_UPLOAD } from '../../types/enum'
+import closeIcon from '../../asset/images/cancel.png';
+import imageNotSize from '../../asset/images/PictureNotSize.png';
 
 const useStyles = makeStyles({
   container: {
@@ -244,6 +248,46 @@ const useStyles = makeStyles({
       paddingLeft: '19px',
     },
   },
+  modal: {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    boxShadow: '0 0 12px 0 rgba(0, 0, 0, 0.25)',
+    border: 'none',
+    // padding: '4px',
+    '&>div:nth-of-type(1)': {
+      display: 'flex', padding: '16px 24px 0px 32px', justifyContent: 'space-between', alignItems: 'center', textAlign: 'center',
+      '&>p': { padding: 0, margin: 0, fontSize: '20px', fontWeight: 500, textAlign: 'center', },
+      '&>img': { cursor: 'pointer', height: '24px', width: '24px' },
+    },
+    '&>div:nth-of-type(2)': {
+      padding: '0px 24px 16px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '16px',
+      justifyContent: 'center',
+      alignItems: 'center',
+      '&>img': { height: '160px', width: '160px' },
+      '&>div': {
+        '&>p:nth-of-type(1)': {
+          padding: 0, margin: '0 0 8px 0', fontSize: '18px', fontWeight: 700, color: '#111315', textAlign: 'center',
+        },
+        '&>p:nth-of-type(2)': {
+          padding: 0, margin: 0, fontSize: '16px', fontWeight: 400, color: '#272B30', textAlign: 'center',
+        }
+      },
+    },
+    '&>div:nth-of-type(3)': {
+      display: 'flex', padding: ' 0 24px 24px', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: '16px',
+      '&>button:nth-of-type(1)': {
+        display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', borderRadius: '8px', backgroundColor: '#2B83FE', padding: '10px 24px', textAlign: 'center',
+        '&>p': { padding: 0, margin: 0, fontSize: '16px', fontWeight: 500, color: '#fff' },
+      },
+    },
+  },
 })
 
 function RegisterAndModifyGooglePlay() {
@@ -270,6 +314,8 @@ function RegisterAndModifyGooglePlay() {
   const [icon, setIcon] = useState('')
   const [homeScreen, setHomeScreen] = useState('')
   const [notificationIcon, setNotificationIcon] = useState('')
+
+  const [openModal, setOpenModal] = useState(false)
 
   const handleIcon = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -368,6 +414,14 @@ function RegisterAndModifyGooglePlay() {
     }
   }
 
+    //handle modal
+    const handleOpenModal = () => {
+      setOpenModal(true)
+    }
+    const handleCloseModal = () => {
+      setOpenModal(false)
+    }  
+  
   useLayoutEffect(() => {
     if (id) {
       axiosClient.get(`${SITE}/get/${id}`)
@@ -562,10 +616,12 @@ function RegisterAndModifyGooglePlay() {
               <img src={iconQuestion} alt='' />
             </div>
             <p>고해상도 아이콘: 512x512 / 32비트 PNG(알파 있음)</p>
-            <InputuploadImage type='512'
+            <InputuploadImage
+              type={IMAGE_SITE_UPLOAD.TYPE_512}
               containerStyle={{ marginTop: '16px' }}
               onChange={handleIcon}
               onDeleted={handleDelIcon}
+              onError={handleOpenModal}
               images={icon} />
           </div>
 
@@ -576,10 +632,11 @@ function RegisterAndModifyGooglePlay() {
             </div>
             <p>가로x세로 1440x2960 JPG또는 24비트 PNG(알파 없음)</p>
             <InputuploadImage
-              type='1440'
+              type={IMAGE_SITE_UPLOAD.TYPE_1440}
               containerStyle={{ marginTop: '16px' }}
               onChange={handleHomeScreen}
               onDeleted={handleDelHomeScreen}
+              onError={handleOpenModal}
               images={homeScreen}
             />
           </div>
@@ -599,7 +656,14 @@ function RegisterAndModifyGooglePlay() {
             </span>
             <a href='#'>자세히 알아보기</a>
           </p>
-          <InputuploadImage type='96' containerStyle={{ marginTop: '16px' }} onChange={handleNotificationIcon} onDeleted={handleDelNotificationIcon} images={notificationIcon} />
+          <InputuploadImage 
+          type={IMAGE_SITE_UPLOAD.TYPE_96} 
+          containerStyle={{ marginTop: '16px' }} 
+          onChange={handleNotificationIcon} 
+          onDeleted={handleDelNotificationIcon} 
+          onError={handleOpenModal}
+          images={notificationIcon} 
+          />
           <p>
             *알림 아이콘은 앱에서 알림이 왔을때 상단에 보여지는 아이콘입니다.
           </p>
@@ -611,6 +675,30 @@ function RegisterAndModifyGooglePlay() {
           <p>제출하기</p>
         </button>
       </div>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        disableAutoFocus
+      >
+        <div className={classes.modal}>
+          <div>
+            <p></p>
+            <img src={closeIcon} alt="close" onClick={handleCloseModal} />
+          </div>
+          <div>
+            <img src={imageNotSize} alt="" />
+            <div>
+              <p>어이쿠! 이미지 크기가 적합하지 않습니다.</p>
+              <p>최상의 품질을 위해 사진의 크기를 확인하십시오.</p>
+            </div>
+          </div>
+          <div>
+            <button onClick={handleCloseModal}>
+              <p>닫기</p>
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

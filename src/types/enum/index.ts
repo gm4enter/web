@@ -30,3 +30,11 @@ export enum STATUS_SITE_UPDATE {
   PENDING = 'PENDING',
   CREATED = 'CREATED',
 }
+
+export enum IMAGE_SITE_UPLOAD {
+  TYPE_96 = '96',
+  TYPE_512 = '512',
+  TYPE_640 = '640',
+  TYPE_1024 = '1024',
+  TYPE_1440 = '1440',
+}

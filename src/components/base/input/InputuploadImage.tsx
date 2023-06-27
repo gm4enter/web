@@ -2,6 +2,7 @@ import { makeStyles } from '@mui/styles'
 import React, { useEffect, useRef, useState } from 'react'
 import closeBoldIcon from '../../../asset/images/cancel.png'
 import closeWhiteIcon from '../../../asset/images/cancelWhite.png'
+import { IMAGE_SITE_UPLOAD } from '../../../types/enum'
 
 const useStyles = makeStyles({
   container: {
@@ -251,25 +252,26 @@ interface Iprops {
   images?: string
   containerStyle?: React.CSSProperties
   onDeleted?: () => void
+  onError?: () => void
 }
 
 export const InputuploadImage = (props: Iprops) => {
-  const { type, onChange, containerStyle, images, onDeleted, ...restProps } = props
+  const { type, onChange, containerStyle, images, onDeleted, onError, ...restProps } = props
   const classes = useStyles()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [image, setImage] = useState<string | null>(null)
 
   const checkType = (type: string | undefined) => {
     switch (type) {
-      case '96':
+      case IMAGE_SITE_UPLOAD.TYPE_96:
         return classes.img96
-      case '512':
+      case IMAGE_SITE_UPLOAD.TYPE_512:
         return classes.img512
-      case '640':
+      case IMAGE_SITE_UPLOAD.TYPE_640:
         return classes.img640
-      case '1024':
+      case IMAGE_SITE_UPLOAD.TYPE_1024:
         return classes.img1024
-      case '1440':
+      case IMAGE_SITE_UPLOAD.TYPE_1440:
         return classes.img1440
       default:
         return classes.img512
@@ -283,10 +285,7 @@ export const InputuploadImage = (props: Iprops) => {
       imageCheck.onload = () => {
         const width = imageCheck.width;
         const height = imageCheck.height;
-        console.log("Image width:", width);
-        console.log("Image height:", height);
-        console.log("Image type:", type);
-
+        
         switch (type) {
           case '96':
             if (width === 96 || height === 96) {
@@ -356,6 +355,7 @@ export const InputuploadImage = (props: Iprops) => {
         } else {
           // Image does not meet the specified size requirements
           console.log('Image size does not match the specified requirements.');
+          onError && onError();
         }
       })
       .catch(error => {

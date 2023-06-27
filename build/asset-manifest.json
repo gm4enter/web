@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.42c6843e.css",
-    "main.js": "/static/js/main.f76f0719.js",
+    "main.css": "/static/css/main.0fb1ce56.css",
+    "main.js": "/static/js/main.82c63077.js",
     "static/js/787.66b25e22.chunk.js": "/static/js/787.66b25e22.chunk.js",
     "static/media/businessGlobalLandingPage.png": "/static/media/businessGlobalLandingPage.f6b5f8975ca543cf4f00.png",
     "static/media/netBackground.png": "/static/media/netBackground.004070a93baac104136c.png",
@@ -9,12 +9,12 @@
     "static/media/gmaLogoLandingPage.png": "/static/media/gmaLogoLandingPage.dd2cd75a19f3aa865984.png",
     "static/media/arowIconLandingPage.png": "/static/media/arowIconLandingPage.2e396432cc1b7c37e47a.png",
     "index.html": "/index.html",
-    "main.42c6843e.css.map": "/static/css/main.42c6843e.css.map",
-    "main.f76f0719.js.map": "/static/js/main.f76f0719.js.map",
+    "main.0fb1ce56.css.map": "/static/css/main.0fb1ce56.css.map",
+    "main.82c63077.js.map": "/static/js/main.82c63077.js.map",
     "787.66b25e22.chunk.js.map": "/static/js/787.66b25e22.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.42c6843e.css",
-    "static/js/main.f76f0719.js"
+    "static/css/main.0fb1ce56.css",
+    "static/js/main.82c63077.js"
   ]
 }
