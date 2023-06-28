@@ -372,9 +372,8 @@ const Header = (props: IProps) => {
     localStorage.clear()
     dispatch(userActions.deleteUser({ params: undefined }))
     setTokenFirebase('')
-    setOpenModal(false)
-    navigate(ROUTE.HOME)
     setOpenModalPhone(false)
+    navigate(ROUTE.HOME)
   };
 
   const onCaptchaVerify = () => {
@@ -400,24 +399,24 @@ const Header = (props: IProps) => {
 
     const appVerifier = (window as any).recaptchaVerifier;
 
-    const formatPh = "+" + phone;
+    const formatPhone = "+" + phone;
 
-    signInWithPhoneNumber(auth, formatPh, appVerifier)
+    signInWithPhoneNumber(auth, formatPhone, appVerifier)
       .then((confirmationResult) => {
         (window as any).confirmationResult = confirmationResult;
         setShowOtp(true);
       })
       .catch((error) => {
         console.log('error signInWithPhoneNumber: ', error);
-        localStorage.clear()
-        dispatch(userActions.deleteUser({ params: undefined }))
-        setTokenFirebase('')
-        setOpenModal(false)
-        navigate(ROUTE.HOME)
-        dispatch(snackBarActions.setStateSnackBar({
-          content: '실패',
-          type: 'error',
-        }))
+        // localStorage.clear()
+        // dispatch(userActions.deleteUser({ params: undefined }))
+        // setTokenFirebase('')
+        // setOpenModalPhone(false)
+        // navigate(ROUTE.HOME)
+        // dispatch(snackBarActions.setStateSnackBar({
+        //   content: '실패',
+        //   type: 'error',
+        // }))
       });
   }
 
@@ -429,15 +428,15 @@ const Header = (props: IProps) => {
       })
       .catch((error: any) => {
         console.log('error onOTPVerify: ', error);
-        localStorage.clear()
-        dispatch(userActions.deleteUser({ params: undefined }))
-        setTokenFirebase('')
-        setOpenModal(false)
-        navigate(ROUTE.HOME)
-        dispatch(snackBarActions.setStateSnackBar({
-          content: '실패',
-          type: 'error',
-        }))
+        // localStorage.clear()
+        // dispatch(userActions.deleteUser({ params: undefined }))
+        // setTokenFirebase('')
+        // setOpenModalPhone(false)
+        // navigate(ROUTE.HOME)
+        // dispatch(snackBarActions.setStateSnackBar({
+        //   content: '실패',
+        //   type: 'error',
+        // }))
       });
   }
 
@@ -451,7 +450,7 @@ const Header = (props: IProps) => {
     const data = {
       mobileNumber: resp?.user?.phoneNumber,
     }
-    axiosClient.put(`${UPDATE_PHONE_NUMBER}/${userProfile._id}`, data)
+    axiosClient.put(UPDATE_PHONE_NUMBER, data)
       .then((res: any) => {
         if (res.statusCode === 200) {
           dispatch(loadingActions.loadingSuccess())
@@ -463,12 +462,12 @@ const Header = (props: IProps) => {
           }))
         }
         else {
-          console.log('message: ', res.message);
+          console.log('message Put UPDATE_PHONE_NUMBER failed: ', res.message);
           dispatch(loadingActions.loadingSuccess())
           localStorage.clear()
           dispatch(userActions.deleteUser({ params: undefined }))
           setTokenFirebase('')
-          setOpenModal(false)
+          setOpenModalPhone(false)
           navigate(ROUTE.HOME)
           dispatch(snackBarActions.setStateSnackBar({
             content: '실패',
@@ -482,7 +481,6 @@ const Header = (props: IProps) => {
         localStorage.clear()
         dispatch(userActions.deleteUser({ params: undefined }))
         setTokenFirebase('')
-        setOpenModal(false)
         navigate(ROUTE.HOME)
         dispatch(snackBarActions.setStateSnackBar({
           content: '실패',
