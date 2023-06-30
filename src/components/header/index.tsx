@@ -518,6 +518,14 @@ const Header = (props: IProps) => {
       alert('이 기능을 사용하려면 로그인해야 합니다.')
     }
   }
+  const handleClickPrice = () => {
+    if (!!localStorage.getItem('accessToken')) {
+      navigate(ROUTE.PRICE)
+    }
+    else {
+      alert('이 기능을 사용하려면 로그인해야 합니다.')
+    }
+  }
   const handleClickContact = () => {
     if (!!localStorage.getItem('accessToken')) {
       navigate(ROUTE.CUSTOMERCENTER)
@@ -582,7 +590,12 @@ const Header = (props: IProps) => {
   }, [userProfile])
 
   useEffect(() => {
+    console.log('userProfile111: ', userProfile);
     if (Object.entries(userProfile).length !== 0) {
+      setShowProfile(true)
+    }
+    else if(!!localStorage.getItem('accessToken') && Object.entries(userProfile).length == 0) {
+      dispatch(userActions.getUser({ params: undefined }))
       setShowProfile(true)
     }
   }, [])
@@ -618,8 +631,8 @@ const Header = (props: IProps) => {
       </div>
       <ul>
         <li onClick={() => console.log("ROUTE.HOME")}>About</li>
-        <li onClick={handleClickSolution}>Solution</li>
-        <li onClick={() => console.log("ROUTE.PRICE")}>Price</li>
+        <li onClick={handleClickSolution}>Solutions</li>
+        <li style={location.pathname === ROUTE.PRICE ? { color: 'blue' } : {}} onClick={handleClickPrice}>Price</li>
         <li onClick={handleClickContact}>Contact</li>
       </ul>
       <div>

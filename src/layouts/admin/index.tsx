@@ -67,12 +67,12 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
   }
 
   return (
-    <div className={location.pathname === '/' ? classes.container_layout : classes.container_admin_layout}>
-      {location.pathname === '/' ? <Header handleButtonShow={handleButtonShow} /> : <HeaderAdmin handleButtonShow={handleButtonShow} />}
+    <div className={(location.pathname === '/' || location.pathname === '/price') ? classes.container_layout : classes.container_admin_layout}>
+      {(location.pathname === '/' || location.pathname === '/price') ? <Header handleButtonShow={handleButtonShow} /> : <HeaderAdmin handleButtonShow={handleButtonShow} />}
       <div style={{ display: 'flex' }}>
         <div className="sidebar">
-          {!(location.pathname === '/') && <Sidebar isOpen={isShowSidebar} />}
-          <SidebarMobile isOpen={isShowSidebar} dataHeader={location.pathname === '/' ? true : false} />
+          {!(location.pathname === '/' || location.pathname === '/price') && <Sidebar isOpen={isShowSidebar} />}
+          <SidebarMobile isOpen={isShowSidebar} dataHeader={(location.pathname === '/' || location.pathname === '/price') ? true : false} />
         </div>
         <div style={{ flex: 1 }}>
           {children}

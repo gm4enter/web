@@ -10,6 +10,7 @@ import RegisterAndModifyAppleStore from '../pages/registerAndModifyAppleStore'
 import CustomerCenterItem from '../layouts/customerCenterItem'
 import RemittanceHistory from '../pages/depositAndHistory/remittanceHistory'
 import CreateConversationMb from '../pages/customercenter/createConversationMb'
+import Price from '../pages/price'
 
 export const ROUTE = {
   HOME: '/',
@@ -37,7 +38,7 @@ export const ROUTE = {
 const routes: Array<MyRouteProp> = [
   { path: ROUTE.HOME, element: <Home /> },
   { path: ROUTE.ABOUT, element: <Home /> },
-  { path: ROUTE.PRICE, element: <Home /> },
+  { path: ROUTE.PRICE, element: <Price /> },
   { path: ROUTE.DEPOSITANDHISTORY, element: <DepositAndHistory />, private: true },
   { path: ROUTE.SITECREATION, element: <SiteCreation />, private: true },
   { path: ROUTE.SITELISTANDEXPIREDLIST, element: <SiteListAndExpiredList />, private: true },

@@ -193,6 +193,37 @@ const useStyles = makeStyles({
             right: '16px',
         },
     },
+    modalSidebar: {
+        position: 'absolute' as 'absolute',
+        top: '40%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'transparent',
+        border: 'none',
+        '&>ul': {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            '&>li': {
+                listStyle: 'none',
+                padding: '16px 0px',
+                fontSize: '28px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                color: '#fff',
+                '&:hover': {
+                    color: '#00FFC2',
+                }
+            },
+            '&>div': {
+                height: '1px',
+                width: '180px',
+                backgroundColor: '#999',
+                marginTop: '3px',
+            },
+
+        }
+    },
 })
 
 interface IProps {
@@ -203,21 +234,32 @@ const HeaderAdmin = (props: IProps) => {
     const classes = useStyles()
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
+    const location = useLocation()
     const userProfile = useAppSelector(selectUserData)
     const { handleButtonShow } = props
     const [isShowSideBar, setIsShowSideBar] = useState(false)
     const [user, setUser] = useState<UserType>()
     const [openModal, setOpenModal] = useState(false)
+    const [showSidebarHeader, setShowSidebarHeader] = useState(false)
 
 
     const handleClick = () => {
         setIsShowSideBar(!isShowSideBar)
         handleButtonShow(isShowSideBar)
+
+        let windowWidth = window.innerWidth;
+        if (windowWidth < 768) {
+            handleCloseSideBar()
+        } else {
+            setShowSidebarHeader(!showSidebarHeader)
+        }
+
     }
     const handleClickMenuUser = () => {
         setOpenModal(!openModal)
     }
     const handleCloseModal = () => setOpenModal(false);
+    const handleCloseSideBar = () => setShowSidebarHeader(false);
 
     const handleLogout = () => {
         if (window.confirm('로그아웃하시겠습니까?')) {
@@ -228,46 +270,47 @@ const HeaderAdmin = (props: IProps) => {
         }
     }
 
-    // useEffect(() => {
-    //     if (tokenFirebase) {
-    //         const data = {
-    //             firebaseToken: tokenFirebase,
-    //         }
-    //         axiosClient.post(LOGIN, data)
-    //             .then((res: any) => {
-    //                 if (res.statusCode === 200) {
-    //                     console.log('message: ', res.message);
-    //                     setStatusLogin(true)
-    //                     localStorage.setItem('accessToken', res.data?.accessToken)
-    //                 }
-    //                 else {
-    //                     console.log('message: ', res.message);
-    //                 }
-    //             })
-    //             .catch((error: any) => {
-    //                 console.log(error)
-    //             })
-    //     }
-    // }, [tokenFirebase])
+    const handleClickAbout = () => {
+        if (!!localStorage.getItem('accessToken')) {
+            setShowSidebarHeader(false)
+            navigate(ROUTE.HOME)
+        }
+        else {
+            alert('이 기능을 사용하려면 로그인해야 합니다.')
+        }
+    }
 
-    // useEffect(() => {
-    //     if (localStorage.getItem('accessToken')) {
-    //         setTokens()
-    //         axiosClient.get(USER)
-    //             .then((res: { data: UserType }) => {
-    //                 if (res.data) {
-    //                     setUser(res.data)
-    //                 }
-    //             })
-    //             .catch((error: any) => {
-    //                 console.log(error)
-    //             })
 
-    //     }
-    // }, [statusLogin])
+    const handleClickSolution = () => {
+        if (!!localStorage.getItem('accessToken')) {
+            setShowSidebarHeader(false)
+            navigate(ROUTE.SITELISTANDEXPIREDLIST)
+        }
+        else {
+            alert('이 기능을 사용하려면 로그인해야 합니다.')
+        }
+    }
+    const handleClickPrice = () => {
+        if (!!localStorage.getItem('accessToken')) {
+            setShowSidebarHeader(false)
+            navigate(ROUTE.PRICE)
+        }
+        else {
+            alert('이 기능을 사용하려면 로그인해야 합니다.')
+        }
+    }
+    const handleClickContact = () => {
+        if (!!localStorage.getItem('accessToken')) {
+            setShowSidebarHeader(false)
+            navigate(ROUTE.CUSTOMERCENTER)
+        }
+        else {
+            alert('이 기능을 사용하려면 로그인해야 합니다.')
+        }
+    }
 
     useLayoutEffect(() => {
-        userProfile ?
+        (Object.entries(userProfile).length !== 0) ?
             setUser(userProfile) :
             dispatch(userActions.getUser({ params: undefined }))
     }, [userProfile])
@@ -329,6 +372,31 @@ const HeaderAdmin = (props: IProps) => {
                     </div>
                     <p>파트너 관리</p>
                     <p onClick={handleLogout}>로그아웃</p>
+                </div>
+            </Modal>
+
+            <Modal
+                open={showSidebarHeader}
+                onClose={handleCloseSideBar}
+                disableAutoFocus
+                BackdropProps={{
+                    timeout: 500,
+                    sx: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)', // Set your desired color here
+                        // Add other styles as needed
+                    },
+                }}
+            >
+                <div className={classes.modalSidebar}>
+                    <ul>
+                        <li onClick={handleClickAbout}>About</li>
+                        <div></div>
+                        <li style={location.pathname === ROUTE.SITELISTANDEXPIREDLIST ? { color: '#00FFC2' } : {}} onClick={handleClickSolution}>Solutions</li>
+                        <div></div>
+                        <li onClick={handleClickPrice}>Price</li>
+                        <div></div>
+                        <li style={location.pathname === ROUTE.CUSTOMERCENTER ? { color: '#00FFC2' } : {}} onClick={handleClickContact}>Contact</li>
+                    </ul>
                 </div>
             </Modal>
 
