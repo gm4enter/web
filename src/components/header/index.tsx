@@ -12,7 +12,7 @@ import { LOGIN, UPDATE_PHONE_NUMBER, USER } from '../../apis/urlConfig'
 import axiosClient, { setTokens } from '../../apis/axiosClient'
 import { setTokensLocalStorage } from '../../utils'
 import { UserType } from '../../types/user.type'
-import { Modal } from '@mui/material'
+import { MenuItem, Modal, Select, SelectChangeEvent } from '@mui/material'
 import { snackBarActions } from '../snackbar/snackbarSlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { selectUserData, userActions } from '../../features/user/userSlice'
@@ -22,7 +22,8 @@ import closeIcon from '../../asset/images/cancel.png'
 import OtpInput from 'react-otp-input';
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
-import { StepMachine, StepContainer, Step, useStepActions, useStepStore } from 'react-step-machine';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 const useStyles = makeStyles({
   container_header: {
@@ -32,7 +33,8 @@ const useStyles = makeStyles({
     left: 0,
     right: 0,
     // height: 86,
-    padding: '24px 100px',
+    padding: '22px 178px',
+    backgroundColor: '#2C2C2C',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -45,24 +47,18 @@ const useStyles = makeStyles({
       },
       '&>div:nth-of-type(1)': {
         display: 'flex',
-        height: '56px',
-        gap: '6px',
+        // height: '36px',
+        gap: '8px',
         paddingRight: '4px',
         alignItems: 'center',
         '&>img': {
-          width: '56px',
-          height: '56px',
+          width: '29px',
+          height: '36px',
         },
         '&>div': {
           fontWeight: 700,
           fontSize: '24px',
-          '&>p': {
-            color: 'blue',
-            fontWeight: 500,
-            fontSize: '16px',
-            padding: 0,
-            margin: 0
-          },
+          color: '#fff',
         },
       },
     },
@@ -71,12 +67,28 @@ const useStyles = makeStyles({
       display: 'flex',
       gap: '64px', padding: 0,
       margin: 0,
-      fontSize: '18px',
+      fontSize: '14px',
       fontWeight: 500,
       '&>li': {
         cursor: 'pointer',
+        color: '#8F8F8F',
         '&:hover': {
-          color: 'blue',
+          color: '#fff',
+        },
+      },
+      '&>div:nth-of-type(1)': {
+        display: 'flex',
+        justifyContent: 'space-between',
+        
+        '&>li': {
+          cursor: 'pointer',
+          color: '#8F8F8F',
+          '&:hover': {
+            color: '#fff',
+          },
+        },
+        '&>div': {
+          width: '1px', height: '20px', background: '#8F8F8F', margin: '0 16px'
         },
       },
     },
@@ -84,31 +96,11 @@ const useStyles = makeStyles({
       '&>div': {
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
-        backgroundColor: '#fff',
-        border: '1px solid #D0D5DD',
-        borderRadius: '100px',
-        fontSize: '18px',
+        backgroundColor: 'transparent',
+        border: '1px solid #8F8F8F',
+        fontSize: '14px',
         fontWeight: 500,
-        padding: '4px 12px 4px 6px',
-        '&>img:nth-child(1)': {
-          width: '40px',
-          height: '40px',
-          borderRadius: '50%',
-        },
-        '&>img:nth-child(2)': {
-          width: '32px',
-          height: '32px',
-        },
-      },
-      '&>button': {
-        backgroundColor: '#fff',
-        border: '1px solid #D0D5DD',
-        borderRadius: '100px',
-        alignItems: 'center',
-        fontSize: '18px',
-        fontWeight: 500,
-        padding: '4px 12px'
+        color: '#fff',
       },
     },
 
@@ -341,6 +333,7 @@ const Header = (props: IProps) => {
 
   const classes = useStyles()
   const location = useLocation()
+  const { t } = useTranslation();
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const userProfile = useAppSelector(selectUserData)
@@ -594,7 +587,7 @@ const Header = (props: IProps) => {
     if (Object.entries(userProfile).length !== 0) {
       setShowProfile(true)
     }
-    else if(!!localStorage.getItem('accessToken') && Object.entries(userProfile).length == 0) {
+    else if (!!localStorage.getItem('accessToken') && Object.entries(userProfile).length == 0) {
       dispatch(userActions.getUser({ params: undefined }))
       setShowProfile(true)
     }
@@ -612,48 +605,58 @@ const Header = (props: IProps) => {
   //     }
   //   })
   // }, [])
+
+
+  //enter-web
+  const [lang, setLang] = useState(i18n.language);
+
+  const handleChangeSelect = (event: SelectChangeEvent) => {
+    setLang(event.target.value as string);
+      i18n.changeLanguage(event.target.value as string);
+  }
+
   return (
     <div
       className={classes.container_header}
-      style={{ background: scroll ? 'white' : 'white' }}
+    // style={{ background: scroll ? 'white' : 'white' }}
     >
       <div>
-        <img src={hamburgerMenu} alt='' onClick={handleClick} />
+        {/* <img src={hamburgerMenu} alt='' onClick={handleClick} /> */}
         <div onClick={() => navigate(ROUTE.HOME)}>
           <img src={logo} alt="logo" />
           <div>
-            GM4 Company
-            <p>
-              Solution
-            </p>
+          {t(`header:home`)}
           </div>
         </div>
       </div>
       <ul>
-        <li onClick={() => console.log("ROUTE.HOME")}>About</li>
-        <li onClick={handleClickSolution}>Solutions</li>
-        <li style={location.pathname === ROUTE.PRICE ? { color: 'blue' } : {}} onClick={handleClickPrice}>Price</li>
-        <li onClick={handleClickContact}>Contact</li>
+        <li style={location.pathname === ROUTE.HOME ? { color: '#fff' } : {}} onClick={() => navigate(ROUTE.HOME)}>{t(`header:home`)}</li>
+        <li onClick={handleClickSolution}>{t(`header:news`)}</li>
+        <li style={location.pathname === ROUTE.PRICE ? { color: '#fff' } : {}} onClick={handleClickPrice}>{t(`header:artists`)}</li>
+        <li onClick={handleClickContact}>{t(`header:models`)}</li>
+        <li onClick={handleClickContact}>{t(`header:actors`)}</li>
+        <li onClick={handleClickContact}>{t(`header:video`)}</li>
+        <li onClick={handleClickContact}>{t(`header:audition`)}</li>
+        <div>
+          <li onClick={handleClickContact}>{t(`header:schedule`)}</li>
+          <div style={{}} />
+          <li onClick={handleClickContact}>{t(`header:joinUs`)} / {t(`header:login`)}</li>
+        </div>
       </ul>
       <div>
-        {(!!localStorage.getItem('accessToken') && Object.entries(userProfile).length !== 0 && showProfile) ? (
-          <div onClick={handleClickMenuUser}>
-            <img
-              src={
-                userProfile?.photo
-              }
-              alt=''
-            />
-            <img src={hamburgerMenu} alt='' />
-          </div>
-        ) : (
-          <button onClick={handleLogin}>
-            로그인
-          </button>
-          // <button onClick={() => setOpenModalPhone(true)}>
-          //   login phone
-          // </button>
-        )}
+        <Select
+          id="demo-select-small"
+          value={lang}
+          onChange={handleChangeSelect}
+          displayEmpty
+          inputProps={{ 'aria-label': 'Without label' }}
+        >
+          <MenuItem value={'ko'}>KOR</MenuItem>
+          <MenuItem value={'en'}>EN</MenuItem>
+          <MenuItem value={'zh'}>CS</MenuItem>
+          <MenuItem value={'ja'}>JP</MenuItem>
+          <MenuItem value={'es'}>ES</MenuItem>
+        </Select>
       </div>
       <Modal
         open={openModal}

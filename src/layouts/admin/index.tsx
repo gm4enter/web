@@ -6,6 +6,7 @@ import Header from '../../components/header'
 import HeaderAdmin from '../../components/headerAdmin'
 import Sidebar from '../../components/sidebar'
 import SidebarMobile from '../../components/sidebar/mobile'
+import useLang, { LANG } from '../../hooks/useLang'
 interface Props {
   children: ReactNode
 }
@@ -35,6 +36,19 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
   const classes = useStyles()
   const location = useLocation()
   const [isShowSidebar, setIsShowSidebar] = React.useState(false)
+
+
+  const { changeLang } = useLang();
+
+  //* Check lang
+  React.useEffect(() => {
+    console.log('check lang');
+    
+    const currentLang = localStorage.getItem(LANG);
+    if (currentLang) {
+      changeLang(currentLang);
+    }
+  }, [changeLang]);
 
   const handleButtonShow = (check: boolean) => {
     setIsShowSidebar(check)

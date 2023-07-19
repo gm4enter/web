@@ -10,6 +10,11 @@ import BaseAdminLayout from './layouts/admin'
 import { createTheme, ThemeProvider } from '@mui/material'
 import Loading from './components/loading'
 import CustomizedSnackbars from './components/snackbar'
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n';
+import useLang, { LANG } from './hooks/useLang';
+
+
 const container = document.getElementById('root')!
 const root = createRoot(container)
 
@@ -23,13 +28,15 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <BaseAdminLayout>
-            <Loading />
-            <CustomizedSnackbars />
-            <Router />
-          </BaseAdminLayout>
-        </ThemeProvider>
+        <I18nextProvider i18n={i18n}>
+          <ThemeProvider theme={theme}>
+            <BaseAdminLayout>
+              <Loading />
+              <CustomizedSnackbars />
+              <Router />
+            </BaseAdminLayout>
+          </ThemeProvider>
+        </I18nextProvider>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

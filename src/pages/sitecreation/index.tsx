@@ -21,6 +21,7 @@ import { transactionActions } from '../../features/transaction/transactionSlice'
 import { TYPE_SORT } from '../../types/enum';
 import { selectUserData, userActions } from '../../features/user/userSlice';
 import { siteActions } from '../../features/site/siteSlice';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles({
     container_site: {
@@ -258,6 +259,7 @@ const SiteCreation = () => {
     const classes = useStyles();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { t } = useTranslation();
     const listPlan = useAppSelector(selectListData)
     const userProfile = useAppSelector(selectUserData)
     const [open, setOpen] = useState(false);
@@ -383,7 +385,7 @@ const SiteCreation = () => {
     return (
         <div className={classes.container_site}>
             <div>
-                <p>생성할 사이트 선택</p>
+                <p>생성할 사이트 선택  {t(`header:home`)}</p>
                 <div onClick={handleOpenModal}>
                     {(Object.entries(theme).length === 0) ? <p>눌러서 선택해주세요.</p> : <p>{theme.name}</p>}
                 </div>
