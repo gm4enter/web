@@ -1,12 +1,10 @@
 {
-  "home": "Home s",
-  "news": "News",
-  "artists": "Artists",
-  "models": "Models",
-  "actors": "Actors",
-  "video": "Video",
-  "audition": "Audition",
-  "schedule": "Schedule",
-  "joinUs": "Join Us",
-  "login": "Login"
+  "title": "My Idoly",
+  "artist": "artist",
+  "contact": "contact",
+  "about": "about",
+  "auditionDetail": "오디션 지원하기",
+  "myIdolyMenu": "My Idoly",
+  "artistMenu": "Artist",
+  "auditionMenu": "Audition"
 }

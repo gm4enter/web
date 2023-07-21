@@ -43,7 +43,7 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
   //* Check lang
   React.useEffect(() => {
     console.log('check lang');
-    
+
     const currentLang = localStorage.getItem(LANG);
     if (currentLang) {
       changeLang(currentLang);
@@ -53,46 +53,12 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
   const handleButtonShow = (check: boolean) => {
     setIsShowSidebar(check)
   }
-  const checkLayout = () => {
-    if (location.pathname === '/') {
-      return (
-        <div className={classes.container_layout}>
-          <Header handleButtonShow={handleButtonShow} />
-          <SidebarMobile isOpen={isShowSidebar} dataHeader />
-          {children}
-          <Footer />
-        </div>
-      )
-    } else {
-      return (
-        <div className={classes.container_admin_layout}>
-          <HeaderAdmin handleButtonShow={handleButtonShow} />
-          <div style={{ display: 'flex' }}>
-            <div className="sidebar">
-              <Sidebar isOpen={isShowSidebar} />
-              <SidebarMobile isOpen={isShowSidebar} />
-            </div>
-
-            <div style={{ flex: 1 }}>{children}</div>
-          </div>
-        </div>
-      )
-    }
-  }
 
   return (
-    <div className={(location.pathname === '/' || location.pathname === '/price') ? classes.container_layout : classes.container_admin_layout}>
-      {(location.pathname === '/' || location.pathname === '/price') ? <Header handleButtonShow={handleButtonShow} /> : <HeaderAdmin handleButtonShow={handleButtonShow} />}
-      <div style={{ display: 'flex' }}>
-        <div className="sidebar">
-          {!(location.pathname === '/' || location.pathname === '/price') && <Sidebar isOpen={isShowSidebar} />}
-          <SidebarMobile isOpen={isShowSidebar} dataHeader={(location.pathname === '/' || location.pathname === '/price') ? true : false} />
-        </div>
-        <div style={{ flex: 1 }}>
-          {children}
-        </div>
-      </div>
-      {!!(location.pathname === '/') && <Footer />}
+    <div className={(location.pathname === '/') ? classes.container_layout : classes.container_admin_layout}>
+      {<Header handleButtonShow={handleButtonShow} isHome={!!(location.pathname === '/')} />}
+      {children}
+      {!!(location.pathname !== '/') && <Footer />}
     </div>
   )
 }
