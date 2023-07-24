@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     marginTop: '104px',
   },
   container_admin_layout: {
-    marginTop: '76px',
+    marginTop: '88px',
   },
   sidebar: {
     '&>div:nth-child(1)': {

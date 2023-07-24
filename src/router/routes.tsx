@@ -12,6 +12,7 @@ import RemittanceHistory from '../pages/depositAndHistory/remittanceHistory'
 import CreateConversationMb from '../pages/customercenter/createConversationMb'
 import Price from '../pages/price'
 import About from '../pages/about'
+import Contact from '../pages/contact'
 
 export const ROUTE = {
   HOME: '/',
@@ -32,6 +33,7 @@ export const ROUTE = {
   CUSTOMERCENTER_ITEM: '/customercenter/:id',
   CREATECONVERSATION_ITEM: '/customercentermb',
   ABOUT: '/about',
+  CONTACT: '/contact',
   PRICE: '/price',
   REMITTANCEHISTORY: '/depositandhistory/remittancehistory',
 }
@@ -39,6 +41,7 @@ export const ROUTE = {
 const routes: Array<MyRouteProp> = [
   { path: ROUTE.HOME, element: <Home /> },
   { path: ROUTE.ABOUT, element: <About /> },
+  { path: ROUTE.CONTACT, element: <Contact /> },
   { path: ROUTE.PRICE, element: <Price /> },
   { path: ROUTE.DEPOSITANDHISTORY, element: <DepositAndHistory />, private: true },
   { path: ROUTE.SITECREATION, element: <SiteCreation />, private: true },

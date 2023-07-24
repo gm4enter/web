@@ -458,14 +458,6 @@ const Header = (props: IProps) => {
       alert('이 기능을 사용하려면 로그인해야 합니다.')
     }
   }
-  const handleClickContact = () => {
-    if (!!localStorage.getItem('accessToken')) {
-      navigate(ROUTE.CUSTOMERCENTER)
-    }
-    else {
-      alert('이 기능을 사용하려면 로그인해야 합니다.')
-    }
-  }
   useLayoutEffect(() => {
     if (tokenFirebase) {
       const data = {
@@ -562,6 +554,11 @@ const Header = (props: IProps) => {
     setOpenModalMenu(false)
     navigate(ROUTE.ABOUT)
   }
+
+  const handleClickContact = () => {
+    setOpenModalMenu(false)
+    navigate(ROUTE.CONTACT)
+  }
   return (
     <div
       className={classes.container_header}
@@ -617,11 +614,11 @@ const Header = (props: IProps) => {
         }}
       >
         <div className={classes.modalSidebar}>
-          <div onClick={handleClickAbout}>
+          <div>
             {t(`header:myIdolyMenu`)}
             <div>
-              <p>{t(`header:about`)}</p>
-              <p>{t(`header:contact`)}</p>
+              <p onClick={handleClickAbout}>{t(`header:about`)}</p>
+              <p onClick={handleClickContact}>{t(`header:contact`)}</p>
             </div>
           </div>
           <div></div>
