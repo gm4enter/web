@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles({
   footer_container: {
-    background: '#FAFAFA',
+    background: '#FFFFFF',
     padding: '40px 80px',
     display: 'flex',
     justifyContent: 'space-between',

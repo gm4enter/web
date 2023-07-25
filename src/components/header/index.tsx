@@ -559,6 +559,11 @@ const Header = (props: IProps) => {
     setOpenModalMenu(false)
     navigate(ROUTE.CONTACT)
   }
+
+  const handleClickAudition = () => {
+    setOpenModalMenu(false)
+    navigate(ROUTE.AUDITION)
+  }
   return (
     <div
       className={classes.container_header}
@@ -628,7 +633,7 @@ const Header = (props: IProps) => {
               <p>{t(`header:artist`)}</p>
             </div></div>
           <div></div>
-          <div onClick={handleClickPrice}>
+          <div onClick={handleClickAudition}>
             {t(`header:auditionMenu`)}
             <div>
               <p>{t(`header:auditionDetail`)}</p>

@@ -9,7 +9,9 @@ import { ROUTE } from '../../router/routes'
 import { Input } from '../../components/base/input/Input'
 import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import * as yup from 'yup';
-import { Button, MenuItem, TextField } from '@mui/material'
+import { Button, MenuItem, TextField, Checkbox } from '@mui/material'
+import InputAdornment from '@mui/material/InputAdornment';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
@@ -107,15 +109,70 @@ const useStyles = makeStyles({
       },
       '&>div:nth-of-type(2)': {
         width: '50%',
+
+        '&>div:nth-of-type(1)': {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '8px',
+          marginBottom: '32px',
+          '&>p': {
+            margin: '0',
+            padding: '0',
+          },
+          '&>p:nth-of-type(1)': {
+            fontSize: '32px',
+            fontWeight: '700',
+            color: '#000',
+          },
+          '&>p:nth-of-type(2)': {
+            fontSize: '14px',
+            fontWeight: '400',
+            color: '#3F3F46',
+            textAlign: 'center',
+          },
+        },
+        '&>div:nth-of-type(2)': {
+          '&>form': {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+            '&>div': {
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+              '&>label': {
+                margin: '0',
+                padding: '0',
+                color: '#000',
+                fontSize: '16px',
+                fontWeight: '700',
+                '&>span': {
+                  color: '#FF0000',
+                },
+              },
+            }
+          },
+        },
       },
     },
   },
 });
 
 const validationSchema = yup.object().shape({
+  inquiryType: yup
+    .string()
+    .required('Required'),
+  name: yup
+    .string()
+    .required('Required'),
   email: yup
     .string()
     .email('Invalid email')
+    .required('Required'),
+  content: yup
+    .string()
     .required('Required'),
   // password: yup
   //   .string()
@@ -142,10 +199,13 @@ const Contact = () => {
       contact: '',
       email: '',
       content: '',
+      policy: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      // alert(JSON.stringify(values, null, 2));
+      console.log('values', values);
+
     },
   });
 
@@ -215,84 +275,164 @@ const Contact = () => {
 
           <div>
             <form onSubmit={formik.handleSubmit}>
-              <label>Inquiry type *</label>
-              <TextField
-                fullWidth
-                id="inquiryType"
-                name="inquiryType"
-                variant="filled"
-                select
-                value={formik.values.inquiryType}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.inquiryType && Boolean(formik.errors.inquiryType)}
-                helperText={formik.touched.inquiryType && formik.errors.inquiryType}
+              <div>
+                <label>Inquiry type <span>*</span></label>
+                <TextField
+                  fullWidth
+                  id="inquiryType"
+                  name="inquiryType"
+                  variant="filled"
+                  select
+                  value={formik.values.inquiryType}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.inquiryType && Boolean(formik.errors.inquiryType)}
+                  helperText={formik.touched.inquiryType && formik.errors.inquiryType}
+                >
+                  <MenuItem key={1} value={1}> 1 </MenuItem>
+                  <MenuItem key={2} value={2}> 2 </MenuItem>
+                </TextField>
+              </div>
+
+              <div>
+                <label>Name <span>*</span></label>
+                <TextField
+                  fullWidth
+                  id="name"
+                  name="name"
+                  variant="filled"
+                  placeholder='Please enter your name'
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.name && Boolean(formik.errors.name)}
+                  helperText={formik.touched.name && formik.errors.name}
+                />
+              </div>
+
+              <div>
+                <label>Contact</label>
+                <TextField
+                  fullWidth
+                  id="contact"
+                  name="contact"
+                  variant="filled"
+                  placeholder='Please enter your contact information'
+                  value={formik.values.contact}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.contact && Boolean(formik.errors.contact)}
+                  helperText={formik.touched.contact && formik.errors.contact}
+                />
+              </div>
+
+              <div>
+                <label>Email <span>*</span></label>
+                <TextField
+                  fullWidth
+                  id="email"
+                  name="email"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <div
+                          style={{ padding: '8px 16px', backgroundColor: '#fff', boxShadow: '0 0 8px 0 rgba(0, 0, 0, 0.08)', cursor: 'pointer' }}
+                          onClick={() => { console.log('verify email') }}
+                        >
+                          Verify
+                        </div>
+                      </InputAdornment>
+                    ),
+                  }}
+                  variant="filled"
+                  placeholder='Please enter your email'
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
+                />
+              </div>
+
+              <div>
+                <label>Content <span>*</span></label>
+                <TextField
+                  fullWidth
+                  id="content"
+                  name="content"
+                  variant="filled"
+                  placeholder='Please enter your content'
+                  multiline
+                  rows={5}
+                  value={formik.values.content}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.content && Boolean(formik.errors.content)}
+                  helperText={formik.touched.content && formik.errors.content}
+                />
+              </div>
+
+              <div>
+                <label>Privary Policy <span>*</span></label>
+                <TextField
+                  fullWidth
+                  id="content"
+                  name="content"
+                  variant="outlined"
+                  placeholder='Please enter your content'
+                  multiline
+                  rows={7}
+                  value='1. Collected Personal Information
+                  We collect the following personal information for the use of the Website, provision of services, response to inquiries and reports, etc.
+                  1) Collected information: Name, contact, E-mail, cookies, IP information.
+                  2) Method: Online collection through the Website.
+                  
+                  2. Purpose of Collecting and Using Personal Information
+                  We use the collected personal information for the following purposes.
+                  - Individual identification and response to service inquiries.
+                  
+                  3. Period of Retention and Use of Personal Information
+                  In principle, the Company destroys all personal information immediately after attaining the purpose of collecting and using such personal information. However, the Company retains certain personal information, including those specified below, during the period of retention and
+                  use consented by the users or for a certain amount of time as obligated by applicable law.
+                  1) Service proposals, inquiries, reports: 12 months
+                  2) Website log-in and access records: 3 months (Protection of Communications Secrets Act)
+                  3) Website log-in and access records: 3 months (Protection of Communications Secrets Act)
+                  
+                  4. Destruction of Personal Information
+                  The Company immediately destroys personal information upon achieving the purpose of the information’s collection and use. The destruction
+                  procedure and methods are as follows.
+                  1) Destruction Procedure
+                  After attaining the personal information’s purpose , the personal information is retained by the Company for a certain amount of time in accordance with the personal information protection grounds under the Company’s internal policy and applicable laws (refer to Period of
+                  Retention and Use) and thereafter destroyed. Any personal information transferred to a database will not be used for other purposes unless
+                  otherwise provided by law.
+                  2) Destruction Method
+                  Personal information stored electronically is deleted through a technical method that prevents the restoration of any records.'
+                />
+              </div>
+
+              <div style={{ flexDirection: 'row', marginBottom: '12px' }}>
+                <Checkbox
+                  id="policy"
+                  name="policy"
+                  sx={{
+                    padding: 0,
+                    '&.Mui-checked': {
+                      color: '#000',
+                    }
+                  }}
+                  value={formik.values.policy}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                <span>Please consent to the privacy policy.</span>
+              </div>
+
+              <Button
+                disabled={!formik.values.policy}
+                variant="contained"
+                fullWidth type="submit"
+                style={(!formik.values.policy) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
               >
-                 <MenuItem key={1} value={1}> 1 </MenuItem>
-                 <MenuItem key={2} value={2}> 2 </MenuItem>
-              </TextField>
-              <label>Name *</label>
-              <TextField
-                fullWidth
-                id="name"
-                name="name"
-                variant="filled"
-                placeholder='Please enter your name'
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
-              />
-
-              <label>Contact</label>
-              <TextField
-                fullWidth
-                id="contact"
-                name="contact"
-                variant="filled"
-                placeholder='Please enter your contact information'
-                value={formik.values.contact}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.contact && Boolean(formik.errors.contact)}
-                helperText={formik.touched.contact && formik.errors.contact}
-              />
-
-              <label>Email *</label>
-              <TextField
-                fullWidth
-                id="email"
-                name="email"
-                variant="filled"
-                placeholder='Please enter your email'
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-              />
-
-              <label>Content *</label>
-              <TextField
-                fullWidth
-                id="content"
-                name="content"
-                variant="filled"
-                placeholder='Please enter your content'
-                multiline
-                rows={5}
-                value={formik.values.content}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.content && Boolean(formik.errors.content)}
-                helperText={formik.touched.content && formik.errors.content}
-              />
-
-              <label>Privary Policy *</label>
-
-
-              <Button color="info" variant="contained" fullWidth type="submit">
                 Submit
               </Button>
             </form>

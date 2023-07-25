@@ -13,9 +13,20 @@ import CreateConversationMb from '../pages/customercenter/createConversationMb'
 import Price from '../pages/price'
 import About from '../pages/about'
 import Contact from '../pages/contact'
+import Audition from '../pages/audition'
+import Audition2 from '../pages/audition/step2'
+import Audition3 from '../pages/audition/step3'
 
 export const ROUTE = {
   HOME: '/',
+  ABOUT: '/about',
+  CONTACT: '/contact',
+  AUDITION: '/audititon',
+
+  AUDITION2: '/audititon/step2',
+  AUDITION3: '/audititon/step3',
+
+
   DEPOSITANDHISTORY: '/depositandhistory',
   SITECREATION: '/sitecreation',
   SITELISTANDEXPIREDLIST: '/sitelistandexpiredlist',
@@ -32,8 +43,6 @@ export const ROUTE = {
   CUSTOMERCENTER: '/customercenter',
   CUSTOMERCENTER_ITEM: '/customercenter/:id',
   CREATECONVERSATION_ITEM: '/customercentermb',
-  ABOUT: '/about',
-  CONTACT: '/contact',
   PRICE: '/price',
   REMITTANCEHISTORY: '/depositandhistory/remittancehistory',
 }
@@ -42,6 +51,13 @@ const routes: Array<MyRouteProp> = [
   { path: ROUTE.HOME, element: <Home /> },
   { path: ROUTE.ABOUT, element: <About /> },
   { path: ROUTE.CONTACT, element: <Contact /> },
+  { path: ROUTE.AUDITION, element: <Audition /> },
+
+  { path: ROUTE.AUDITION2, element: <Audition2 /> },
+  { path: ROUTE.AUDITION3, element: <Audition3 /> },
+
+
+
   { path: ROUTE.PRICE, element: <Price /> },
   { path: ROUTE.DEPOSITANDHISTORY, element: <DepositAndHistory />, private: true },
   { path: ROUTE.SITECREATION, element: <SiteCreation />, private: true },
