@@ -1,7 +1,7 @@
 import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import arowIconLandingPage from '../../asset/images/arowIconLandingPage.png'
+import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
 import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
 import background from '../../asset/images/Audition.png'
@@ -96,7 +96,7 @@ const useStyles = makeStyles({
                     // background: '#ffccff',
                     '&>div': {
                         display: 'flex',
-                        gap: '32px',
+                        // gap: '32px',
                         '&>label': {
                             minWidth: '70px',
                             flex: 1,
@@ -112,7 +112,25 @@ const useStyles = makeStyles({
                         '&>div': {
                             flex: 5,
                             minWidth: '180px',
-
+                        },
+                    },
+                    '&>div:nth-of-type(7)': {
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        '&>div:nth-of-type(1)': {
+                            display: 'flex',
+                            alignItems: 'center',
+                            '&>div': {
+                                padding: '12px',
+                                display: 'flex',
+                                gap: '8px',
+                                cursor: 'pointer',
+                            },
+                            '&>div:nth-of-type(2)': {
+                                '&>img': {
+                                    transform: 'scaleX(-1) scaleY(1)'
+                                },
+                            },
                         },
                     },
                 },
@@ -122,19 +140,16 @@ const useStyles = makeStyles({
 });
 
 const validationSchema = yup.object().shape({
-    inquiryType: yup
-        .string()
-        .required('Required'),
-    name: yup
-        .string()
-        .required('Required'),
     email: yup
         .string()
-        .email('Invalid email')
-        .required('Required'),
-    content: yup
-        .string()
-        .required('Required'),
+        .email('Invalid email'),
+    // gender: yup
+    //     .string()
+    //     .required('Required'),
+    // name: yup
+    //     .string()
+    //     .required('Required'),
+
     // password: yup
     //   .string()
     //   .min(8, 'Password should be of minimum 8 characters length')
@@ -150,6 +165,11 @@ const Audition2 = () => {
         navigate(ROUTE.AUDITION + '/step3')
     }
 
+    const handleClickBack = () => {
+        console.log('handleClickBack');
+        navigate(ROUTE.AUDITION)
+    }
+
     const handleClickContact = () => {
         navigate(ROUTE.CONTACT)
     }
@@ -158,10 +178,10 @@ const Audition2 = () => {
         initialValues: {
             gender: '',
             name: '',
-            contact: '',
+            date: '',
+            countries: '',
+            phoneNumber: '',
             email: '',
-            content: '',
-            policy: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -235,49 +255,35 @@ const Audition2 = () => {
                         <label>지원자 정보 <span>*</span></label>
                     </div>
                     <form onSubmit={formik.handleSubmit}>
-
                         <div>
                             <label>성별</label>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                id='gender'
-                                name="gender"
-                                value={formik.values.gender}
-                                onChange={formik.handleChange}
-                            >
-                                <FormControlLabel value={'1'} control={<Radio />} label="남" />
-                                <FormControlLabel value={'2'} control={<Radio />} label="여" />
-                            </RadioGroup>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <RadioGroup
+                                    row
+                                    aria-labelledby="demo-row-radio-buttons-group-label"
+                                    id='gender'
+                                    name="gender"
+                                    value={formik.values.gender}
+                                    onChange={formik.handleChange}
+                                >
+                                    <FormControlLabel value={'1'} control={<Radio />} label="남" />
+                                    <FormControlLabel value={'0'} control={<Radio />} label="여" />
+                                </RadioGroup>
+                                <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.gender && formik.errors.gender}</p>
+                            </div>
                         </div>
 
                         <div>
                             <label>이름</label>
                             <TextField
                                 fullWidth
-                                id="content"
-                                name="content"
-                                variant="outlined"
-                                placeholder='Please enter your content'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                value={formik.values.content}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.content && Boolean(formik.errors.content)}
-                                helperText={formik.touched.content && formik.errors.content}
-                            />
-                        </div>
-
-                        <div>
-                            <label>생년월일</label>
-                            <TextField
-                                fullWidth
                                 id="name"
                                 name="name"
                                 variant="outlined"
-                                placeholder='Please enter your name'
+                                placeholder='당신의 성명을 입력 해주세요'
+                                sx={{
+                                    backgroundColor: '#F7F7F7',
+                                }}
                                 value={formik.values.name}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -287,18 +293,40 @@ const Audition2 = () => {
                         </div>
 
                         <div>
+                            <label>생년월일</label>
+                            <TextField
+                                fullWidth
+                                id="date"
+                                name="date"
+                                variant="outlined"
+                                placeholder='YYYY/MM/DD'
+                                sx={{
+                                    backgroundColor: '#F7F7F7',
+                                }}
+                                value={formik.values.date}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.date && Boolean(formik.errors.date)}
+                                helperText={formik.touched.date && formik.errors.date}
+                            />
+                        </div>
+
+                        <div>
                             <label>국적</label>
                             <TextField
                                 fullWidth
-                                id="contact"
-                                name="contact"
+                                id="contries"
+                                name="contries"
                                 variant="outlined"
                                 placeholder='Please enter your contact information'
-                                value={formik.values.contact}
+                                sx={{
+                                    backgroundColor: '#F7F7F7',
+                                }}
+                                value={formik.values.countries}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                error={formik.touched.contact && Boolean(formik.errors.contact)}
-                                helperText={formik.touched.contact && formik.errors.contact}
+                                error={formik.touched.countries && Boolean(formik.errors.countries)}
+                                helperText={formik.touched.countries && formik.errors.countries}
                             />
                         </div>
 
@@ -306,10 +334,32 @@ const Audition2 = () => {
                             <label>연락처</label>
                             <TextField
                                 fullWidth
+                                id="phoneNumber"
+                                name="phoneNumber"
+                                variant="outlined"
+                                placeholder='전화번호를 입력하세요'
+                                sx={{
+                                    backgroundColor: '#F7F7F7',
+                                }}
+                                value={formik.values.phoneNumber}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
+                                helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
+                            />
+                        </div>
+
+                        <div>
+                            <label>아이디(이메일)</label>
+                            <TextField
+                                fullWidth
                                 id="email"
                                 name="email"
                                 variant="outlined"
-                                placeholder='Please enter your email'
+                                placeholder='Please enter your content'
+                                sx={{
+                                    backgroundColor: '#F7F7F7',
+                                }}
                                 value={formik.values.email}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -319,46 +369,43 @@ const Audition2 = () => {
                         </div>
 
                         <div>
-                            <label>아이디(이메일)</label>
-                            <TextField
-                                fullWidth
-                                id="content"
-                                name="content"
-                                variant="outlined"
-                                placeholder='Please enter your content'
-                                value={formik.values.content}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.content && Boolean(formik.errors.content)}
-                                helperText={formik.touched.content && formik.errors.content}
-                            />
-                        </div>
-
-                        <div style={{ flexDirection: 'row', marginBottom: '12px' }}>
-                            <Checkbox
-                                id="policy"
-                                name="policy"
+                            <div>
+                                <div onClick={handleClickBack}>
+                                    <img src={arrowBack} alt='' />
+                                    이전 단계
+                                </div>
+                                <div onClick={handleClickNext}>
+                                    다음 단계
+                                    <img src={arrowBack} alt='' />
+                                </div>
+                            </div>
+                            <Button
+                                disabled={!formik.values}
                                 sx={{
-                                    padding: 0,
-                                    '&.Mui-checked': {
-                                        color: '#000',
-                                    }
+                                    marginRight: '24px',
+                                    padding: '12px 60px',
+                                    backgroundColor: '#fff',
+                                    color: '#0063F7',
+                                    border: '1px solid #0063F7',
                                 }}
-                                value={formik.values.policy}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                            />
-                            <span>Please consent to the privacy policy.</span>
+                                onClick={handleClickNext}
+                            >
+                                다음 단계
+                            </Button>
+                            <Button
+                                disabled={!formik.values}
+                                variant="contained"
+                                type="submit"
+                                color='primary'
+                                sx={{
+                                    padding: '12px 60px'
+                                }}
+                            // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
+                            >
+                                지원서 저장
+                            </Button>
                         </div>
 
-                        <Button
-                            disabled={!formik.values.policy}
-                            variant="contained"
-                            fullWidth type="submit"
-                            style={(!formik.values.policy) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
-                        >
-                            Submit
-                        </Button>
                     </form>
                 </div>
             </div>
