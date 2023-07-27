@@ -3,14 +3,14 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
-import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
+import linkIcon from '../../asset/images/link-2.png'
 import background from '../../asset/images/Audition.png'
 import lineStep from '../../asset/images/lineStep.png'
 import { ROUTE } from '../../router/routes'
 import { Input } from '../../components/base/input/Input'
 import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import * as yup from 'yup';
-import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl, OutlinedInput, Select, useTheme, SelectChangeEvent, Theme } from '@mui/material'
+import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl, OutlinedInput, Select, useTheme, SelectChangeEvent, Theme, InputAdornment } from '@mui/material'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
@@ -205,12 +205,12 @@ const Audition4 = () => {
 
     const handleClickNext = () => {
         console.log('handleClickNext');
-        navigate(ROUTE.AUDITION + '/step4')
+        navigate(ROUTE.AUDITION + '/step5')
     }
 
     const handleClickBack = () => {
         console.log('handleClickBack');
-        navigate(ROUTE.AUDITION + '/step2')
+        navigate(ROUTE.AUDITION + '/step3')
     }
 
     const handleClickContact = () => {
@@ -319,15 +319,37 @@ const Audition4 = () => {
                     </div>
                     <form onSubmit={formik.handleSubmit}>
                         <div>
-                            <label>주소</label>
+                            <label>프로필 사진(필수)</label>
                             <div>
                                 <div style={{ display: 'flex', gap: '12px' }}>
                                     <TextField
-                                        // fullWidth
+                                        fullWidth
                                         id="address"
                                         name="address"
                                         variant="outlined"
-                                        placeholder='우편번호'
+                                        placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <div
+                                                        style={{
+                                                            padding: '12px 16px',
+                                                            marginRight: '-8px',
+                                                            backgroundColor: '#000',
+                                                            color: '#fff',
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px',
+                                                        }}
+                                                        onClick={() => { console.log('verify email') }}
+                                                    >
+                                                        <img src={linkIcon} alt='' />
+                                                        파일첨부
+                                                    </div>
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                         sx={{
                                             flex: 1,
                                             backgroundColor: '#F7F7F7',
@@ -338,33 +360,43 @@ const Audition4 = () => {
                                         error={formik.touched.address && Boolean(formik.errors.address)}
                                         helperText={formik.touched.address && formik.errors.address}
                                     />
-                                    <Button
-                                        disabled={!formik.values}
-                                        variant="contained"
-                                        color='primary'
-                                        sx={{
-                                            padding: '12px 16px',
-                                            backgroundColor: '#000',
-                                            color: '#fff'
-                                        }}
-                                    >
-                                        우편번호 찾기 (대한민국 한정)
-                                    </Button>
                                 </div>
                                 <p>과도한 보정이나 어클로 찍은 사진이 아닌 정면 사진 원본으로 첨부 (10MB 아하) 파일</p>
                             </div>
                         </div>
 
                         <div>
-                            <label>주소</label>
+                            <label>사진 첨부(선택)</label>
                             <div>
                                 <div style={{ display: 'flex', gap: '12px' }}>
                                     <TextField
-                                        // fullWidth
+                                        fullWidth
                                         id="address"
                                         name="address"
                                         variant="outlined"
-                                        placeholder='우편번호'
+                                        placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <div
+                                                        style={{
+                                                            padding: '12px 16px',
+                                                            marginRight: '-8px',
+                                                            backgroundColor: '#000',
+                                                            color: '#fff',
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px',
+                                                        }}
+                                                        onClick={() => { console.log('verify email') }}
+                                                    >
+                                                        <img src={linkIcon} alt='' />
+                                                        파일첨부
+                                                    </div>
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                         sx={{
                                             flex: 1,
                                             backgroundColor: '#F7F7F7',
@@ -375,18 +407,6 @@ const Audition4 = () => {
                                         error={formik.touched.address && Boolean(formik.errors.address)}
                                         helperText={formik.touched.address && formik.errors.address}
                                     />
-                                    <Button
-                                        disabled={!formik.values}
-                                        variant="contained"
-                                        color='primary'
-                                        sx={{
-                                            padding: '12px 16px',
-                                            backgroundColor: '#000',
-                                            color: '#fff'
-                                        }}
-                                    >
-                                        우편번호 찾기 (대한민국 한정)
-                                    </Button>
                                 </div>
                                 <p>상반신, 정면, 전신 등 본인의 사진을 추가로 첨부</p>
                                 <p>과도한 보정이나 어플로 찍은 사진이 아닌 정면 사진 원본으로 첨부 (10MB이하)</p>
@@ -397,11 +417,33 @@ const Audition4 = () => {
                             <label>체중(kg)</label>
                             <div style={{ display: 'flex', gap: '12px' }}>
                                 <TextField
-                                    // fullWidth
+                                    fullWidth
                                     id="address"
                                     name="address"
                                     variant="outlined"
-                                    placeholder='우편번호'
+                                    placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <div
+                                                    style={{
+                                                        padding: '12px 16px',
+                                                        marginRight: '-8px',
+                                                        backgroundColor: '#000',
+                                                        color: '#fff',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '4px',
+                                                    }}
+                                                    onClick={() => { console.log('verify email') }}
+                                                >
+                                                    <img src={linkIcon} alt='' />
+                                                    파일 첨부 (필수)
+                                                </div>
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                     sx={{
                                         flex: 1,
                                         backgroundColor: '#F7F7F7',
@@ -412,18 +454,6 @@ const Audition4 = () => {
                                     error={formik.touched.address && Boolean(formik.errors.address)}
                                     helperText={formik.touched.address && formik.errors.address}
                                 />
-                                <Button
-                                    disabled={!formik.values}
-                                    variant="contained"
-                                    color='primary'
-                                    sx={{
-                                        padding: '12px 16px',
-                                        backgroundColor: '#000',
-                                        color: '#fff'
-                                    }}
-                                >
-                                    우편번호 찾기 (대한민국 한정)
-                                </Button>
                             </div>
                         </div>
 
@@ -432,11 +462,33 @@ const Audition4 = () => {
                             <div>
                                 <div style={{ display: 'flex', gap: '12px' }}>
                                     <TextField
-                                        // fullWidth
+                                        fullWidth
                                         id="address"
                                         name="address"
                                         variant="outlined"
-                                        placeholder='우편번호'
+                                        placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <div
+                                                        style={{
+                                                            padding: '12px 16px',
+                                                            marginRight: '-8px',
+                                                            backgroundColor: '#000',
+                                                            color: '#fff',
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px',
+                                                        }}
+                                                        onClick={() => { console.log('verify email') }}
+                                                    >
+                                                        <img src={linkIcon} alt='' />
+                                                        파일 첨부 (필수)
+                                                    </div>
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                         sx={{
                                             flex: 1,
                                             backgroundColor: '#F7F7F7',
@@ -447,18 +499,6 @@ const Audition4 = () => {
                                         error={formik.touched.address && Boolean(formik.errors.address)}
                                         helperText={formik.touched.address && formik.errors.address}
                                     />
-                                    <Button
-                                        disabled={!formik.values}
-                                        variant="contained"
-                                        color='primary'
-                                        sx={{
-                                            padding: '12px 16px',
-                                            backgroundColor: '#000',
-                                            color: '#fff'
-                                        }}
-                                    >
-                                        우편번호 찾기 (대한민국 한정)
-                                    </Button>
                                 </div>
                                 <p>노래 / 랩 부문 : 1분30초 내에 밝은 곳, 얼굴 정면으로 삼 반신까지 나오게 촬영 한 노래 / 랩 영상 첨부</p>
                                 <p>노래 / 랩 부문 : 1분30초 내에 밝은 곳, 얼굴 정면으로 삼 반신까지 나오게 촬영 한 노래 / 랩 영상 첨부</p>
@@ -506,8 +546,8 @@ const Audition4 = () => {
 
                     </form>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 

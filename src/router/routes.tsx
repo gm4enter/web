@@ -17,6 +17,7 @@ import Audition from '../pages/audition'
 import Audition2 from '../pages/audition/step2'
 import Audition3 from '../pages/audition/step3'
 import Audition4 from '../pages/audition/step4'
+import Audition5 from '../pages/audition/step5'
 
 export const ROUTE = {
   HOME: '/',
@@ -27,6 +28,7 @@ export const ROUTE = {
   AUDITION2: '/audititon/step2',
   AUDITION3: '/audititon/step3',
   AUDITION4: '/audititon/step4',
+  AUDITION5: '/audititon/step5',
 
 
   DEPOSITANDHISTORY: '/depositandhistory',
@@ -58,6 +60,7 @@ const routes: Array<MyRouteProp> = [
   { path: ROUTE.AUDITION2, element: <Audition2 /> },
   { path: ROUTE.AUDITION3, element: <Audition3 /> },
   { path: ROUTE.AUDITION4, element: <Audition4 /> },
+  { path: ROUTE.AUDITION5, element: <Audition5 /> },
 
 
 
