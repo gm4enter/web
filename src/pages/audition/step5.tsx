@@ -173,6 +173,8 @@ const supportTypes = [
     '모델 (Model)'
 ]
 
+const infoUser = []
+
 function getStyles(name: string, personName: readonly string[], theme: Theme) {
     return {
         fontWeight:
@@ -309,275 +311,100 @@ const Audition5 = () => {
 
                 <div>
                     <div>
-                        <label>필수입력 <span>*</span></label>
+                        <label>지원자 정보</label>
                     </div>
                     <form onSubmit={formik.handleSubmit}>
                         <div>
-                            <label>지원분야</label>
-                            <Select
-                                labelId="demo-multiple-name-label"
-                                id="supportType"
-                                name="supportType"
-                                multiple
-                                displayEmpty
-                                fullWidth
-                                value={supportType}
-                                onChange={handleChange}
-                                input={<OutlinedInput />}
-                                MenuProps={MenuProps}
-                                renderValue={(selected) => {
-                                    if (selected.length === 0) {
-                                        return <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>;
-                                    }
+                            <label>이름</label>
+                            <div>Son Hung Min</div>
+                        </div>
 
-                                    return selected.join(', ');
-                                }}
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                            >
-                                {supportType.length === 0 && (
-                                    <MenuItem disabled value="">
-                                        <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>
-                                    </MenuItem>
-                                )}
-                                {supportTypes.map((type) => (
-                                    <MenuItem
-                                        key={type}
-                                        value={type}
-                                        style={getStyles(type, supportType, theme)}
-                                        disabled={supportType.length >= 2 && !supportType.includes(type)}
-                                    >
-                                        {type}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                            {/* <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.supportType && formik.errors.supportType}</p> */}
+                        <div>
+                            <label>성별</label>
+                            <div>남</div>
+                        </div>
+
+                        <div>
+                            <label>생년월일</label>
+                            <div>1982/03/22</div>
+                        </div>
+
+                        <div>
+                            <label>국적</label>
+                            <div>Korean</div>
+                        </div>
+
+                        <div>
+                            <label>연락처</label>
+                            <div>+82 123456789</div>
+                        </div>
+
+                        <div>
+                            <label>아이디(이메일)</label>
+                            <div>greenapp@naver.com</div>
+                        </div>
+
+                        <div className={classes.label}>
+                            <label>지원서 입력</label>
+                        </div>
+
+                        <div>
+                            <label>지원분야</label>
+                            <div>마사지, 부동산</div>
                         </div>
 
                         <div>
                             <label>신장(cm)</label>
-                            <TextField
-                                fullWidth
-                                id="height"
-                                name="height"
-                                variant="outlined"
-                                placeholder='신장츠 단위, 숫자만'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                value={formik.values.height}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.height && Boolean(formik.errors.height)}
-                                helperText={formik.touched.height && formik.errors.height}
-                            />
+                            <div>179</div>
                         </div>
-
                         <div>
                             <label>체중(kg)</label>
-                            <TextField
-                                fullWidth
-                                id="weight"
-                                name="weight"
-                                variant="outlined"
-                                placeholder='단위, 숫자만 입력'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                value={formik.values.weight}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.weight && Boolean(formik.errors.weight)}
-                                helperText={formik.touched.weight && formik.errors.weight}
-                            />
+                            <div>70</div>
+                        </div>
+                        <div>
+                            <label>주소</label>
+                            <div>경기도 시흥시 군자로 510(거모동)</div>
+                        </div>
+                        <div>
+                            <label>직업</label>
+                            <div>사진 모델</div>
+                        </div>
+                        <div>
+                            <label>혈액형</label>
+                            <div>혈액형 O</div>
+                        </div>
+                        <div>
+                            <label>사용가능언어및 수준 (모국어제외)</label>
+                            <div>영어 아이엘츠 7.0</div>
+                        </div>
+                        <div>
+                            <label>취미/특기</label>
+                            <div>다리를 건너기, 음악감상, 사이클링, 배구, 요리</div>
+                        </div>
+
+                        <div className={classes.label}>
+                            <label>지원서 입력</label>
                         </div>
 
                         <div>
-                            <label>주소</label>
-                            <div style={{ display: 'flex', gap: '12px' }}>
-                                <TextField
-                                    // fullWidth
-                                    id="address"
-                                    name="address"
-                                    variant="outlined"
-                                    placeholder='우편번호'
-                                    sx={{
-                                        flex: 1,
-                                        backgroundColor: '#F7F7F7',
-                                    }}
-                                    value={formik.values.address}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.address && Boolean(formik.errors.address)}
-                                    helperText={formik.touched.address && formik.errors.address}
-                                />
-                                <Button
-                                    disabled={!formik.values}
-                                    variant="contained"
-                                    color='primary'
-                                    sx={{
-                                        padding: '12px 16px',
-                                        backgroundColor: '#000',
-                                        color: '#fff'
-                                    }}
-                                >
-                                    우편번호 찾기 (대한민국 한정)
-                                </Button>
+                            <label>프로필 사진(필수)</label>
+                            <div>
+                                <a href='#'>Mypicture.png</a>
                             </div>
                         </div>
 
                         <div>
-                            <label></label>
-                            <TextField
-                                fullWidth
-                                id="address2"
-                                name="address2"
-                                variant="outlined"
-                                placeholder='상세주소'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                value={formik.values.address2}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.address2 && Boolean(formik.errors.address2)}
-                                helperText={formik.touched.address2 && formik.errors.address2}
-                            />
-                        </div>
-
-                        <div className={classes.label}>
-                            <label>선택입력 <span>*</span></label>
+                            <label>사진 첨부(선택)</label>
+                            <div>
+                                <a href='#'>Hipictureabcxyz.jpeg</a>
+                            </div>
                         </div>
 
                         <div>
-                            <label>직업</label>
-                            <TextField
-                                fullWidth
-                                id="job"
-                                name="job"
-                                variant="outlined"
-                                placeholder='학생인 경우, 학교명/ 학년 기재'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                value={formik.values.job}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.job && Boolean(formik.errors.job)}
-                                helperText={formik.touched.job && formik.errors.job}
-                            />
-                        </div>
-
-                        <div>
-                            <label>혈액형</label>
-                            {/* <TextField
-                                fullWidth
-                                id="bloodGroup"
-                                name="bloodGroup"
-                                variant="outlined"
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                select
-                                value={formik.values.bloodGroup}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.bloodGroup && Boolean(formik.errors.bloodGroup)}
-                                helperText={formik.touched.bloodGroup && formik.errors.bloodGroup}
-                            >
-                                <MenuItem key={1} value={1}> 1 </MenuItem>
-                                <MenuItem key={2} value={2}> 2 </MenuItem>
-                            </TextField> */}
-                            <Select
-                                labelId="demo-multiple-name-label"
-                                id="bloodGroup"
-                                name="bloodGroup"
-                                displayEmpty
-                                fullWidth
-                                value={formik.values.bloodGroup}
-                                onChange={formik.handleChange}
-                                input={<OutlinedInput />}
-                                MenuProps={MenuProps}
-                                renderValue={(selected) => {
-                                    if (selected === '') {
-                                        return <em>혈액형을 선택하세요</em>;
-                                    }
-                                    return selected;
-                                }}
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                            >
-                                <MenuItem key={1} value={1}> 1 </MenuItem>
-                                <MenuItem key={2} value={2}> 2 </MenuItem>
-                            </Select>
-                        </div>
-
-                        <div>
-                            <label>사용가능언어및 수준 (모국제외)</label>
-                            {/* <TextField
-                                fullWidth
-                                id="language"
-                                name="language"
-                                variant="outlined"
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                select
-                                value={formik.values.language}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.language && Boolean(formik.errors.language)}
-                                helperText={formik.touched.language && formik.errors.language}
-                            >
-                                <MenuItem key={1} value={1}> 1 </MenuItem>
-                                <MenuItem key={2} value={2}> 2 </MenuItem>
-                            </TextField> */}
-                            <Select
-                                labelId="demo-multiple-name-label"
-                                id="language"
-                                name="language"
-                                displayEmpty
-                                fullWidth
-                                value={formik.values.language}
-                                onChange={formik.handleChange}
-                                input={<OutlinedInput />}
-                                MenuProps={MenuProps}
-                                renderValue={(selected) => {
-                                    if (selected === '') {
-                                        return <em>사용 가능한 언어 및 레벨을 선택하십시오</em>;
-                                    }
-                                    return selected;
-                                }}
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                            >
-                                <MenuItem key={1} value={1}> 1 </MenuItem>
-                                <MenuItem key={2} value={2}> 2 </MenuItem>
-                            </Select>
-                        </div>
-
-                        <div>
-                            <label>취미/특기</label>
-                            <TextField
-                                fullWidth
-                                id="hobby"
-                                name="hobby"
-                                variant="outlined"
-                                multiline
-                                rows={5}
-                                placeholder='예시, 피아노, 현대무용, 미디, 작곡 등'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                value={formik.values.hobby}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.hobby && Boolean(formik.errors.hobby)}
-                                helperText={formik.touched.hobby && formik.errors.hobby}
-                            />
+                            <label>영상 첨부</label>
+                            <div>
+                                <a href='#'>auditonabcxyz.mp4</a>
+                            </div>
                         </div>
 
                         <div className={classes.buttom_area}>
