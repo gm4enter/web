@@ -560,6 +560,11 @@ const Header = (props: IProps) => {
     navigate(ROUTE.CONTACT)
   }
 
+  const handleClickArtist = () => {
+    setOpenModalMenu(false)
+    navigate(ROUTE.ARTIST)
+  }
+
   const handleClickAudition = () => {
     setOpenModalMenu(false)
     navigate(ROUTE.AUDITION)
@@ -622,20 +627,24 @@ const Header = (props: IProps) => {
           <div>
             {t(`header:myIdolyMenu`)}
             <div>
-              <p onClick={handleClickAbout}>{t(`header:about`)}</p>
-              <p onClick={handleClickContact}>{t(`header:contact`)}</p>
+              <p style={location.pathname === ROUTE.ABOUT ? { color: '#00FFC2' } : {}} onClick={handleClickAbout}>{t(`header:about`)}</p>
+              <p style={location.pathname === ROUTE.CONTACT ? { color: '#00FFC2' } : {}} onClick={handleClickContact}>{t(`header:contact`)}</p>
             </div>
           </div>
+
           <div></div>
-          <div style={location.pathname === ROUTE.SITELISTANDEXPIREDLIST ? { color: '#00FFC2' } : {}} onClick={handleClickSolution}>
+
+          <div>
             {t(`header:artistMenu`)}
-            <div>
+            <div style={location.pathname === ROUTE.ARTIST ? { color: '#00FFC2' } : {}} onClick={handleClickArtist}>
               <p>{t(`header:artist`)}</p>
             </div></div>
+
           <div></div>
-          <div onClick={handleClickAudition}>
+
+          <div>
             {t(`header:auditionMenu`)}
-            <div>
+            <div style={location.pathname === ROUTE.AUDITION ? { color: '#00FFC2' } : {}} onClick={handleClickAudition}>
               <p>{t(`header:auditionDetail`)}</p>
             </div>
           </div>
