@@ -76,6 +76,14 @@ const useStyles = makeStyles({
 
     },
   },
+  select: {
+    '&:before, &:after': {
+      borderBottom: 'none', // Hide the underline border
+    },
+    '& fieldset': {
+      border: 'none', // Hide the regular border
+    },
+  },
   modalSidebar: {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -574,7 +582,7 @@ const Header = (props: IProps) => {
       className={classes.container_header}
       style={{ background: isHome ? 'rgba(0, 0, 0, 0.32)' : 'white' }}
     >
-      <div onClick={() => navigate(ROUTE.HOME)} style={{color: isHome ? 'white' : '#000'}}>
+      <div onClick={() => navigate(ROUTE.HOME)} style={{ color: isHome ? 'white' : '#000' }}>
         {/* <img src={logo} alt="logo" /> */}
         <LogoIcon color={isHome ? '' : '#000'} />
         {t(`header:title`)}
@@ -594,7 +602,14 @@ const Header = (props: IProps) => {
             displayEmpty
             inputProps={{ 'aria-label': 'Without label' }}
             size='small'
-            sx={{ color: isHome ? '#fff' : '#000' }}
+            className={classes.select}
+            sx={{
+              color: isHome ? '#fff' : '#000',
+              '& .MuiSvgIcon-root.MuiSelect-iconOutlined': {
+                color: isHome ? '#fff' : '#000', // Change the SVG icon color to white
+              },
+            }}
+          // IconComponent={() => <ArrowDropDownIcon />}
           >
             <MenuItem value={'ko'}>KOR</MenuItem>
             <MenuItem value={'en'}>EN</MenuItem>
@@ -603,10 +618,10 @@ const Header = (props: IProps) => {
             <MenuItem value={'es'}>ES</MenuItem>
           </Select>
         </div>
-        <img 
-        src={openModalMenu ? (isHome ? cancelWhite : cancel) : (isHome ? hamburgerMenu : hamburgerMenuBlack)} 
-        alt="polygon" 
-        onClick={() => { setOpenModalMenu(!openModalMenu); console.log('clicked menu') }} 
+        <img
+          src={openModalMenu ? (isHome ? cancelWhite : cancel) : (isHome ? hamburgerMenu : hamburgerMenuBlack)}
+          alt="polygon"
+          onClick={() => { setOpenModalMenu(!openModalMenu); console.log('clicked menu') }}
         />
       </div>
 

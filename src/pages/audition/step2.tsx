@@ -174,6 +174,15 @@ const Audition2 = () => {
         navigate(ROUTE.CONTACT)
     }
 
+    // Function to convert the selected date format
+    const formatDate = (dateValue: string) => {
+        const dateObject = new Date(dateValue);
+        const year = dateObject.getFullYear();
+        const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObject.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     const formik = useFormik({
         initialValues: {
             gender: '',
@@ -300,11 +309,17 @@ const Audition2 = () => {
                                 name="date"
                                 variant="outlined"
                                 placeholder='YYYY/MM/DD'
+                                type='date'
                                 sx={{
                                     backgroundColor: '#F7F7F7',
                                 }}
                                 value={formik.values.date}
-                                onChange={formik.handleChange}
+                                // onChange={formik.handleChange}
+                                onChange={event => {
+                                    const formattedDate = formatDate(event.target.value);
+                                    formik.handleChange(event);
+                                    formik.setFieldValue('date', formattedDate);
+                                }}
                                 onBlur={formik.handleBlur}
                                 error={formik.touched.date && Boolean(formik.errors.date)}
                                 helperText={formik.touched.date && formik.errors.date}
@@ -315,8 +330,8 @@ const Audition2 = () => {
                             <label>국적</label>
                             <TextField
                                 fullWidth
-                                id="contries"
-                                name="contries"
+                                id="countries"
+                                name="countries"
                                 variant="outlined"
                                 placeholder='Please enter your contact information'
                                 sx={{
@@ -401,6 +416,8 @@ const Audition2 = () => {
                                     padding: '12px 60px'
                                 }}
                             // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
+                            onClick={handleClickNext}
+
                             >
                                 지원서 저장
                             </Button>

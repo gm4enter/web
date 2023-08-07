@@ -538,6 +538,8 @@ const Audition4 = () => {
                                 sx={{
                                     padding: '12px 60px'
                                 }}
+                                onClick={handleClickNext}
+
                             // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
                             >
                                 지원서 저장

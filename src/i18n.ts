@@ -5,7 +5,7 @@ import koLang from './locales/ko';
 import jaLang from './locales/ja';
 import zhLang from './locales/zh';
 
-const currentLng = 'en';
+const currentLng = 'ko';
 
 i18n
   // .use(LanguageDetector)
