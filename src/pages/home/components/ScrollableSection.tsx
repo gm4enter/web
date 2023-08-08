@@ -4,9 +4,8 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
   contentSection: {
-    // minWidth: '100%',
-    // minheight: 'calc(100vh - 88px)',
-    /* Add any additional styling for the content section */
+    width: '100%',
+    height: '100vh',
   },
 }));
 
