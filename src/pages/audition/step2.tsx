@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles'
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useLayoutEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
 import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
@@ -159,6 +159,7 @@ const validationSchema = yup.object().shape({
 const Audition2 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
+    const location = useLocation()
 
     const handleClickNext = () => {
         console.log('handleClickNext');
@@ -199,6 +200,10 @@ const Audition2 = () => {
 
         },
     });
+
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    }, [location.pathname])
 
     return (
         <div className={classes.home_container}>
@@ -415,8 +420,8 @@ const Audition2 = () => {
                                 sx={{
                                     padding: '12px 60px'
                                 }}
-                            // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
-                            onClick={handleClickNext}
+                                // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
+                                onClick={handleClickNext}
 
                             >
                                 지원서 저장

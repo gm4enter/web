@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles'
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useLayoutEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import arowIconLandingPage from '../../asset/images/arowIconLandingPage.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
 import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
@@ -203,6 +203,8 @@ const useStyles = makeStyles({
 const Audition = () => {
   const classes = useStyles()
   const navigate = useNavigate()
+  const location = useLocation()
+
   const [value, setValue] = React.useState('');
 
   console.log('value', value);
@@ -220,6 +222,10 @@ const Audition = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
   };
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+}, [location.pathname])
 
   return (
     <div className={classes.home_container}>

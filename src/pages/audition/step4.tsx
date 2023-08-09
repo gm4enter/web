@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles'
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useLayoutEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
 import linkIcon from '../../asset/images/link-2.png'
@@ -202,6 +202,7 @@ const validationSchema = yup.object().shape({
 const Audition4 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
+    const location = useLocation()
 
     const handleClickNext = () => {
         console.log('handleClickNext');
@@ -253,6 +254,10 @@ const Audition4 = () => {
             formik.setFieldValue('supportType', supportTypes);
         }
     };
+
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    }, [location.pathname])
 
     return (
         <div className={classes.home_container}>
