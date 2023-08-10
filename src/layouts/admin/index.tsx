@@ -55,10 +55,10 @@ const AdminLayout: React.FC<Props> = ({ children }) => {
   }
 
   return (
-    <div className={(location.pathname === '/') ? classes.container_layout : classes.container_admin_layout}>
-      {<Header handleButtonShow={handleButtonShow} isHome={!!(location.pathname === '/')} />}
+    <div className={(location.pathname === '/' || location.pathname === '/artistdetail') ? classes.container_layout : classes.container_admin_layout}>
+      {<Header handleButtonShow={handleButtonShow} isHome={!!(location.pathname === '/') || !!(location.pathname === '/artistdetail')} />}
       {children}
-      {!!(location.pathname !== '/') && <Footer />}
+      {!!(location.pathname !== '/' && location.pathname !== '/artistdetail') && <Footer />}
     </div>
   )
 }

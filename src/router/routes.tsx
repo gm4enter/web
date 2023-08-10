@@ -19,12 +19,14 @@ import Audition3 from '../pages/audition/step3'
 import Audition4 from '../pages/audition/step4'
 import Audition5 from '../pages/audition/step5'
 import Artist from '../pages/artist'
+import ArtistDetail from '../pages/artistDetail'
 
 export const ROUTE = {
   HOME: '/',
   ABOUT: '/about',
   CONTACT: '/contact',
   ARTIST: '/artist',
+  ARTISTDETAIL: '/artistdetail',
   AUDITION: '/audititon',
 
   AUDITION2: '/audititon/step2',
@@ -58,6 +60,7 @@ const routes: Array<MyRouteProp> = [
   { path: ROUTE.ABOUT, element: <About /> },
   { path: ROUTE.CONTACT, element: <Contact /> },
   { path: ROUTE.ARTIST, element: <Artist /> },
+  { path: ROUTE.ARTISTDETAIL, element: <ArtistDetail /> },
   { path: ROUTE.AUDITION, element: <Audition /> },
 
   { path: ROUTE.AUDITION2, element: <Audition2 /> },

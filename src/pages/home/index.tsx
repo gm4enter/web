@@ -53,22 +53,35 @@
 
 
 // ImageList.tsx
-import React, { useEffect, useRef, useState } from 'react';
-import { Paper, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Paper, List, ListItem, ListItemIcon, ListItemText, Button } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
+import bgHome1 from '../../asset/images/bgHome1.png'
+import bgHome2 from '../../asset/images/bgHome2.png'
+import { ROUTE } from '../../router/routes';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 
 const images: string[] = [
-  'https://www.w3schools.com/howto/img_nature_wide.jpg',
-  'https://www.w3schools.com/howto/img_nature_wide.jpg',
-  'https://www.w3schools.com/howto/img_nature_wide.jpg',
-  'https://www.w3schools.com/howto/img_nature_wide.jpg',
-  'https://www.w3schools.com/howto/img_nature_wide.jpg',
+  bgHome1,
+  bgHome2,
+  bgHome1,
+  bgHome2,
+  bgHome1,
   // Add more image URLs here
 ];
 
 const ImageList: React.FC = () => {
+  // const classes = useStyles()
+  const navigate = useNavigate()
+  const location = useLocation()
   const listRef = useRef<HTMLUListElement>(null);
   const [scrollIndex, setScrollIndex] = useState(0);
+
+  const handleClickDetail = () => {
+    console.log('handleClickDetail');
+    navigate(ROUTE.ARTISTDETAIL)
+  };
 
   useEffect(() => {
     const scrollList = () => {
@@ -92,18 +105,53 @@ const ImageList: React.FC = () => {
     };
   }, []);
 
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
+
   return (
-    <Paper elevation={3} style={{ overflowY: 'auto', overflowX: 'hidden', background: '#ffccff' }}>
-      <List ref={listRef}>
+    <Paper elevation={3} style={{ overflowY: 'auto', overflowX: 'hidden', gap: '0px' }}>
+      <List ref={listRef} sx={{ margin: 0, padding: 0, gap: 0 }}>
         {images.map((image, index) => (
-          <ListItem key={index} disableGutters>
-            <ListItemIcon>
-              <img src={image} alt={`Image ${index + 1}`} style={{ height: '100vh', width: '100%' }} />
-            </ListItemIcon>
-            {/* {index !== images.length - 1 && <KeyboardArrowDown fontSize="large" />} */}
+          <ListItem key={index} disableGutters sx={{ margin: 0, padding: 0 }}>
+            <div style={{
+              width: '100%',
+              height: '100vh',
+              backgroundImage: `url("${image}")`,
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              boxSizing: 'border-box',
+              padding: '0px 80px 88px 80px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+            }}>
+              {/* <img src={image} alt={`Image ${index + 1}`} style={{ }} /> */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px' }}>
+                <h1 style={{ color: 'white', fontSize: '80px', fontWeight: 'bold', margin: 0 }}>Sing My Songs</h1>
+                <Button
+                  variant="outlined"
+                  style={{
+                    color: 'white',
+                    borderColor: 'white',
+                    borderRadius: '100px',
+                    padding: '12px 80px',
+                    fontSize: '18px',
+                    background: "rgba(0, 0, 0, 0.32)",
+                  }}
+                  onClick={handleClickDetail}
+                >
+                  Visit Me
+                </Button>
+              </div>
+
+            </div>
           </ListItem>
         ))}
       </List>
+      <div>
+        <KeyboardArrowDown />
+      </div>
     </Paper>
   );
 };
