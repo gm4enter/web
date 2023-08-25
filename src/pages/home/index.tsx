@@ -60,6 +60,8 @@ import bgHome1 from '../../asset/images/bgHome1.png'
 import bgHome2 from '../../asset/images/bgHome2.png'
 import { ROUTE } from '../../router/routes';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import axiosClient from '../../apis/axiosClient';
 
 
 const images: string[] = [
@@ -109,6 +111,17 @@ const ImageList: React.FC = () => {
     window.scrollTo(0, 0)
   }, [location.pathname])
 
+  useEffect(() => {
+    axiosClient.get('/api/artist')
+      .then(res => {
+        console.log(res);
+      }
+      )
+      .catch(err => {
+        console.log(err);
+      })
+  }, []);
+
   return (
     <Paper elevation={3} style={{ overflowY: 'auto', overflowX: 'hidden', gap: '0px' }}>
       <List ref={listRef} sx={{ margin: 0, padding: 0, gap: 0 }}>
@@ -131,13 +144,21 @@ const ImageList: React.FC = () => {
                 <h1 style={{ color: 'white', fontSize: '80px', fontWeight: 'bold', margin: 0 }}>Sing My Songs</h1>
                 <Button
                   variant="outlined"
-                  style={{
+                  sx={{
                     color: 'white',
                     borderColor: 'white',
                     borderRadius: '100px',
                     padding: '12px 80px',
                     fontSize: '18px',
                     background: "rgba(0, 0, 0, 0.32)",
+                    '&:hover': {
+                      color: 'white',
+                      borderColor: 'white',
+                      borderRadius: '100px',
+                      padding: '12px 80px',
+                      fontSize: '18px',
+                      background: "#000",
+                    }
                   }}
                   onClick={handleClickDetail}
                 >
