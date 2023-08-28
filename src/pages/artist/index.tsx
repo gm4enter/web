@@ -162,7 +162,7 @@ const originalArray = [
     {
         id: 7,
         name: 'Nguyễn Văn G',
-        img: 'https://yt3.googleusercontent.com/9DTziUXmosxUCZUqErlwiIBfPOCcDSm6sU1scc7rkCWUJW7kvu6rTjOx5SiR3Ze4E2V0oE4OCg=s900-c-k-c0x00ffffff-no-rj'
+        img: 'https://media-cdn-v2.laodong.vn/storage/newsportal/2023/7/27/1221944/Blackpink-1690252632.jpeg'
 
     },
     {

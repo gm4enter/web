@@ -61,7 +61,7 @@ const routes: Array<MyRouteProp> = [
   { path: ROUTE.ABOUT, element: <About /> },
   { path: ROUTE.CONTACT, element: <Contact /> },
   { path: ROUTE.ARTIST, element: <Artist /> },
-  { path: ROUTE.ARTISTDETAIL, element: <ArtistDetail /> },
+  { path: ROUTE.ARTISTDETAIL_ID, element: <ArtistDetail /> },
   { path: ROUTE.AUDITION, element: <Audition /> },
 
   { path: ROUTE.AUDITION2, element: <Audition2 /> },

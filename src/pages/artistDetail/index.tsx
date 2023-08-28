@@ -1,9 +1,11 @@
 // ImageList.tsx
 import { makeStyles } from '@mui/styles';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ArrowBendUpLeftWhite from '../../asset/images/ArrowBendUpLeftWhite.png';
 import bgArtistDetail from '../../asset/images/bgArtistDetail.png';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import axiosClient from '../../apis/axiosClient';
+import { ROUTE } from '../../router/routes';
 
 
 const useStyles = makeStyles({
@@ -57,6 +59,7 @@ const useStyles = makeStyles({
           color: '#fff',
           fontSize: '20px',
           fontWeight: 'normal',
+          width: '100%',
           '&>p': {
             fontSize: '20px',
             fontWeight: 'normal',
@@ -80,11 +83,29 @@ const ActistDetail: React.FC = () => {
   const classes = useStyles()
   const navigate = useNavigate()
   const location = useLocation()
+  const { id } = useParams()
+
+  console.log('id artist', id);
+
+  const [dataArtist, setDataArtist] = useState<any>(null)
+
+  console.log('dataArtist', dataArtist);
 
   const handleClickBack = () => {
     console.log('handleClickBack');
-    navigate(-1)
+    navigate(ROUTE.HOME)
   }
+
+  useLayoutEffect(() => {
+    axiosClient.get(`/artist/${id}`)
+      .then(res => {
+        console.log('res');
+        setDataArtist(res.data)
+      })
+      .catch(err => {
+        console.log('err', err);
+      })
+  }, [])
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0)
@@ -92,6 +113,7 @@ const ActistDetail: React.FC = () => {
 
   return (
     <div className={classes.detail_container}
+      style={dataArtist?.image ? { backgroundImage: `url("http://13.125.36.208:9000/static/image/${dataArtist?.image}")` } : {}}
     >
       <div onClick={handleClickBack}>
         <img src={ArrowBendUpLeftWhite} alt='' />
@@ -99,28 +121,45 @@ const ActistDetail: React.FC = () => {
       </div>
       <div>
         <div>
-          Song Hye-kyo ( 송혜교 )
-          <p>Song Hye-kyo( born November 22, 1981) is a South Korean actress. She gained international popularity through her leading roles</p>
-          <p>1996-Now</p>
+          {dataArtist?.full_name}
+          <p>{dataArtist?.description1}</p>
+          {/* <p>{dataArtist?.birthday}-Now</p> */}
         </div>
         <div>
           <div>
-            <p>Movie</p>
+            <p>{dataArtist?.description2}</p>
+            <p>{dataArtist?.description3}</p>
+            {/* <p>Movie</p>
             <p>Autumn in My Heart (2000), All In (2003), Full House (2004), That Winter, the Wind Blows (2013), Descendants of the Sun (2016), Encounter (2018) and The Glory (2022)...</p>
             <p>Awards</p>
-            <p>Autumn in My Heart (2000), All In (2003), Full House (2004), That Winter, the Wind Blows (2013), Descendants of the Sun (2016), Encounter (2018) and The Glory (2022)...</p>
+            <p>Autumn in My Heart (2000), All In (2003), Full House (2004), That Winter, the Wind Blows (2013), Descendants of the Sun (2016), Encounter (2018) and The Glory (2022)...</p> */}
           </div>
           <div />
         </div>
       </div>
-      <iframe
-        width="100%"
-        height="746px"
-        src="https://www.youtube.com/embed/Vdm6i1m4tDE"
-        title="YouTube video player"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      />
-
+      {
+        (dataArtist?.url || ['https://www.youtube.com/embed/jfKfPfyJRdk?si=OeG4wtrOHlGPL5po']).map((item: string, index: number) => {
+          console.log('item', item);
+          const embedurl = item.replace('watch?v=', 'embed/');
+          return (
+            <iframe
+              width="100%"
+              height="746px"
+              style={{ marginBottom: '50px' }}
+              src={embedurl}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            />
+          )
+        })
+      }
+      {/* <iframe 
+      width="100%"
+      height="746"
+      src="https://www.youtube.com/embed/jfKfPfyJRdk?si=OeG4wtrOHlGPL5po" 
+      title="YouTube video player" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      /> */}
     </div>
   );
 };

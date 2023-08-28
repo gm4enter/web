@@ -33,9 +33,10 @@ const ImageList = () => {
   const listRef = useRef<HTMLUListElement>(null);
   const [scrollIndex, setScrollIndex] = useState(0);
 
-  const handleClickDetail = () => {
-    console.log('handleClickDetail');
-    navigate(ROUTE.ARTISTDETAIL)
+  const handleClickDetail = (id: string) => {
+    console.log('handleClickDetail', id);
+    // navigate(ROUTE.ARTISTDETAIL)
+    navigate(`${ROUTE.ARTISTDETAIL}/${id}`)
   };
 
   useEffect(() => {
@@ -103,7 +104,7 @@ const ImageList = () => {
                       background: "#000",
                     }
                   }}
-                  onClick={handleClickDetail}
+                  onClick={() => handleClickDetail(artist.id)}
                 >
                   Visit Me
                 </Button>
