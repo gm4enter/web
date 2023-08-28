@@ -505,7 +505,7 @@ const Header = (props: IProps) => {
   useLayoutEffect(() => {
     if (!!localStorage.getItem('accessToken') && Object.entries(userProfile).length === 0) {
       setTokens()
-      dispatch(userActions.getUser({ params: undefined }))
+      // dispatch(userActions.getUser({ params: undefined }))
     }
     if (!localStorage.getItem('accessToken')) {
       dispatch(userActions.deleteUser({ params: undefined }))
@@ -527,7 +527,7 @@ const Header = (props: IProps) => {
       setShowProfile(true)
     }
     else if (!!localStorage.getItem('accessToken') && Object.entries(userProfile).length == 0) {
-      dispatch(userActions.getUser({ params: undefined }))
+      // dispatch(userActions.getUser({ params: undefined }))
       setShowProfile(true)
     }
   }, [])

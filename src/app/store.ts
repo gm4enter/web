@@ -14,9 +14,11 @@ import { planReducer } from "../features/plan/planSlice";
 import { siteReducer } from "../features/site/siteSlice";
 import { snackBarReducer } from "../components/snackbar/snackbarSlice";
 import { userReducer } from "../features/user/userSlice";
+import { homeReducer } from "../features/home/homeSlice";
 
 const rootReducer = combineReducers({
   siteReducer: siteReducer,
+  homeReducer: homeReducer,
   conversationReducer: conversationReducer,
   planReducer: planReducer,
   loadingReducer: loadingReducer,

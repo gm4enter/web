@@ -1,58 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import ScrollableSection from './components/ScrollableSection';
-// import Slider from 'react-slick';
-// import 'slick-carousel/slick/slick.css';
-// import 'slick-carousel/slick/slick-theme.css';
-// import { Typography } from '@mui/material';
-// import { makeStyles } from '@mui/styles';
-
-// const useStyles = makeStyles(() => ({
-//   scrollContainer: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//     width: '100%',
-//     overflowX: 'auto',
-//     // overflowY: 'auto',
-//     whiteSpace: 'nowrap',
-//     horizontalScrollBehavior: 'smooth',
-//   },
-// }));
-
-// const Home: React.FC = () => {
-//   const classes = useStyles();
-//   const contentSections: React.ReactNode[] = [
-//     <img style={{height:'100%', width:'100%'}} src="https://www.w3schools.com/howto/img_nature_wide.jpg" alt="" />,
-//     <img style={{height:'100%', width:'100%'}} src="https://www.w3schools.com/howto/img_nature_wide.jpg" alt="" />,
-//     <img style={{height:'100%', width:'100%'}} src="https://www.w3schools.com/howto/img_nature_wide.jpg" alt="" />,
-//     <img style={{height:'100%', width:'100%'}} src="https://www.w3schools.com/howto/img_nature_wide.jpg" alt="" />,
-//     // Add more content sections as needed
-//   ];
-
-//   const settings = {
-//     dots: false, // Display navigation dots
-//     infinite: true, // Loop through slides infinitely
-//     speed: 1000, // Transition speed in milliseconds
-//     slidesToShow: 1, // Number of slides to show at a time
-//     slidesToScroll: 1, // Number of slides to scroll per action
-//     autoplay: true, // Enable auto-sliding
-//     autoplaySpeed: 5000 // Auto-sliding interval in milliseconds
-//   };
-
-//   return (
-//     <div className={classes.scrollContainer}>
-//       <Slider {...settings}>
-//         {contentSections.map((content, index) => (
-//           <ScrollableSection key={index}>{content}</ScrollableSection>
-//         ))}
-//       </Slider>
-//     </div>
-//   );
-// };
-
-// export default Home;
-
-
-// ImageList.tsx
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Paper, List, ListItem, ListItemIcon, ListItemText, Button } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
@@ -62,6 +7,8 @@ import { ROUTE } from '../../router/routes';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import axiosClient from '../../apis/axiosClient';
+import { homeActions, selectListData } from '../../features/home/homeSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 
 const images: string[] = [
@@ -73,10 +20,16 @@ const images: string[] = [
   // Add more image URLs here
 ];
 
-const ImageList: React.FC = () => {
+const ImageList = () => {
   // const classes = useStyles()
+  const dispatch = useAppDispatch();
   const navigate = useNavigate()
   const location = useLocation()
+  const listArtist = useAppSelector(selectListData)
+
+  console.log('listArtist', listArtist);
+  
+
   const listRef = useRef<HTMLUListElement>(null);
   const [scrollIndex, setScrollIndex] = useState(0);
 
@@ -86,51 +39,41 @@ const ImageList: React.FC = () => {
   };
 
   useEffect(() => {
-    const scrollList = () => {
-      if (listRef.current) {
-        const scrollPosition = window.innerHeight * scrollIndex;
-        listRef.current.scrollTo({
-          top: scrollPosition,
-          behavior: 'smooth',
-        });
+    dispatch(homeActions.getList({ params: undefined }))
+    // const scrollList = () => {
+    //   if (listRef.current) {
+    //     const scrollPosition = window.innerHeight * scrollIndex;
+    //     listRef.current.scrollTo({
+    //       top: scrollPosition,
+    //       behavior: 'smooth',
+    //     });
 
-        setScrollIndex(prevIndex => (prevIndex + 1) % images.length);
-      }
+    //     setScrollIndex(prevIndex => (prevIndex + 1) % images.length);
+    //   }
 
-      requestAnimationFrame(scrollList);
-    };
+    //   requestAnimationFrame(scrollList);
+    // };
 
-    const animationFrameId = requestAnimationFrame(scrollList);
+    // const animationFrameId = requestAnimationFrame(scrollList);
 
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
+    // return () => {
+    //   cancelAnimationFrame(animationFrameId);
+    // };
   }, []);
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0)
   }, [location.pathname])
 
-  useEffect(() => {
-    axiosClient.get('/api/artist')
-      .then(res => {
-        console.log(res);
-      }
-      )
-      .catch(err => {
-        console.log(err);
-      })
-  }, []);
-
   return (
     <Paper elevation={3} style={{ overflowY: 'auto', overflowX: 'hidden', gap: '0px' }}>
       <List ref={listRef} sx={{ margin: 0, padding: 0, gap: 0 }}>
-        {images.map((image, index) => (
-          <ListItem key={index} disableGutters sx={{ margin: 0, padding: 0 }}>
+        {listArtist.map((artist, index) => (
+          <ListItem key={artist.id} disableGutters sx={{ margin: 0, padding: 0 }}>
             <div style={{
               width: '100%',
               height: '100vh',
-              backgroundImage: `url("${image}")`,
+              backgroundImage: `url("${bgHome1}")`,
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
               boxSizing: 'border-box',
@@ -141,7 +84,7 @@ const ImageList: React.FC = () => {
             }}>
               {/* <img src={image} alt={`Image ${index + 1}`} style={{ }} /> */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px' }}>
-                <h1 style={{ color: 'white', fontSize: '80px', fontWeight: 'bold', margin: 0 }}>Sing My Songs</h1>
+                <h1 style={{ color: 'white', fontSize: '80px', fontWeight: 'bold', margin: 0 }}>{artist.nickname}</h1>
                 <Button
                   variant="outlined"
                   sx={{
@@ -170,9 +113,9 @@ const ImageList: React.FC = () => {
           </ListItem>
         ))}
       </List>
-      <div>
+      {/* <div>
         <KeyboardArrowDown />
-      </div>
+      </div> */}
     </Paper>
   );
 };

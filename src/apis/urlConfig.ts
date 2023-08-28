@@ -16,6 +16,9 @@ export const TRANSACTION = "/transaction";
 //site
 export const SITE = "/site";
 
+//artist
+export const ARTIST = "/artist";
+
 //theme
 export const THEME = "/theme";
 
