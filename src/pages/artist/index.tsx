@@ -12,6 +12,8 @@ import * as yup from 'yup';
 import { Button, MenuItem, TextField, Checkbox } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { selectListData } from '../../features/home/homeSlice'
+import { useAppSelector } from '../../app/hooks'
 
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
@@ -182,6 +184,8 @@ const originalArray = [
 const Artist = () => {
     const classes = useStyles()
     const navigate = useNavigate()
+    const listArtist = useAppSelector(selectListData)
+
 
     const handleClickAbout = () => {
         navigate(ROUTE.ABOUT)
@@ -232,6 +236,16 @@ const Artist = () => {
         array2.push(originalArray[i + 1]);
         array3.push(originalArray[i + 2]);
     }
+
+
+    // // Lặp qua mảng gốc và lần lượt chia vào ba mảng con theo thứ tự
+    // if (listArtist.length > 0) {
+    //     for (let i = 0; i < listArtist.length; i += 3) {
+    //         array1.push(listArtist[i]);
+    //         array2.push(listArtist[i + 1]);
+    //         array3.push(listArtist[i + 2]);
+    //     }
+    // }
 
     console.log('array1', array1);
     console.log('array2', array2);

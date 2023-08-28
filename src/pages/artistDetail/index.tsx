@@ -6,12 +6,14 @@ import bgArtistDetail from '../../asset/images/bgArtistDetail.png';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axiosClient from '../../apis/axiosClient';
 import { ROUTE } from '../../router/routes';
+import { loadingActions } from '../../components/loading/loadingSlice';
+import { useAppDispatch } from '../../app/hooks';
 
 
 const useStyles = makeStyles({
   detail_container: {
     width: '100%',
-    backgroundImage: `url("${bgArtistDetail}")`,
+    // backgroundImage: `url("${bgArtistDetail}")`,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     boxSizing: 'border-box',
@@ -84,6 +86,7 @@ const ActistDetail: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { id } = useParams()
+  const dispatch = useAppDispatch();
 
   console.log('id artist', id);
 
@@ -97,13 +100,16 @@ const ActistDetail: React.FC = () => {
   }
 
   useLayoutEffect(() => {
+    dispatch(loadingActions.openLoading())
     axiosClient.get(`/artist/${id}`)
       .then(res => {
         console.log('res');
         setDataArtist(res.data)
+        dispatch(loadingActions.loadingSuccess())
       })
       .catch(err => {
         console.log('err', err);
+        dispatch(loadingActions.loadingSuccess())
       })
   }, [])
 
@@ -113,6 +119,7 @@ const ActistDetail: React.FC = () => {
 
   return (
     <div className={classes.detail_container}
+      // style={{ backgroundImage: `url("http://13.125.36.208:9000/static/image/${dataArtist?.image}")` }}
       style={dataArtist?.image ? { backgroundImage: `url("http://13.125.36.208:9000/static/image/${dataArtist?.image}")` } : {}}
     >
       <div onClick={handleClickBack}>
@@ -138,9 +145,11 @@ const ActistDetail: React.FC = () => {
         </div>
       </div>
       {
-        (dataArtist?.url || ['https://www.youtube.com/embed/jfKfPfyJRdk?si=OeG4wtrOHlGPL5po']).map((item: string, index: number) => {
+        (dataArtist?.url || []).map((item: string, index: number) => {
           console.log('item', item);
           const embedurl = item.replace('watch?v=', 'embed/');
+          console.log('embedurl', embedurl);
+
           return (
             <iframe
               width="100%"
