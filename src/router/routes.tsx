@@ -27,6 +27,7 @@ export const ROUTE = {
   CONTACT: '/contact',
   ARTIST: '/artist',
   ARTISTDETAIL: '/artistdetail',
+  ARTISTDETAIL_ID: '/artistdetail/:id',
   AUDITION: '/audititon',
 
   AUDITION2: '/audititon/step2',
