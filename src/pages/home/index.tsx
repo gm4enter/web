@@ -73,7 +73,7 @@ const ImageList = () => {
             <div style={{
               width: '100%',
               height: '100vh',
-              backgroundImage: `url("${bgHome1}")`,
+              backgroundImage: `url("http://13.125.36.208:9000/static/image/${artist.thumbnail}")`,
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
               boxSizing: 'border-box',
