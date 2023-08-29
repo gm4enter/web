@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles'
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useLayoutEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import arowIconLandingPage from '../../asset/images/arowIconLandingPage.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
 import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
@@ -12,8 +12,9 @@ import * as yup from 'yup';
 import { Button, MenuItem, TextField, Checkbox } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { selectListData } from '../../features/home/homeSlice'
-import { useAppSelector } from '../../app/hooks'
+import { homeActions, selectListData } from '../../features/home/homeSlice'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { ArtistType } from '../../types/home.type'
 
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
@@ -72,7 +73,7 @@ const useStyles = makeStyles({
                 width: 'calc(100% / 3 - 22px)',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between',
+                // justifyContent: 'space-between',
                 gap: '32px',
                 cursor: 'pointer',
                 '&>div': {
@@ -184,12 +185,9 @@ const originalArray = [
 const Artist = () => {
     const classes = useStyles()
     const navigate = useNavigate()
+    const dispatch = useAppDispatch();
+    const location = useLocation()
     const listArtist = useAppSelector(selectListData)
-
-
-    const handleClickAbout = () => {
-        navigate(ROUTE.ABOUT)
-    }
 
     const handleClickContact = () => {
         navigate(ROUTE.CONTACT)
@@ -213,44 +211,46 @@ const Artist = () => {
     });
 
     // Tạo ba mảng con
-    const array1: {
-        id: number;
-        name: string;
-        img: string;
-    }[] = [];
-    const array2: {
-        id: number;
-        name: string;
-        img: string;
-    }[] = [];
-    const array3: {
-        id: number;
-        name: string;
-        img: string;
-    }[] = [];
-
-
-    // Lặp qua mảng gốc và lần lượt chia vào ba mảng con theo thứ tự
-    for (let i = 0; i < originalArray.length; i += 3) {
-        array1.push(originalArray[i]);
-        array2.push(originalArray[i + 1]);
-        array3.push(originalArray[i + 2]);
-    }
+    const array1: ArtistType[] = [];
+    const array2: ArtistType[] = [];
+    const array3: ArtistType[] = [];
 
 
     // // Lặp qua mảng gốc và lần lượt chia vào ba mảng con theo thứ tự
-    // if (listArtist.length > 0) {
-    //     for (let i = 0; i < listArtist.length; i += 3) {
-    //         array1.push(listArtist[i]);
-    //         array2.push(listArtist[i + 1]);
-    //         array3.push(listArtist[i + 2]);
-    //     }
+    // for (let i = 0; i < originalArray.length; i += 3) {
+    //     array1.push(originalArray[i]);
+    //     array2.push(originalArray[i + 1]);
+    //     array3.push(originalArray[i + 2]);
     // }
+
+
+    // Lặp qua mảng gốc và lần lượt chia vào ba mảng con theo thứ tự
+    if (listArtist.length > 0) {
+        console.log('listArtist', listArtist);
+
+        for (let i = 0; i < listArtist.length; i += 3) {
+            array1.push(listArtist[i]);
+            array2.push(listArtist[i + 1]);
+            array3.push(listArtist[i + 2]);
+        }
+    }
 
     console.log('array1', array1);
     console.log('array2', array2);
     console.log('array3', array3);
 
+    const handleClickArtist = (id: string) => {
+        console.log('handleClickArtist', id);
+        navigate(`${ROUTE.ARTISTDETAIL}/${id}`)
+    }
+
+    useEffect(() => {
+        dispatch(homeActions.getList({ params: undefined }))
+    }, []);
+
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    }, [location.pathname])
 
     return (
         <div className={classes.home_container}>
@@ -263,32 +263,45 @@ const Artist = () => {
 
             <div>
                 <div>
-                    {(array1.length > 0) && (array1 || []).map((item, index) => (
-                        <div>
-                            <img src={item.img} alt='' />
-                            <p>{item.name}</p>
-
-                        </div>
-                    ))}
+                    {(array1.length > 0) && (array1 || []).map((item, index) => {
+                        if (item === undefined)
+                            return;
+                        else
+                            return (
+                                <div onClick={() => handleClickArtist(item.id)}>
+                                    <img src={`http://13.125.36.208:9000/static/image/${item.thumbnail}`} alt='' />
+                                    <p>{item.nickname}</p>
+                                </div>
+                            )
+                    })}
                 </div>
 
                 <div>
-                    {(array2.length > 0) && (array2 || []).map((item, index) => (
-                        <div>
-                            <img src={item.img} alt='' />
-                            <p>{item.name}</p>
-
-                        </div>
-                    ))}
+                    {(array2.length > 0) && (array2 || []).map((item, index) => {
+                        if (item === undefined)
+                            return;
+                        else
+                            return (
+                                <div onClick={() => handleClickArtist(item.id)}>
+                                    <img src={`http://13.125.36.208:9000/static/image/${item.thumbnail}`} alt='' />
+                                    <p>{item.nickname}</p>
+                                </div>
+                            )
+                    })}
                 </div>
 
                 <div>
-                    {(array3.length > 0) && (array3 || []).map((item, index) => (
-                        <div>
-                            <img src={item.img} alt='' />
-                            <p>{item.name}</p>
-                        </div>
-                    ))}
+                    {(array3.length > 0) && (array3 || []).map((item, index) => {
+                        if (item === undefined)
+                            return;
+                        else
+                            return (
+                                <div onClick={() => handleClickArtist(item.id)}>
+                                    <img src={`http://13.125.36.208:9000/static/image/${item.thumbnail}`} alt='' />
+                                    <p>{item.nickname}</p>
+                                </div>
+                            )
+                    })}
 
                 </div>
             </div>
