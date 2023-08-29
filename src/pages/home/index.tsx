@@ -106,7 +106,7 @@ const ImageList = () => {
                   }}
                   onClick={() => handleClickDetail(artist.id)}
                 >
-                  Visit Me 1
+                  Visit Me
                 </Button>
               </div>
 
