@@ -269,7 +269,7 @@ const Artist = () => {
                         else
                             return (
                                 <div onClick={() => handleClickArtist(item.id)}>
-                                    <img src={`http://13.125.36.208:9000/static/image/${item.thumbnail}`} alt='' />
+                                    <img src={`https://server.gm4ent.com/static/image/${item.thumbnail}`} alt='' />
                                     <p>{item.nickname}</p>
                                 </div>
                             )
@@ -283,7 +283,7 @@ const Artist = () => {
                         else
                             return (
                                 <div onClick={() => handleClickArtist(item.id)}>
-                                    <img src={`http://13.125.36.208:9000/static/image/${item.thumbnail}`} alt='' />
+                                    <img src={`https://server.gm4ent.com/static/image/${item.thumbnail}`} alt='' />
                                     <p>{item.nickname}</p>
                                 </div>
                             )
@@ -297,7 +297,7 @@ const Artist = () => {
                         else
                             return (
                                 <div onClick={() => handleClickArtist(item.id)}>
-                                    <img src={`http://13.125.36.208:9000/static/image/${item.thumbnail}`} alt='' />
+                                    <img src={`https://server.gm4ent.com/static/image/${item.thumbnail}`} alt='' />
                                     <p>{item.nickname}</p>
                                 </div>
                             )

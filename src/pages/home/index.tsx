@@ -74,7 +74,7 @@ const ImageList = () => {
             <div style={{
               width: '100%',
               height: '100vh',
-              backgroundImage: `url("http://13.125.36.208:9000/static/image/${artist.thumbnail}")`,
+              backgroundImage: `url("https://server.gm4ent.com/static/image/${artist.thumbnail}")`,
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
               boxSizing: 'border-box',

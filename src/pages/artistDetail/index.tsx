@@ -119,8 +119,8 @@ const ActistDetail: React.FC = () => {
 
   return (
     <div className={classes.detail_container}
-      // style={{ backgroundImage: `url("http://13.125.36.208:9000/static/image/${dataArtist?.image}")` }}
-      style={dataArtist?.image ? { backgroundImage: `url("http://13.125.36.208:9000/static/image/${dataArtist?.image}")` } : {}}
+      // style={{ backgroundImage: `url("https://server.gm4ent.com/static/image/${dataArtist?.image}")` }}
+      style={dataArtist?.image ? { backgroundImage: `url("https://server.gm4ent.com/static/image/${dataArtist?.image}")` } : {}}
     >
       <div onClick={handleClickBack}>
         <img src={ArrowBendUpLeftWhite} alt='' />
