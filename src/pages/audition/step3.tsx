@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
@@ -15,6 +15,8 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { dataSteps } from '../../constants'
+import { useAuditionContext } from '../../context/auditionContext'
+import DaumPostcode, { useDaumPostcodePopup } from 'react-daum-postcode';
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
@@ -165,7 +167,7 @@ const MenuProps = {
 };
 
 const supportTypes = [
-    '선택',
+    // '선택',
     '(Singing)',
     '(Rapping)',
     '(Dancing)',
@@ -183,58 +185,79 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 }
 
 const validationSchema = yup.object().shape({
-    email: yup
+    supportType: yup
+        .array()
+        .min(1, 'At least one support type is required')
+        .required('Required'),
+    height: yup
         .string()
-        .email('Invalid email'),
-    // gender: yup
-    //     .string()
-    //     .required('Required'),
-    // name: yup
-    //     .string()
-    //     .required('Required'),
-
-    // password: yup
-    //   .string()
-    //   .min(8, 'Password should be of minimum 8 characters length')
-    //   .required('Password is required'),
+        .required('Required'),
+    weight: yup
+        .string()
+        .required('Required'),
+    postalCode: yup
+        .string()
+        .required('Required'),
+    address: yup
+        .string()
+        .required('Required'),
+    job: yup
+        .string()
+        .required('Required'),
+    bloodGroup: yup
+        .string()
+        .required('Required'),
+    language: yup
+        .string()
+        .required('Required'),
+    hobby: yup
+        .string()
+        .required('Required'),
 });
 
-const Audition3 = () => {
+export const AuditionStep3 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
     const location = useLocation()
 
+    const { data, setData } = useAuditionContext();
+
+    console.log('dataContext child 3', data);
+
     const handleClickNext = () => {
         console.log('handleClickNext');
-        navigate(ROUTE.AUDITION + '/step4')
+        setData({ ...data, step: 4 })
     }
 
     const handleClickBack = () => {
         console.log('handleClickBack');
-        navigate(ROUTE.AUDITION + '/step2')
+        setData({ ...data, step: 2 })
     }
 
-    const handleClickContact = () => {
-        navigate(ROUTE.CONTACT)
+    const handleClickSave = () => {
+        console.log('handleClickSave');
+        setData({ ...data, curentStepSave: 3 })
+        navigate(ROUTE.HOME)
     }
+
 
     const formik = useFormik({
         initialValues: {
-            supportType: '',
-            height: '',
-            weight: '',
-            address: '',
-            address2: '',
-            job: '',
-            bloodGroup: '',
-            language: '',
-            hobby: '',
+            supportType: data.dataStep3?.supportType || [],
+            height: data.dataStep3?.height || '',
+            weight: data.dataStep3?.weight || '',
+            postalCode: data.dataStep3?.postalCode || '',
+            address: data.dataStep3?.address || '',
+            job: data.dataStep3?.job || '',
+            bloodGroup: data.dataStep3?.bloodGroup || '',
+            language: data.dataStep3?.language || '',
+            hobby: data.dataStep3?.hobby || '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            // alert(JSON.stringify(values, null, 2));
-            console.log('values', values);
-
+            console.log('values formik', values);
+            console.log('handleClickSubmit');
+            setData({ ...data, step: 4, dataStep3: values })
         },
     });
 
@@ -254,6 +277,38 @@ const Audition3 = () => {
             formik.setFieldValue('supportType', supportTypes);
         }
     };
+
+    //popup address
+    const scriptUrl = 'URL_TO_DAUM_POSTCODE_SCRIPT';
+    const open = useDaumPostcodePopup();
+
+    const handleComplete = (data: any) => {
+        let fullAddress = data.address;
+        let extractedPostalCode = data.zonecode;
+        let extraAddress = '';
+
+        if (data.addressType === 'R') {
+            if (data.bname !== '') {
+                extraAddress += data.bname;
+            }
+            if (data.buildingName !== '') {
+                extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
+            }
+            fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
+        }
+
+        console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+
+        console.log(extractedPostalCode); // e.g. '04794'
+
+        formik.setFieldValue('postalCode', extractedPostalCode);
+        formik.setFieldValue('address', fullAddress);
+    };
+
+    const handleClickPostalCode = () => {
+        open({ onComplete: handleComplete });
+    };
+    //end
 
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
@@ -325,45 +380,52 @@ const Audition3 = () => {
                     <form onSubmit={formik.handleSubmit}>
                         <div>
                             <label>지원분야</label>
-                            <Select
-                                labelId="demo-multiple-name-label"
-                                id="supportType"
-                                name="supportType"
-                                multiple
-                                displayEmpty
-                                fullWidth
-                                value={supportType}
-                                onChange={handleChange}
-                                input={<OutlinedInput />}
-                                MenuProps={MenuProps}
-                                renderValue={(selected) => {
-                                    if (selected.length === 0) {
-                                        return <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>;
-                                    }
+                            <div>
+                                <Select
+                                    id="supportType"
+                                    name="supportType"
+                                    labelId="demo-multiple-name-label"
+                                    multiple
+                                    displayEmpty
+                                    fullWidth
+                                    value={supportType}
+                                    onChange={handleChange}
+                                    input={<OutlinedInput />}
+                                    MenuProps={MenuProps}
+                                    renderValue={(selected) => {
+                                        if (selected.length === 0) {
+                                            return <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>;
+                                        }
 
-                                    return selected.join(', ');
-                                }}
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                            >
-                                {supportType.length === 0 && (
-                                    <MenuItem disabled value="">
-                                        <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>
-                                    </MenuItem>
-                                )}
-                                {supportTypes.map((type) => (
-                                    <MenuItem
-                                        key={type}
-                                        value={type}
-                                        style={getStyles(type, supportType, theme)}
-                                        disabled={supportType.length >= 2 && !supportType.includes(type)}
-                                    >
-                                        {type}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                            {/* <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.supportType && formik.errors.supportType}</p> */}
+                                        return selected.join(', ');
+                                    }}
+                                    sx={{
+                                        backgroundColor: '#F7F7F7',
+                                    }}
+                                    inputProps={{
+                                        style: {
+                                            backgroundColor: '#F7F7F7',
+                                        }
+                                    }}
+                                >
+                                    {supportType.length === 0 && (
+                                        <MenuItem disabled value="">
+                                            <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>
+                                        </MenuItem>
+                                    )}
+                                    {supportTypes.map((type) => (
+                                        <MenuItem
+                                            key={type}
+                                            value={type}
+                                            style={getStyles(type, supportType, theme)}
+                                            disabled={supportType.length >= 2 && !supportType.includes(type)}
+                                        >
+                                            {type}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.supportType && formik.errors.supportType}</p>
+                            </div>
                         </div>
 
                         <div>
@@ -374,8 +436,10 @@ const Audition3 = () => {
                                 name="height"
                                 variant="outlined"
                                 placeholder='신장츠 단위, 숫자만'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
+                                inputProps={{
+                                    style: {
+                                        backgroundColor: '#F7F7F7',
+                                    }
                                 }}
                                 value={formik.values.height}
                                 onChange={formik.handleChange}
@@ -393,8 +457,10 @@ const Audition3 = () => {
                                 name="weight"
                                 variant="outlined"
                                 placeholder='단위, 숫자만 입력'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
+                                inputProps={{
+                                    style: {
+                                        backgroundColor: '#F7F7F7',
+                                    }
                                 }}
                                 value={formik.values.weight}
                                 onChange={formik.handleChange}
@@ -406,22 +472,31 @@ const Audition3 = () => {
 
                         <div>
                             <label>주소</label>
+                            {/* <DaumPostcode onComplete={handleComplete} />
+                            <p>Selected Address:{address}</p> */}
+
                             <div style={{ display: 'flex', gap: '12px' }}>
                                 <TextField
                                     // fullWidth
-                                    id="address"
-                                    name="address"
+                                    id="postalCode"
+                                    name="postalCode"
                                     variant="outlined"
                                     placeholder='우편번호'
                                     sx={{
                                         flex: 1,
-                                        backgroundColor: '#F7F7F7',
+                                        // backgroundColor: '#F7F7F7',
+
                                     }}
-                                    value={formik.values.address}
+                                    inputProps={{
+                                        style: {
+                                            backgroundColor: '#F7F7F7',
+                                        }
+                                    }}
+                                    value={formik.values.postalCode}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    error={formik.touched.address && Boolean(formik.errors.address)}
-                                    helperText={formik.touched.address && formik.errors.address}
+                                    error={formik.touched.postalCode && Boolean(formik.errors.postalCode)}
+                                    helperText={formik.touched.postalCode && formik.errors.postalCode}
                                 />
                                 <Button
                                     disabled={!formik.values}
@@ -430,8 +505,10 @@ const Audition3 = () => {
                                     sx={{
                                         padding: '12px 16px',
                                         backgroundColor: '#000',
-                                        color: '#fff'
+                                        color: '#fff',
+                                        height: '56px'
                                     }}
+                                    onClick={handleClickPostalCode}
                                 >
                                     우편번호 찾기 (대한민국 한정)
                                 </Button>
@@ -442,18 +519,20 @@ const Audition3 = () => {
                             <label></label>
                             <TextField
                                 fullWidth
-                                id="address2"
-                                name="address2"
+                                id="address"
+                                name="address"
                                 variant="outlined"
                                 placeholder='상세주소'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
+                                inputProps={{
+                                    style: {
+                                        backgroundColor: '#F7F7F7',
+                                    }
                                 }}
-                                value={formik.values.address2}
+                                value={formik.values.address}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                error={formik.touched.address2 && Boolean(formik.errors.address2)}
-                                helperText={formik.touched.address2 && formik.errors.address2}
+                                error={formik.touched.address && Boolean(formik.errors.address)}
+                                helperText={formik.touched.address && formik.errors.address}
                             />
                         </div>
 
@@ -469,8 +548,10 @@ const Audition3 = () => {
                                 name="job"
                                 variant="outlined"
                                 placeholder='학생인 경우, 학교명/ 학년 기재'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
+                                inputProps={{
+                                    style: {
+                                        backgroundColor: '#F7F7F7',
+                                    }
                                 }}
                                 value={formik.values.job}
                                 onChange={formik.handleChange}
@@ -482,92 +563,75 @@ const Audition3 = () => {
 
                         <div>
                             <label>혈액형</label>
-                            {/* <TextField
-                                fullWidth
-                                id="bloodGroup"
-                                name="bloodGroup"
-                                variant="outlined"
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                select
-                                value={formik.values.bloodGroup}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.bloodGroup && Boolean(formik.errors.bloodGroup)}
-                                helperText={formik.touched.bloodGroup && formik.errors.bloodGroup}
-                            >
-                                <MenuItem key={1} value={1}> 1 </MenuItem>
-                                <MenuItem key={2} value={2}> 2 </MenuItem>
-                            </TextField> */}
-                            <Select
-                                labelId="demo-multiple-name-label"
-                                id="bloodGroup"
-                                name="bloodGroup"
-                                displayEmpty
-                                fullWidth
-                                value={formik.values.bloodGroup}
-                                onChange={formik.handleChange}
-                                input={<OutlinedInput />}
-                                MenuProps={MenuProps}
-                                renderValue={(selected) => {
-                                    if (selected === '') {
-                                        return <em>혈액형을 선택하세요</em>;
-                                    }
-                                    return selected;
-                                }}
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                            >
-                                <MenuItem key={1} value={1}> 1 </MenuItem>
-                                <MenuItem key={2} value={2}> 2 </MenuItem>
-                            </Select>
+                            <div>
+                                <Select
+                                    labelId="demo-multiple-name-label"
+                                    id="bloodGroup"
+                                    name="bloodGroup"
+                                    displayEmpty
+                                    fullWidth
+                                    value={formik.values.bloodGroup}
+                                    onChange={formik.handleChange}
+                                    input={<OutlinedInput />}
+                                    MenuProps={MenuProps}
+                                    renderValue={(selected) => {
+                                        if (selected === '') {
+                                            return <em>혈액형을 선택하세요</em>;
+                                        }
+                                        return selected;
+                                    }}
+                                    sx={{
+                                        backgroundColor: '#F7F7F7',
+                                    }}
+                                    inputProps={{
+                                        style: {
+                                            backgroundColor: '#F7F7F7',
+                                        }
+                                    }}
+                                >
+                                    <MenuItem key={1} value={'A'}> A </MenuItem>
+                                    <MenuItem key={2} value={'B'}> B </MenuItem>
+                                    <MenuItem key={3} value={'AB'}> AB </MenuItem>
+                                    <MenuItem key={4} value={'O'}> O </MenuItem>
+                                </Select>
+                                <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.bloodGroup && formik.errors.bloodGroup}</p>
+                            </div>
                         </div>
 
                         <div>
                             <label>사용가능언어및 수준 (모국제외)</label>
-                            {/* <TextField
-                                fullWidth
-                                id="language"
-                                name="language"
-                                variant="outlined"
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                select
-                                value={formik.values.language}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.language && Boolean(formik.errors.language)}
-                                helperText={formik.touched.language && formik.errors.language}
-                            >
-                                <MenuItem key={1} value={1}> 1 </MenuItem>
-                                <MenuItem key={2} value={2}> 2 </MenuItem>
-                            </TextField> */}
-                            <Select
-                                labelId="demo-multiple-name-label"
-                                id="language"
-                                name="language"
-                                displayEmpty
-                                fullWidth
-                                value={formik.values.language}
-                                onChange={formik.handleChange}
-                                input={<OutlinedInput />}
-                                MenuProps={MenuProps}
-                                renderValue={(selected) => {
-                                    if (selected === '') {
-                                        return <em>사용 가능한 언어 및 레벨을 선택하십시오</em>;
-                                    }
-                                    return selected;
-                                }}
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                            >
-                                <MenuItem key={1} value={1}> 1 </MenuItem>
-                                <MenuItem key={2} value={2}> 2 </MenuItem>
-                            </Select>
+                            <div>
+                                <Select
+                                    labelId="demo-multiple-name-label"
+                                    id="language"
+                                    name="language"
+                                    displayEmpty
+                                    fullWidth
+                                    value={formik.values.language}
+                                    onChange={formik.handleChange}
+                                    input={<OutlinedInput />}
+                                    MenuProps={MenuProps}
+                                    renderValue={(selected) => {
+                                        if (selected === '') {
+                                            return <em>사용 가능한 언어 및 레벨을 선택하십시오</em>;
+                                        }
+                                        return selected;
+                                    }}
+                                    inputProps={{
+                                        style: {
+                                            backgroundColor: '#F7F7F7',
+                                        }
+                                    }}
+                                    sx={{
+                                        backgroundColor: '#F7F7F7',
+                                    }}
+                                >
+                                    <MenuItem key={1} value={1}> 1 </MenuItem>
+                                    <MenuItem key={2} value={2}> 2 </MenuItem>
+                                </Select>
+                                <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.language && formik.errors.language}</p>
+                            </div>
+
                         </div>
 
                         <div>
@@ -583,6 +647,11 @@ const Audition3 = () => {
                                 sx={{
                                     backgroundColor: '#F7F7F7',
                                 }}
+                                // inputProps={{
+                                //     style: {
+                                //         backgroundColor: '#F7F7F7',
+                                //     }
+                                // }}
                                 value={formik.values.hobby}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -603,27 +672,25 @@ const Audition3 = () => {
                                 </div>
                             </div>
                             <Button
-                                disabled={!formik.values}
+                                // disabled={!formik.values}
+                                type="submit"
                                 sx={{
                                     padding: '12px 60px',
                                     backgroundColor: '#fff',
                                     color: '#0063F7',
                                     border: '1px solid #0063F7',
                                 }}
-                                onClick={handleClickNext}
                             >
                                 다음 단계
                             </Button>
                             <Button
                                 disabled={!formik.values}
                                 variant="contained"
-                                type="submit"
                                 color='primary'
                                 sx={{
                                     padding: '12px 60px'
                                 }}
-                                onClick={handleClickNext}
-
+                                onClick={handleClickSave}
                             // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
                             >
                                 지원서 저장
@@ -636,5 +703,3 @@ const Audition3 = () => {
         </div>
     )
 }
-
-export default Audition3

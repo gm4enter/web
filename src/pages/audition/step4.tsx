@@ -15,6 +15,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { dataSteps } from '../../constants'
+import { useAuditionContext } from '../../context/auditionContext'
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
@@ -199,23 +200,29 @@ const validationSchema = yup.object().shape({
     //   .required('Password is required'),
 });
 
-const Audition4 = () => {
+export const AuditionStep4 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
     const location = useLocation()
 
+    const { data, setData } = useAuditionContext();
+
+    console.log('dataContext child 4', data);
+
     const handleClickNext = () => {
         console.log('handleClickNext');
-        navigate(ROUTE.AUDITION + '/step5')
+        setData({ ...data, step: 5 })
     }
 
     const handleClickBack = () => {
         console.log('handleClickBack');
-        navigate(ROUTE.AUDITION + '/step3')
+        setData({ ...data, step: 3 })
     }
 
-    const handleClickContact = () => {
-        navigate(ROUTE.CONTACT)
+    const handleClickSave = () => {
+        console.log('handleClickSave');
+        setData({ ...data, curentStepSave: 4 })
+        navigate(ROUTE.HOME)
     }
 
     const formik = useFormik({
@@ -357,7 +364,12 @@ const Audition4 = () => {
                                         }}
                                         sx={{
                                             flex: 1,
-                                            backgroundColor: '#F7F7F7',
+                                            // backgroundColor: '#F7F7F7',
+                                        }}
+                                        inputProps={{
+                                            style: {
+                                                backgroundColor: '#F7F7F7',
+                                            }
                                         }}
                                         value={formik.values.address}
                                         onChange={formik.handleChange}
@@ -404,7 +416,12 @@ const Audition4 = () => {
                                         }}
                                         sx={{
                                             flex: 1,
-                                            backgroundColor: '#F7F7F7',
+                                            // backgroundColor: '#F7F7F7',
+                                        }}
+                                        inputProps={{
+                                            style: {
+                                                backgroundColor: '#F7F7F7',
+                                            }
                                         }}
                                         value={formik.values.address}
                                         onChange={formik.handleChange}
@@ -451,7 +468,12 @@ const Audition4 = () => {
                                     }}
                                     sx={{
                                         flex: 1,
-                                        backgroundColor: '#F7F7F7',
+                                        // backgroundColor: '#F7F7F7',
+                                    }}
+                                    inputProps={{
+                                        style: {
+                                            backgroundColor: '#F7F7F7',
+                                        }
                                     }}
                                     value={formik.values.address}
                                     onChange={formik.handleChange}
@@ -557,5 +579,3 @@ const Audition4 = () => {
         </div >
     )
 }
-
-export default Audition4

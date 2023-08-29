@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://13.125.36.208:9000/api'
+export const BASE_URL = 'https://server.gm4ent.com/api'
 
 export const dataSteps = [
     {

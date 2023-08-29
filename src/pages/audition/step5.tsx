@@ -15,6 +15,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { dataSteps } from '../../constants'
+import { useAuditionContext } from '../../context/auditionContext'
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
@@ -153,37 +154,6 @@ const useStyles = makeStyles({
     }
 });
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-const supportTypes = [
-    '선택',
-    '(Singing)',
-    '(Rapping)',
-    '(Dancing)',
-    '연기 (Acting)',
-    '모델 (Model)'
-]
-
-const infoUser = []
-
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
-
 const validationSchema = yup.object().shape({
     email: yup
         .string()
@@ -201,22 +171,26 @@ const validationSchema = yup.object().shape({
     //   .required('Password is required'),
 });
 
-const Audition5 = () => {
+export const AuditionStep5 = () => {
+
     const classes = useStyles()
     const navigate = useNavigate()
     const location = useLocation()
 
+    const { data, setData } = useAuditionContext();
     const handleClickNext = () => {
         console.log('handleClickNext');
     }
 
     const handleClickBack = () => {
         console.log('handleClickBack');
-        navigate(ROUTE.AUDITION + '/step4')
+        setData({ ...data, step: 4 })
     }
 
-    const handleClickContact = () => {
-        navigate(ROUTE.CONTACT)
+    const handleClickSave = () => {
+        console.log('handleClickSave');
+        setData({ ...data, curentStepSave: 5 })
+        navigate(ROUTE.HOME)
     }
 
     const formik = useFormik({
@@ -321,32 +295,39 @@ const Audition5 = () => {
                     <form onSubmit={formik.handleSubmit}>
                         <div>
                             <label>이름</label>
-                            <div>Son Hung Min</div>
+                            <div>{data.dataStep2?.name}</div>
                         </div>
 
                         <div>
                             <label>성별</label>
-                            <div>남</div>
+                            <div>{data.dataStep2?.gender === '1' ? '남' : '여'}</div>
                         </div>
 
                         <div>
                             <label>생년월일</label>
-                            <div>1982/03/22</div>
+                            <div>{data.dataStep2?.dob}</div>
                         </div>
 
                         <div>
                             <label>국적</label>
-                            <div>Korean</div>
+                            <div>
+                                {data.dataStep2?.countries.map((item, index) => (
+                                    <React.Fragment key={index}>
+                                        {index > 0 && ', '}
+                                        {item}
+                                    </React.Fragment>
+                                ))}
+                            </div>
                         </div>
 
                         <div>
                             <label>연락처</label>
-                            <div>+82 123456789</div>
+                            <div>{data.dataStep2?.phoneNumber}</div>
                         </div>
 
                         <div>
                             <label>아이디(이메일)</label>
-                            <div>greenapp@naver.com</div>
+                            <div>{data.dataStep2?.email}</div>
                         </div>
 
                         <div className={classes.label}>
@@ -355,36 +336,42 @@ const Audition5 = () => {
 
                         <div>
                             <label>지원분야</label>
-                            <div>마사지, 부동산</div>
+                            <div> {data.dataStep3?.supportType.map((item, index) => (
+                                <React.Fragment key={index}>
+                                    {index > 0 && ', '}
+                                    {item}
+                                </React.Fragment>
+                            ))}
+                            </div>
                         </div>
 
                         <div>
                             <label>신장(cm)</label>
-                            <div>179</div>
+                            <div>{data.dataStep3?.height}</div>
                         </div>
                         <div>
                             <label>체중(kg)</label>
-                            <div>70</div>
+                            <div>{data.dataStep3?.weight}</div>
                         </div>
                         <div>
                             <label>주소</label>
-                            <div>경기도 시흥시 군자로 510(거모동)</div>
+                            <div>{data.dataStep3?.address}</div>
                         </div>
                         <div>
                             <label>직업</label>
-                            <div>사진 모델</div>
+                            <div>{data.dataStep3?.job}</div>
                         </div>
                         <div>
                             <label>혈액형</label>
-                            <div>혈액형 O</div>
+                            <div>혈액형 {data.dataStep3?.bloodGroup}</div>
                         </div>
                         <div>
                             <label>사용가능언어및 수준 (모국어제외)</label>
-                            <div>영어 아이엘츠 7.0</div>
+                            <div>{data.dataStep3?.language}</div>
                         </div>
                         <div>
                             <label>취미/특기</label>
-                            <div>다리를 건너기, 음악감상, 사이클링, 배구, 요리</div>
+                            <div>{data.dataStep3?.hobby}</div>
                         </div>
 
                         <div className={classes.label}>
@@ -451,5 +438,3 @@ const Audition5 = () => {
         </div>
     )
 }
-
-export default Audition5

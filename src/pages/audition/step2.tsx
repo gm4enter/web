@@ -10,11 +10,15 @@ import { ROUTE } from '../../router/routes'
 import { Input } from '../../components/base/input/Input'
 import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import * as yup from 'yup';
-import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl } from '@mui/material'
+import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl, Select, OutlinedInput, useTheme, SelectChangeEvent, Theme } from '@mui/material'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { dataSteps } from '../../constants'
+import { useAuditionContext } from '../../context/auditionContext'
+import PhoneInput from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
+
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
@@ -139,16 +143,57 @@ const useStyles = makeStyles({
     },
 });
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+const countriesTypes = [
+    '한국',
+    '미국',
+    '일본',
+    '중국',
+    '베트남',
+    '태국'
+]
+
+function getStyles(name: string, personName: readonly string[], theme: Theme) {
+    return {
+        fontWeight:
+            personName.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
+
 const validationSchema = yup.object().shape({
+    gender: yup
+        .string()
+        .required('Required'),
+    name: yup
+        .string()
+        .required('Required'),
+    dob: yup
+        .string()
+        .required('Required'),
+    countries: yup
+        .array()
+        .min(1, 'At least one support type is required')
+        .required('Required'),
+    phoneNumber: yup
+        .string()
+        .required('Required')
+        .min(8, 'Invalid phone number'),
     email: yup
         .string()
-        .email('Invalid email'),
-    // gender: yup
-    //     .string()
-    //     .required('Required'),
-    // name: yup
-    //     .string()
-    //     .required('Required'),
+        .email('Invalid email')
+        .required('Required'),
 
     // password: yup
     //   .string()
@@ -156,24 +201,47 @@ const validationSchema = yup.object().shape({
     //   .required('Password is required'),
 });
 
-const Audition2 = () => {
+
+export const AuditionStep2 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
     const location = useLocation()
+    const theme = useTheme();
+    const [countries, setCountries] = React.useState<string[]>([]);
+    const { data, setData } = useAuditionContext();
+
+    console.log('dataContext child 2', data);
 
     const handleClickNext = () => {
         console.log('handleClickNext');
-        navigate(ROUTE.AUDITION + '/step3')
+        setData({ ...data, step: 3 })
     }
 
     const handleClickBack = () => {
         console.log('handleClickBack');
-        navigate(ROUTE.AUDITION)
+        setData({ ...data, step: 1 })
     }
 
-    const handleClickContact = () => {
-        navigate(ROUTE.CONTACT)
+    const handleClickSave = () => {
+        console.log('handleClickSave');
+        setData({ ...data, curentStepSave: 2 })
+        navigate(ROUTE.HOME)
     }
+
+
+    const handleChangeContries = (event: SelectChangeEvent<typeof countries>) => {
+        const {
+            target: { value },
+        } = event;
+        // On autofill we get a stringified value.
+        const countriesTypes = typeof value === 'string' ? value.split(',') : value;
+
+        // Allow selecting a maximum of two items
+        if (countriesTypes.length <= 2) {
+            setCountries(countriesTypes);
+            formik.setFieldValue('countries', countriesTypes);
+        }
+    };
 
     // Function to convert the selected date format
     const formatDate = (dateValue: string) => {
@@ -186,18 +254,19 @@ const Audition2 = () => {
 
     const formik = useFormik({
         initialValues: {
-            gender: '',
-            name: '',
-            date: '',
-            countries: '',
-            phoneNumber: '',
-            email: '',
+            gender: data.dataStep2?.gender || '',
+            name: data.dataStep2?.name || '',
+            dob: data.dataStep2?.dob || '',
+            countries: data.dataStep2?.countries || [],
+            phoneNumber: data.dataStep2?.phoneNumber || '',
+            email: data.dataStep2?.email || '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             // alert(JSON.stringify(values, null, 2));
-            console.log('values', values);
-
+            console.log('values formik', values);
+            console.log('handleClickNext');
+            setData({ ...data, step: 3, dataStep2: values })
         },
     });
 
@@ -295,8 +364,10 @@ const Audition2 = () => {
                                 name="name"
                                 variant="outlined"
                                 placeholder='당신의 성명을 입력 해주세요'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
+                                inputProps={{
+                                    style: {
+                                        backgroundColor: '#F7F7F7',
+                                    }
                                 }}
                                 value={formik.values.name}
                                 onChange={formik.handleChange}
@@ -310,28 +381,30 @@ const Audition2 = () => {
                             <label>생년월일</label>
                             <TextField
                                 fullWidth
-                                id="date"
-                                name="date"
+                                id="dob"
+                                name="dob"
                                 variant="outlined"
                                 placeholder='YYYY/MM/DD'
                                 type='date'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
+                                inputProps={{
+                                    style: {
+                                        backgroundColor: '#F7F7F7',
+                                    }
                                 }}
-                                value={formik.values.date}
+                                value={formik.values.dob}
                                 // onChange={formik.handleChange}
                                 onChange={event => {
                                     const formattedDate = formatDate(event.target.value);
                                     formik.handleChange(event);
-                                    formik.setFieldValue('date', formattedDate);
+                                    formik.setFieldValue('dob', formattedDate);
                                 }}
                                 onBlur={formik.handleBlur}
-                                error={formik.touched.date && Boolean(formik.errors.date)}
-                                helperText={formik.touched.date && formik.errors.date}
+                                error={formik.touched.dob && Boolean(formik.errors.dob)}
+                                helperText={formik.touched.dob && formik.errors.dob}
                             />
                         </div>
 
-                        <div>
+                        {/* <div>
                             <label>국적</label>
                             <TextField
                                 fullWidth
@@ -339,8 +412,10 @@ const Audition2 = () => {
                                 name="countries"
                                 variant="outlined"
                                 placeholder='Please enter your contact information'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
+                                inputProps={{
+                                    style: {
+                                        backgroundColor: '#F7F7F7',
+                                    }
                                 }}
                                 value={formik.values.countries}
                                 onChange={formik.handleChange}
@@ -348,25 +423,82 @@ const Audition2 = () => {
                                 error={formik.touched.countries && Boolean(formik.errors.countries)}
                                 helperText={formik.touched.countries && formik.errors.countries}
                             />
+                        </div> */}
+                        <div>
+                            <label>국적</label>
+                            <div>
+                                <Select
+                                    id="countries"
+                                    name="countries"
+                                    labelId="demo-multiple-name-label"
+                                    multiple
+                                    displayEmpty
+                                    fullWidth
+                                    value={countries}
+                                    onChange={handleChangeContries}
+                                    input={<OutlinedInput />}
+                                    MenuProps={MenuProps}
+                                    renderValue={(selected) => {
+                                        if (selected.length === 0) {
+                                            return <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>;
+                                        }
+
+                                        return selected.join(', ');
+                                    }}
+                                    sx={{
+                                        backgroundColor: '#F7F7F7',
+                                    }}
+                                    inputProps={{
+                                        style: {
+                                            backgroundColor: '#F7F7F7',
+                                        }
+                                    }}
+                                >
+                                    {countries.length === 0 && (
+                                        <MenuItem disabled value="">
+                                            <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>
+                                        </MenuItem>
+                                    )}
+                                    {countriesTypes.map((type) => (
+                                        <MenuItem
+                                            key={type}
+                                            value={type}
+                                            style={getStyles(type, countries, theme)}
+                                            disabled={countries.length >= 2 && !countries.includes(type)}
+                                        >
+                                            {type}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.countries && formik.errors.countries}</p>
+                            </div>
                         </div>
 
                         <div>
                             <label>연락처</label>
-                            <TextField
-                                fullWidth
-                                id="phoneNumber"
-                                name="phoneNumber"
-                                variant="outlined"
-                                placeholder='전화번호를 입력하세요'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
-                                }}
-                                value={formik.values.phoneNumber}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
-                                helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
-                            />
+                            <div>
+                                <label htmlFor="phoneNumber" style={{ display: 'none' }}>연락처</label>
+                                <PhoneInput
+                                    country={'kr'}
+                                    placeholder='전화번호를 입력하세요'
+                                    inputStyle={{
+                                        width: '100%',
+                                        height: '100%',
+                                        padding: '10px 16px 10px 48px',
+                                        fontSize: '16px',
+                                        fontWeight: '500',
+                                        borderRadius: '4px',
+                                        backgroundColor: '#F7F7F7',
+                                    }}
+                                    containerStyle={{ height: '56px' }}
+                                    value={formik.values.phoneNumber}
+                                    onChange={value => formik.setFieldValue('phoneNumber', `+${value}`)}  // Update formik value
+                                    onBlur={formik.handleBlur}
+                                />
+                                {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+                                    <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.errors.phoneNumber}</p>
+                                ) : null}
+                            </div>
                         </div>
 
                         <div>
@@ -377,8 +509,10 @@ const Audition2 = () => {
                                 name="email"
                                 variant="outlined"
                                 placeholder='Please enter your content'
-                                sx={{
-                                    backgroundColor: '#F7F7F7',
+                                inputProps={{
+                                    style: {
+                                        backgroundColor: '#F7F7F7',
+                                    }
                                 }}
                                 value={formik.values.email}
                                 onChange={formik.handleChange}
@@ -400,7 +534,8 @@ const Audition2 = () => {
                                 </div>
                             </div>
                             <Button
-                                disabled={!formik.values}
+                                // disabled={!formik.values}
+                                type="submit"
                                 sx={{
                                     marginRight: '24px',
                                     padding: '12px 60px',
@@ -408,31 +543,29 @@ const Audition2 = () => {
                                     color: '#0063F7',
                                     border: '1px solid #0063F7',
                                 }}
-                                onClick={handleClickNext}
+                            // onClick={handleClickNext}
                             >
                                 다음 단계
                             </Button>
                             <Button
                                 disabled={!formik.values}
                                 variant="contained"
-                                type="submit"
+                                // type="submit"
                                 color='primary'
                                 sx={{
                                     padding: '12px 60px'
                                 }}
                                 // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
-                                onClick={handleClickNext}
+                                onClick={handleClickSave}
 
                             >
                                 지원서 저장
                             </Button>
                         </div>
-
                     </form>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
-export default Audition2
