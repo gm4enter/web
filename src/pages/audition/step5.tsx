@@ -300,7 +300,7 @@ export const AuditionStep5 = () => {
 
                         <div>
                             <label>성별</label>
-                            <div>{data.dataStep2?.gender === '1' ? '남' : '여'}</div>
+                            <div>{data.dataStep2?.gender && (data.dataStep2?.gender === '1' ? '남' : '여')}</div>
                         </div>
 
                         <div>
@@ -363,7 +363,7 @@ export const AuditionStep5 = () => {
                         </div>
                         <div>
                             <label>혈액형</label>
-                            <div>혈액형 {data.dataStep3?.bloodGroup}</div>
+                            <div>{data.dataStep3?.bloodGroup && (`혈액형' ${data.dataStep3?.bloodGroup}`)}</div>
                         </div>
                         <div>
                             <label>사용가능언어및 수준 (모국어제외)</label>
