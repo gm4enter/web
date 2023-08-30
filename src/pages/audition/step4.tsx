@@ -1,14 +1,14 @@
 import { makeStyles } from '@mui/styles'
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
-import linkIcon from '../../asset/images/link-2.png'
+import UploadFileIcon from '../../asset/images/iconUploadFile.png'
 import background from '../../asset/images/Audition.png'
 import lineStep from '../../asset/images/lineStep.png'
 import { ROUTE } from '../../router/routes'
 import { Input } from '../../components/base/input/Input'
-import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useFormik, useField } from 'formik';
 import * as yup from 'yup';
 import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl, OutlinedInput, Select, useTheme, SelectChangeEvent, Theme, InputAdornment } from '@mui/material'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
@@ -184,20 +184,13 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 }
 
 const validationSchema = yup.object().shape({
-    email: yup
+    image: yup
         .string()
-        .email('Invalid email'),
-    // gender: yup
-    //     .string()
-    //     .required('Required'),
-    // name: yup
+        .required('Required'),
+    // video: yup
     //     .string()
     //     .required('Required'),
 
-    // password: yup
-    //   .string()
-    //   .min(8, 'Password should be of minimum 8 characters length')
-    //   .required('Password is required'),
 });
 
 export const AuditionStep4 = () => {
@@ -208,6 +201,11 @@ export const AuditionStep4 = () => {
     const { data, setData } = useAuditionContext();
 
     console.log('dataContext child 4', data);
+
+    const [image, setImage] = React.useState<File | null>(null);
+    const [imageOptional, setImageOptional] = React.useState<File | null>(null);
+    const [video, setVideo] = React.useState<File | null>(null);
+    const [videoOptional, setVideoOptional] = React.useState<File | null>(null);
 
     const handleClickNext = () => {
         console.log('handleClickNext');
@@ -225,42 +223,93 @@ export const AuditionStep4 = () => {
         navigate(ROUTE.HOME)
     }
 
+    //funcs change
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const fileInputRef2 = useRef<HTMLInputElement | null>(null);
+    const fileInputRef3 = useRef<HTMLInputElement | null>(null);
+    const fileInputRef4 = useRef<HTMLInputElement | null>(null);
+
+    const handleImageClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const handleImageOptionalClick = () => {
+        if (fileInputRef2.current) {
+            fileInputRef2.current.click();
+        }
+    }
+
+    const handleVideoClick = () => {
+        if (fileInputRef3.current) {
+            fileInputRef3.current.click();
+        }
+    };
+
+    const handleVideoOptionalClick = () => {
+        if (fileInputRef4.current) {
+            fileInputRef4.current.click();
+        }
+    }
+
+    const handleChangeImage = (e: any) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file: File = e.target.files[0];
+            setImage(file);
+            formik.setFieldValue('image', file.name);
+        }
+    }
+    const handleChangeImageOptional = (e: any) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file: File = e.target.files[0];
+            setImageOptional(file);
+            formik.setFieldValue('imageOptional', file.name);
+        }
+    }
+    const handleChangeVideo = (e: any) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file: File = e.target.files[0];
+            setVideo(file);
+            formik.setFieldValue('video', file.name);
+        }
+    }
+
+    const handleChangeVideoOptional = (e: any) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file: File = e.target.files[0];
+            setVideoOptional(file);
+            formik.setFieldValue('videoOptional', file.name);
+        }
+    }
+
+
     const formik = useFormik({
         initialValues: {
-            supportType: '',
-            height: '',
-            weight: '',
-            address: '',
-            address2: '',
-            job: '',
-            bloodGroup: '',
-            language: '',
-            hobby: '',
+            image: data.dataStep4?.image,
+            imageOptional: data.dataStep4?.imageOptional,
+            video: data.dataStep4?.video,
+            videoOptional: data.dataStep4?.videoOptional,
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            // alert(JSON.stringify(values, null, 2));
-            console.log('values', values);
+            console.log('handleClickSubmit');
+            console.log('values formik', values);
 
+            console.log('image', image);
+            console.log('imageOptional', imageOptional);
+            console.log('video', video);
+            console.log('videoOptional', videoOptional);
+            const dataStep4 = {
+                image: image,
+                imageOptional: imageOptional,
+                video: video,
+                videoOptional: videoOptional,
+            }
+            setData({ ...data, step: 5, dataStep4: dataStep4})
         },
     });
 
-    const theme = useTheme();
-    const [supportType, setSupportType] = React.useState<string[]>([]);
-
-    const handleChange = (event: SelectChangeEvent<typeof supportType>) => {
-        const {
-            target: { value },
-        } = event;
-        // On autofill we get a stringified value.
-        const supportTypes = typeof value === 'string' ? value.split(',') : value;
-
-        // Allow selecting a maximum of two items
-        if (supportTypes.length <= 2) {
-            setSupportType(supportTypes);
-            formik.setFieldValue('supportType', supportTypes);
-        }
-    };
 
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
@@ -336,11 +385,14 @@ export const AuditionStep4 = () => {
                                 <div style={{ display: 'flex', gap: '12px' }}>
                                     <TextField
                                         fullWidth
-                                        id="address"
-                                        name="address"
+                                        id="image"
+                                        name="image"
                                         variant="outlined"
                                         placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
                                         InputProps={{
+                                            style: {
+                                                backgroundColor: '#F7F7F7',
+                                            },
                                             endAdornment: (
                                                 <InputAdornment position="end">
                                                     <div
@@ -354,9 +406,9 @@ export const AuditionStep4 = () => {
                                                             alignItems: 'center',
                                                             gap: '4px',
                                                         }}
-                                                        onClick={() => { console.log('verify email') }}
+                                                        onClick={handleImageClick}
                                                     >
-                                                        <img src={linkIcon} alt='' />
+                                                        <img src={UploadFileIcon} alt='' />
                                                         파일첨부
                                                     </div>
                                                 </InputAdornment>
@@ -366,16 +418,22 @@ export const AuditionStep4 = () => {
                                             flex: 1,
                                             // backgroundColor: '#F7F7F7',
                                         }}
-                                        inputProps={{
-                                            style: {
-                                                backgroundColor: '#F7F7F7',
-                                            }
-                                        }}
-                                        value={formik.values.address}
-                                        onChange={formik.handleChange}
+                                        value={formik.values.image}
+                                        disabled
+                                        // onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        error={formik.touched.address && Boolean(formik.errors.address)}
-                                        helperText={formik.touched.address && formik.errors.address}
+                                        error={formik.touched.image && Boolean(formik.errors.image)}
+                                        helperText={formik.touched.image && formik.errors.image}
+                                    />
+                                    <input
+                                        id="image"
+                                        name="image"
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={handleChangeImage}
+                                        onBlur={formik.handleBlur}
+                                        ref={fileInputRef}
                                     />
                                 </div>
                                 <p>과도한 보정이나 어클로 찍은 사진이 아닌 정면 사진 원본으로 첨부 (10MB 아하) 파일</p>
@@ -388,11 +446,14 @@ export const AuditionStep4 = () => {
                                 <div style={{ display: 'flex', gap: '12px' }}>
                                     <TextField
                                         fullWidth
-                                        id="address"
-                                        name="address"
+                                        id="imageOptional"
+                                        name="imageOptional"
                                         variant="outlined"
                                         placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
                                         InputProps={{
+                                            style: {
+                                                backgroundColor: '#F7F7F7',
+                                            },
                                             endAdornment: (
                                                 <InputAdornment position="end">
                                                     <div
@@ -406,9 +467,9 @@ export const AuditionStep4 = () => {
                                                             alignItems: 'center',
                                                             gap: '4px',
                                                         }}
-                                                        onClick={() => { console.log('verify email') }}
+                                                        onClick={handleImageOptionalClick}
                                                     >
-                                                        <img src={linkIcon} alt='' />
+                                                        <img src={UploadFileIcon} alt='' />
                                                         파일첨부
                                                     </div>
                                                 </InputAdornment>
@@ -418,16 +479,21 @@ export const AuditionStep4 = () => {
                                             flex: 1,
                                             // backgroundColor: '#F7F7F7',
                                         }}
-                                        inputProps={{
-                                            style: {
-                                                backgroundColor: '#F7F7F7',
-                                            }
-                                        }}
-                                        value={formik.values.address}
-                                        onChange={formik.handleChange}
+                                        value={formik.values.imageOptional}
+                                        disabled
                                         onBlur={formik.handleBlur}
-                                        error={formik.touched.address && Boolean(formik.errors.address)}
-                                        helperText={formik.touched.address && formik.errors.address}
+                                        error={formik.touched.imageOptional && Boolean(formik.errors.imageOptional)}
+                                        helperText={formik.touched.imageOptional && formik.errors.imageOptional}
+                                    />
+                                    <input
+                                        id="imageOptional"
+                                        name="imageOptional"
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={handleChangeImageOptional}
+                                        onBlur={formik.handleBlur}
+                                        ref={fileInputRef2}
                                     />
                                 </div>
                                 <p>상반신, 정면, 전신 등 본인의 사진을 추가로 첨부</p>
@@ -436,62 +502,13 @@ export const AuditionStep4 = () => {
                         </div>
 
                         <div>
-                            <label>체중(kg)</label>
-                            <div style={{ display: 'flex', gap: '12px' }}>
-                                <TextField
-                                    fullWidth
-                                    id="address"
-                                    name="address"
-                                    variant="outlined"
-                                    placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <div
-                                                    style={{
-                                                        padding: '12px 16px',
-                                                        marginRight: '-8px',
-                                                        backgroundColor: '#000',
-                                                        color: '#fff',
-                                                        cursor: 'pointer',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: '4px',
-                                                    }}
-                                                    onClick={() => { console.log('verify email') }}
-                                                >
-                                                    <img src={linkIcon} alt='' />
-                                                    파일 첨부 (필수)
-                                                </div>
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    sx={{
-                                        flex: 1,
-                                        // backgroundColor: '#F7F7F7',
-                                    }}
-                                    inputProps={{
-                                        style: {
-                                            backgroundColor: '#F7F7F7',
-                                        }
-                                    }}
-                                    value={formik.values.address}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.address && Boolean(formik.errors.address)}
-                                    helperText={formik.touched.address && formik.errors.address}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label></label>
+                            <label>영상 첨부</label>
                             <div>
                                 <div style={{ display: 'flex', gap: '12px' }}>
                                     <TextField
                                         fullWidth
-                                        id="address"
-                                        name="address"
+                                        id="video"
+                                        name="video"
                                         variant="outlined"
                                         placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
                                         InputProps={{
@@ -508,9 +525,9 @@ export const AuditionStep4 = () => {
                                                             alignItems: 'center',
                                                             gap: '4px',
                                                         }}
-                                                        onClick={() => { console.log('verify email') }}
+                                                        onClick={handleVideoClick}
                                                     >
-                                                        <img src={linkIcon} alt='' />
+                                                        <img src={UploadFileIcon} alt='' />
                                                         파일 첨부 (필수)
                                                     </div>
                                                 </InputAdornment>
@@ -520,11 +537,77 @@ export const AuditionStep4 = () => {
                                             flex: 1,
                                             backgroundColor: '#F7F7F7',
                                         }}
-                                        value={formik.values.address}
-                                        onChange={formik.handleChange}
+                                        value={formik.values.video}
+                                        disabled
                                         onBlur={formik.handleBlur}
-                                        error={formik.touched.address && Boolean(formik.errors.address)}
-                                        helperText={formik.touched.address && formik.errors.address}
+                                        error={formik.touched.video && Boolean(formik.errors.video)}
+                                        helperText={formik.touched.video && formik.errors.video}
+                                    />
+                                    <input
+                                        id="video"
+                                        name="video"
+                                        type="file"
+                                        accept="video/*"
+                                        style={{ display: 'none' }}
+                                        onChange={handleChangeVideo}
+                                        onBlur={formik.handleBlur}
+                                        ref={fileInputRef3}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label></label>
+                            <div>
+                                <div style={{ display: 'flex', gap: '12px' }}>
+                                    <TextField
+                                        fullWidth
+                                        id="videoOptional"
+                                        name="videoOptional"
+                                        variant="outlined"
+                                        placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <div
+                                                        style={{
+                                                            padding: '12px 16px',
+                                                            marginRight: '-8px',
+                                                            backgroundColor: '#000',
+                                                            color: '#fff',
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px',
+                                                        }}
+                                                        onClick={handleVideoOptionalClick}
+                                                    >
+                                                        <img src={UploadFileIcon} alt='' />
+                                                        파일 첨부 (선택)
+                                                    </div>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        sx={{
+                                            flex: 1,
+                                            backgroundColor: '#F7F7F7',
+                                        }}
+                                        value={formik.values.videoOptional}
+                                        disabled
+                                        onBlur={formik.handleBlur}
+                                        error={formik.touched.videoOptional && Boolean(formik.errors.videoOptional)}
+                                        helperText={formik.touched.videoOptional && formik.errors.videoOptional}
+                                    />
+                                    <input
+                                        id="videoOptional"
+                                        name="videoOptional"
+                                        type="file"
+                                        accept="video/*"
+                                        style={{ display: 'none' }}
+                                        onChange={handleChangeVideoOptional}
+                                        onBlur={formik.handleBlur}
+                                        ref={fileInputRef4}
                                     />
                                 </div>
                                 <p>노래 / 랩 부문 : 1분30초 내에 밝은 곳, 얼굴 정면으로 삼 반신까지 나오게 촬영 한 노래 / 랩 영상 첨부</p>
@@ -547,13 +630,14 @@ export const AuditionStep4 = () => {
                             </div>
                             <Button
                                 disabled={!formik.values}
+                                type="submit"
                                 sx={{
                                     padding: '12px 60px',
                                     backgroundColor: '#fff',
                                     color: '#0063F7',
                                     border: '1px solid #0063F7',
                                 }}
-                                onClick={handleClickNext}
+                            // onClick={handleClickNext}
                             >
                                 다음 단계
                             </Button>

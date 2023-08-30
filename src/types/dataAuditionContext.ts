@@ -24,10 +24,30 @@ export interface DataAuditionContextType {
     hobby: string;
   };
   dataStep4?: {
-    name: string;
-    email: string;
-    mobileNumber: string;
-    password: string;
-    passwordConfirm: string;
+    image: File | null;
+    imageOptional?: File | null;
+    video: File | null;
+    videoOptional?: File | null;
   };
+}
+
+export interface DataApplyArtist {
+  name: string;
+  gender: string;
+  birthday: string | Date;
+  national: string;
+  phone_number: string;
+  email: string;
+  support_field: string;
+  height: number;
+  weight: number;
+  postal_code: string;
+  address: string;
+  career: string;
+  blood_group: string;
+  languages: string;
+  hobby: string;
+  profile_files?: string[];
+  files?: string[];
+  weight_files?: string[];
 }

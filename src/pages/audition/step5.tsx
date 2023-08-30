@@ -16,6 +16,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { dataSteps } from '../../constants'
 import { useAuditionContext } from '../../context/auditionContext'
+import axiosClient from '../../apis/axiosClient'
+import { useAppDispatch } from '../../app/hooks'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
+import { DataApplyArtist } from '../../types/dataAuditionContext'
+import { loadingActions } from '../../components/loading/loadingSlice'
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
@@ -176,8 +181,11 @@ export const AuditionStep5 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
     const location = useLocation()
-
+    const dispatch = useAppDispatch();
     const { data, setData } = useAuditionContext();
+
+    console.log('dataContext child 5', data);
+
     const handleClickNext = () => {
         console.log('handleClickNext');
     }
@@ -187,10 +195,112 @@ export const AuditionStep5 = () => {
         setData({ ...data, step: 4 })
     }
 
-    const handleClickSave = () => {
+    const handleClickSave = async () => {
         console.log('handleClickSave');
-        setData({ ...data, curentStepSave: 5 })
-        navigate(ROUTE.HOME)
+        console.log('dataContext', data);
+
+        try {
+            dispatch(loadingActions.openLoading())
+
+            const formDataImg = new FormData()
+            const formDataImgOptional = new FormData()
+            const formDataVideo = new FormData()
+            const formDataVideoOptional = new FormData()
+
+            data.dataStep4?.image && formDataImg.append('images', data.dataStep4?.image)
+            data.dataStep4?.imageOptional && formDataImgOptional.append('images', data.dataStep4?.imageOptional)
+            data.dataStep4?.video && formDataVideo.append('images', data.dataStep4?.video)
+            data.dataStep4?.videoOptional && formDataVideoOptional.append('images', data.dataStep4?.videoOptional)
+
+            // const [resImg, resImgOp, resVideo, resVideoOp] = await Promise.all([
+            //     data.dataStep4?.image && axiosClient.post('/upload', formDataImg, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     }),
+            //     data.dataStep4?.imageOptional && axiosClient.post('/upload', formDataImgOptional, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     }),
+            //     data.dataStep4?.video && axiosClient.post('/upload', formDataVideo, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     }),
+            //     data.dataStep4?.videoOptional && axiosClient.post('/upload', formDataVideoOptional, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     }),
+            // ])
+
+            // console.log('resImg: ', resImg);
+            // console.log('resImgOp: ', resImgOp);
+            // console.log('resVideo: ', resVideo);
+            // console.log('resVideoOp: ', resVideoOp);
+
+            const mockImg = {
+                img: 'images-1693388517249.jpg',
+                imgop: 'images-1693388517259.jpg',
+                video: [
+                    'images-1693388517291.mp4',
+                    'images-1693388517312.mp4',
+                ]
+            }
+
+            const dataStep5: DataApplyArtist = {
+                name: data.dataStep2?.name || '',
+                gender: (data.dataStep2?.gender === '1' ? '남' : '여'),
+                birthday: data.dataStep2?.dob || '',
+                national: data.dataStep2?.countries.join(', ') || '',
+                phone_number: data.dataStep2?.phoneNumber || '',
+                email: data.dataStep2?.email || '',
+                support_field: data.dataStep3?.supportType.join(', ') || '',
+                height: parseFloat(data.dataStep3?.height || '0'),
+                weight: parseFloat(data.dataStep3?.weight || '0'),
+                postal_code: data.dataStep3?.postalCode || '',
+                address: data.dataStep3?.address || '',
+                career: data.dataStep3?.job || '',
+                blood_group: data.dataStep3?.bloodGroup || '',
+                languages: String(data.dataStep3?.language) || '',
+                hobby: data.dataStep3?.hobby || '',
+                // profile_files: resImg && resImg.data.length > 0 ? [resImg.data[0]] : [],
+                // files: resImgOp && resImgOp.data.length > 0 ? [resImgOp.data[0]] : [],
+                // weight_files: [
+                //     resVideo && resVideo.data.length > 0 ? resVideo.data[0] : null,
+                //     resVideoOp && resVideoOp.data.length > 0 ? resVideoOp.data[0] : null,
+                // ],
+                profile_files: mockImg.img ? [mockImg.img] : [],
+                files: mockImg.imgop ? [mockImg.imgop] : [],
+                weight_files: mockImg.video,
+            }
+
+            console.log('dataStep5', dataStep5);
+
+            axiosClient.post('/apply', dataStep5)
+                .then(res => {
+                    console.log('res apply', res);
+                    dispatch(snackBarActions.setStateSnackBar({
+                        content: '성공',
+                        type: 'success',
+                    }))
+                })
+                .catch(err => {
+                    console.log('err', err);
+                    dispatch(snackBarActions.setStateSnackBar({
+                        content: '실패',
+                        type: 'error',
+                    }))
+                })
+                .finally(() => {
+                    dispatch(loadingActions.loadingSuccess())
+                })
+
+        } catch (error) {
+            console.log('error:', error)
+        }
+        
     }
 
     const formik = useFormik({
@@ -208,26 +318,48 @@ export const AuditionStep5 = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             // alert(JSON.stringify(values, null, 2));
-            console.log('values', values);
-
+            console.log('values formik', values);
+            console.log('dataContext', data);
         },
     });
 
-    const theme = useTheme();
-    const [supportType, setSupportType] = React.useState<string[]>([]);
-
-    const handleChange = (event: SelectChangeEvent<typeof supportType>) => {
-        const {
-            target: { value },
-        } = event;
-        // On autofill we get a stringified value.
-        const supportTypes = typeof value === 'string' ? value.split(',') : value;
-
-        // Allow selecting a maximum of two items
-        if (supportTypes.length <= 2) {
-            setSupportType(supportTypes);
-            formik.setFieldValue('supportType', supportTypes);
+    // Handler to open the selected file
+    const handleImageLinkClick = () => {
+        const imageFile = data.dataStep4?.image;
+        if (imageFile) {
+            const imageUrl = URL.createObjectURL(imageFile);
+            window.open(imageUrl); // Open the image in a new tab or window
         }
+    };
+
+    const handleFileLinkClick = (file: File | null) => {
+        if (file) {
+            const fileUrl = URL.createObjectURL(file);
+            window.open(fileUrl); // Open the file in a new tab or window
+        }
+    };
+
+    const getFileLink = (file: File | null | undefined, label: string) => {
+        if (file) {
+            return (
+                <div>
+                    <label>{label}</label>
+                    <div>
+                        <a href="#" onClick={() => handleFileLinkClick(file)}>
+                            {file?.name}
+                        </a>
+                    </div>
+                </div>
+            );
+        }
+        return (
+            <div>
+                <label>{label}</label>
+                <div>
+                    <a href="#"></a>
+                </div>
+            </div>
+        )
     };
 
     useLayoutEffect(() => {
@@ -247,8 +379,6 @@ export const AuditionStep5 = () => {
                             <>
                                 <div>
                                     <Checkbox
-                                        id="policy"
-                                        name="policy"
                                         icon={<RadioButtonUncheckedIcon />}
                                         checkedIcon={<CheckCircleIcon />}
                                         sx={
@@ -269,8 +399,6 @@ export const AuditionStep5 = () => {
                         ))}
                         <div>
                             <Checkbox
-                                id="policy"
-                                name="policy"
                                 icon={<RadioButtonUncheckedIcon />}
                                 checkedIcon={<CheckCircleIcon />}
                                 sx={{
@@ -311,12 +439,7 @@ export const AuditionStep5 = () => {
                         <div>
                             <label>국적</label>
                             <div>
-                                {data.dataStep2?.countries.map((item, index) => (
-                                    <React.Fragment key={index}>
-                                        {index > 0 && ', '}
-                                        {item}
-                                    </React.Fragment>
-                                ))}
+                                {data.dataStep2?.countries.join(', ')}
                             </div>
                         </div>
 
@@ -336,12 +459,8 @@ export const AuditionStep5 = () => {
 
                         <div>
                             <label>지원분야</label>
-                            <div> {data.dataStep3?.supportType.map((item, index) => (
-                                <React.Fragment key={index}>
-                                    {index > 0 && ', '}
-                                    {item}
-                                </React.Fragment>
-                            ))}
+                            <div>
+                                {data.dataStep3?.supportType.join(', ')}
                             </div>
                         </div>
 
@@ -363,7 +482,7 @@ export const AuditionStep5 = () => {
                         </div>
                         <div>
                             <label>혈액형</label>
-                            <div>{data.dataStep3?.bloodGroup && (`혈액형' ${data.dataStep3?.bloodGroup}`)}</div>
+                            <div>{data.dataStep3?.bloodGroup && (`혈액형 ${data.dataStep3?.bloodGroup}`)}</div>
                         </div>
                         <div>
                             <label>사용가능언어및 수준 (모국어제외)</label>
@@ -377,27 +496,10 @@ export const AuditionStep5 = () => {
                         <div className={classes.label}>
                             <label>지원서 입력</label>
                         </div>
-
-                        <div>
-                            <label>프로필 사진(필수)</label>
-                            <div>
-                                <a href='#'>Mypicture.png</a>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label>사진 첨부(선택)</label>
-                            <div>
-                                <a href='#'>Hipictureabcxyz.jpeg</a>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label>영상 첨부</label>
-                            <div>
-                                <a href='#'>auditonabcxyz.mp4</a>
-                            </div>
-                        </div>
+                        {getFileLink(data.dataStep4?.image, '프로필 사진(필수)')}
+                        {getFileLink(data.dataStep4?.imageOptional, '사진 첨부(선택)')}
+                        {getFileLink(data.dataStep4?.video, '사진 첨부(선택)')}
+                        {getFileLink(data.dataStep4?.videoOptional, '')}
 
                         <div className={classes.buttom_area}>
                             <div>
@@ -406,8 +508,8 @@ export const AuditionStep5 = () => {
                                     이전 단계
                                 </div>
                             </div>
-                            <Button
-                                disabled={!formik.values}
+                            {/* <Button
+                                // disabled={!formik.values}
                                 sx={{
                                     padding: '12px 60px',
                                     backgroundColor: '#fff',
@@ -417,15 +519,16 @@ export const AuditionStep5 = () => {
                                 onClick={handleClickNext}
                             >
                                 다음 단계
-                            </Button>
+                            </Button> */}
                             <Button
-                                disabled={!formik.values}
+                                // disabled={!formik.values}
                                 variant="contained"
-                                type="submit"
+                                // type="submit"
                                 color='primary'
                                 sx={{
                                     padding: '12px 60px'
                                 }}
+                                onClick={handleClickSave}
                             // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
                             >
                                 지원서 저장
