@@ -292,6 +292,9 @@ export const AuditionStep2 = () => {
     }, [location.pathname])
 
     useLayoutEffect(() => {
+        if(data.dataStep2?.countries){
+            setCountries(data.dataStep2?.countries)
+        }
         if (savedDataStep2Local) {
             const dataStep2Local = JSON.parse(savedDataStep2Local);
             if (dataStep2Local.gender) {
@@ -484,7 +487,7 @@ export const AuditionStep2 = () => {
                                         console.log('selected', selected);
 
                                         const selectedCountries = selected as string[];
-                                        
+
 
                                         if (selected.length === 0) {
                                             return <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>;
