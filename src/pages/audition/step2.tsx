@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
@@ -18,6 +18,8 @@ import { dataSteps } from '../../constants'
 import { useAuditionContext } from '../../context/auditionContext'
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
+import { useAppDispatch } from '../../app/hooks'
 
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
@@ -130,7 +132,13 @@ const useStyles = makeStyles({
                                 gap: '8px',
                                 cursor: 'pointer',
                             },
-                            '&>div:nth-of-type(2)': {
+                            '&>button': {
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                padding: '12px',
+                                fontSize: '16px',
+                                display: 'flex',
+                                gap: '8px',
                                 '&>img': {
                                     transform: 'scaleX(-1) scaleY(1)'
                                 },
@@ -206,11 +214,14 @@ export const AuditionStep2 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
     const location = useLocation()
+    const dispatch = useAppDispatch();
     const theme = useTheme();
     const [countries, setCountries] = React.useState<string[]>([]);
     const { data, setData } = useAuditionContext();
 
     console.log('dataContext child 2', data);
+
+    const savedDataStep2Local = localStorage.getItem('dataSaveStep2');
 
     const handleClickNext = () => {
         console.log('handleClickNext');
@@ -224,8 +235,14 @@ export const AuditionStep2 = () => {
 
     const handleClickSave = () => {
         console.log('handleClickSave');
-        setData({ ...data, curentStepSave: 2 })
-        navigate(ROUTE.HOME)
+        setData({ ...data, curentStepSave: 2, })
+        if (formik.values.gender || formik.values.name || formik.values.dob || formik.values.countries.length > 0 || formik.values.phoneNumber || formik.values.email) {
+            localStorage.setItem('dataSaveStep2', JSON.stringify(formik.values));
+            dispatch(snackBarActions.setStateSnackBar({
+                content: '성공',
+                type: 'success',
+            }))
+        }
     }
 
 
@@ -273,6 +290,31 @@ export const AuditionStep2 = () => {
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
     }, [location.pathname])
+
+    useLayoutEffect(() => {
+        if (savedDataStep2Local) {
+            const dataStep2Local = JSON.parse(savedDataStep2Local);
+            if (dataStep2Local.gender) {
+                formik.setFieldValue('gender', dataStep2Local.gender);
+            }
+            if (dataStep2Local.name) {
+                formik.setFieldValue('name', dataStep2Local.name);
+            }
+            if (dataStep2Local.dob) {
+                formik.setFieldValue('dob', dataStep2Local.dob);
+            }
+            if (dataStep2Local.countries) {
+                setCountries(dataStep2Local.countries);
+                formik.setFieldValue('countries', dataStep2Local.countries);
+            }
+            if (dataStep2Local.phoneNumber) {
+                formik.setFieldValue('phoneNumber', dataStep2Local.phoneNumber);
+            }
+            if (dataStep2Local.email) {
+                formik.setFieldValue('email', dataStep2Local.email);
+            }
+        }
+    }, []);
 
     return (
         <div className={classes.home_container}>
@@ -439,6 +481,8 @@ export const AuditionStep2 = () => {
                                     input={<OutlinedInput />}
                                     MenuProps={MenuProps}
                                     renderValue={(selected) => {
+                                        console.log('selected', selected);
+
                                         if (selected.length === 0) {
                                             return <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>;
                                         }
@@ -528,10 +572,10 @@ export const AuditionStep2 = () => {
                                     <img src={arrowBack} alt='' />
                                     이전 단계
                                 </div>
-                                <div onClick={handleClickNext}>
+                                <button type="submit">
                                     다음 단계
                                     <img src={arrowBack} alt='' />
-                                </div>
+                                </button>
                             </div>
                             <Button
                                 // disabled={!formik.values}
@@ -548,7 +592,7 @@ export const AuditionStep2 = () => {
                                 다음 단계
                             </Button>
                             <Button
-                                disabled={!formik.values}
+                                disabled={!(formik.values.gender || formik.values.name || formik.values.dob || formik.values.countries.length > 0 || formik.values.phoneNumber || formik.values.email)}
                                 variant="contained"
                                 // type="submit"
                                 color='primary'

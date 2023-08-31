@@ -17,6 +17,8 @@ import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { dataSteps } from '../../constants'
 import { useAuditionContext } from '../../context/auditionContext'
 import DaumPostcode, { useDaumPostcodePopup } from 'react-daum-postcode';
+import { useAppDispatch } from '../../app/hooks'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
@@ -190,10 +192,12 @@ const validationSchema = yup.object().shape({
         .min(1, 'At least one support type is required')
         .required('Required'),
     height: yup
-        .string()
+        .number()
+        .typeError('Must be a number')
         .required('Required'),
     weight: yup
-        .string()
+        .number()
+        .typeError('Must be a number')
         .required('Required'),
     postalCode: yup
         .string()
@@ -219,10 +223,13 @@ export const AuditionStep3 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
     const location = useLocation()
+    const dispatch = useAppDispatch();
 
     const { data, setData } = useAuditionContext();
 
     console.log('dataContext child 3', data);
+    const savedDataStep3Local = localStorage.getItem('dataSaveStep3');
+
 
     const handleClickNext = () => {
         console.log('handleClickNext');
@@ -237,7 +244,16 @@ export const AuditionStep3 = () => {
     const handleClickSave = () => {
         console.log('handleClickSave');
         setData({ ...data, curentStepSave: 3 })
-        navigate(ROUTE.HOME)
+        if (
+            formik.values.supportType.length > 0 || formik.values.address || formik.values.bloodGroup ||
+            formik.values.height || formik.values.hobby || formik.values.job || formik.values.language ||
+            formik.values.postalCode || formik.values.weight || formik.values.supportType.length > 0) {
+            localStorage.setItem('dataSaveStep3', JSON.stringify(formik.values));
+            dispatch(snackBarActions.setStateSnackBar({
+                content: '성공',
+                type: 'success',
+            }))
+        }
     }
 
 
@@ -313,6 +329,39 @@ export const AuditionStep3 = () => {
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
     }, [location.pathname])
+
+    useLayoutEffect(() => {
+        if (savedDataStep3Local) {
+            const dataStep3Local = JSON.parse(savedDataStep3Local);
+            if (dataStep3Local.supportType) {
+                formik.setFieldValue('supportType', dataStep3Local.supportType);
+            }
+            if (dataStep3Local.height) {
+                formik.setFieldValue('height', dataStep3Local.height);
+            }
+            if (dataStep3Local.weight) {
+                formik.setFieldValue('weight', dataStep3Local.weight);
+            }
+            if (dataStep3Local.postalCode) {
+                formik.setFieldValue('postalCode', dataStep3Local.postalCode);
+            }
+            if (dataStep3Local.address) {
+                formik.setFieldValue('address', dataStep3Local.address);
+            }
+            if (dataStep3Local.job) {
+                formik.setFieldValue('job', dataStep3Local.job);
+            }
+            if (dataStep3Local.bloodGroup) {
+                formik.setFieldValue('bloodGroup', dataStep3Local.bloodGroup);
+            }
+            if (dataStep3Local.language) {
+                formik.setFieldValue('language', dataStep3Local.language);
+            }
+            if (dataStep3Local.hobby) {
+                formik.setFieldValue('hobby', dataStep3Local.hobby);
+            }
+        }
+    }, []);
 
     return (
         <div className={classes.home_container}>
@@ -684,7 +733,9 @@ export const AuditionStep3 = () => {
                                 다음 단계
                             </Button>
                             <Button
-                                disabled={!formik.values}
+                                disabled={!(formik.values.supportType.length > 0 || formik.values.address || formik.values.bloodGroup ||
+                                    formik.values.height || formik.values.hobby || formik.values.job || formik.values.language ||
+                                    formik.values.postalCode || formik.values.weight || formik.values.supportType.length > 0)}
                                 variant="contained"
                                 color='primary'
                                 sx={{

@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import React, { useLayoutEffect, useRef } from 'react'
+import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
@@ -16,6 +16,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { dataSteps } from '../../constants'
 import { useAuditionContext } from '../../context/auditionContext'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
+import { useAppDispatch } from '../../app/hooks'
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
@@ -197,10 +199,15 @@ export const AuditionStep4 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
     const location = useLocation()
-
+    const dispatch = useAppDispatch();
     const { data, setData } = useAuditionContext();
 
     console.log('dataContext child 4', data);
+    const savedDataStep4Local = localStorage.getItem('dataSaveStep4');
+
+    console.log('GET savedDataStep4Local', savedDataStep4Local);
+    
+
 
     const [image, setImage] = React.useState<File | null>(null);
     const [imageOptional, setImageOptional] = React.useState<File | null>(null);
@@ -220,7 +227,22 @@ export const AuditionStep4 = () => {
     const handleClickSave = () => {
         console.log('handleClickSave');
         setData({ ...data, curentStepSave: 4 })
-        navigate(ROUTE.HOME)
+        if (formik.values.image || formik.values.imageOptional || formik.values.video || formik.values.videoOptional ) {
+            const dataStep4 = {
+                image: image,
+                imageOptional: imageOptional,
+                video: video,
+                videoOptional: videoOptional,
+            }
+            console.log('dataStep411111', dataStep4);
+            
+            localStorage.setItem('dataSaveStep4', JSON.stringify(dataStep4));
+            dispatch(snackBarActions.setStateSnackBar({
+                content: '성공',
+                type: 'success',
+            }))
+        }
+
     }
 
     //funcs change
@@ -306,7 +328,7 @@ export const AuditionStep4 = () => {
                 video: video,
                 videoOptional: videoOptional,
             }
-            setData({ ...data, step: 5, dataStep4: dataStep4})
+            setData({ ...data, step: 5, dataStep4: dataStep4 })
         },
     });
 
@@ -314,6 +336,31 @@ export const AuditionStep4 = () => {
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
     }, [location.pathname])
+
+    useEffect(() => {
+        if (data.dataStep4) {
+            if (data.dataStep4.image) {
+              setImage(data.dataStep4.image);
+              formik.setFieldValue('image', data.dataStep4.image.name);
+            }
+            
+            if (data.dataStep4.imageOptional) {
+              setImageOptional(data.dataStep4.imageOptional);
+              formik.setFieldValue('imageOptional', data.dataStep4.imageOptional.name);
+            }
+            
+            if (data.dataStep4.video) {
+              setVideo(data.dataStep4.video);
+              formik.setFieldValue('video', data.dataStep4.video.name);
+            }
+            
+            if (data.dataStep4.videoOptional) {
+              setVideoOptional(data.dataStep4.videoOptional);
+              formik.setFieldValue('videoOptional', data.dataStep4.videoOptional.name);
+            }
+          }
+
+    }, [])
 
     return (
         <div className={classes.home_container}>
@@ -644,12 +691,11 @@ export const AuditionStep4 = () => {
                             <Button
                                 disabled={!formik.values}
                                 variant="contained"
-                                type="submit"
                                 color='primary'
                                 sx={{
                                     padding: '12px 60px'
                                 }}
-                                onClick={handleClickNext}
+                                onClick={handleClickSave}
 
                             // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
                             >

@@ -12,6 +12,8 @@ import * as yup from 'yup';
 import { Button, MenuItem, TextField, Checkbox } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { useAppDispatch } from '../../app/hooks'
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
@@ -183,7 +185,7 @@ const validationSchema = yup.object().shape({
 const Contact = () => {
   const classes = useStyles()
   const navigate = useNavigate()
-
+  const dispatch = useAppDispatch()
   const handleClickAbout = () => {
     navigate(ROUTE.ABOUT)
   }
@@ -205,7 +207,13 @@ const Contact = () => {
     onSubmit: (values) => {
       // alert(JSON.stringify(values, null, 2));
       console.log('values', values);
-
+      dispatch(snackBarActions.setStateSnackBar({
+        content: '성공',
+        type: 'success',
+      }))
+      // setTimeout(() => {
+      //   navigate(ROUTE.HOME)
+      // }, 2000)
     },
   });
 
