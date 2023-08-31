@@ -334,6 +334,7 @@ export const AuditionStep3 = () => {
         if (savedDataStep3Local) {
             const dataStep3Local = JSON.parse(savedDataStep3Local);
             if (dataStep3Local.supportType) {
+                setSupportType(dataStep3Local.supportType);
                 formik.setFieldValue('supportType', dataStep3Local.supportType);
             }
             if (dataStep3Local.height) {
@@ -735,7 +736,7 @@ export const AuditionStep3 = () => {
                             <Button
                                 disabled={!(formik.values.supportType.length > 0 || formik.values.address || formik.values.bloodGroup ||
                                     formik.values.height || formik.values.hobby || formik.values.job || formik.values.language ||
-                                    formik.values.postalCode || formik.values.weight || formik.values.supportType.length > 0)}
+                                    formik.values.postalCode || formik.values.weight )}
                                 variant="contained"
                                 color='primary'
                                 sx={{

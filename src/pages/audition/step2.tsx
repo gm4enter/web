@@ -483,6 +483,9 @@ export const AuditionStep2 = () => {
                                     renderValue={(selected) => {
                                         console.log('selected', selected);
 
+                                        const selectedCountries = selected as string[];
+                                        
+
                                         if (selected.length === 0) {
                                             return <em>지원하고자 하는 분야를 선택하세요 (최대 2개) </em>;
                                         }

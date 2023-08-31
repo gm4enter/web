@@ -285,6 +285,9 @@ export const AuditionStep5 = () => {
                         content: '성공',
                         type: 'success',
                     }))
+                    localStorage.removeItem('dataSaveStep2');
+                    localStorage.removeItem('dataSaveStep3');
+                    localStorage.removeItem('dataSaveStep4');
                 })
                 .catch(err => {
                     console.log('err', err);
