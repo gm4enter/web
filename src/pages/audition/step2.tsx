@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
@@ -20,6 +20,10 @@ import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 import { useAppDispatch } from '../../app/hooks'
+import DatePicker from 'react-date-picker'
+
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
 
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
@@ -139,6 +143,14 @@ const useStyles = makeStyles({
                                 fontSize: '16px',
                                 display: 'flex',
                                 gap: '8px',
+                                cursor: 'pointer',
+                                alignItems: 'center',
+                                '&>p': {
+                                    margin: '0',
+                                    padding: '0',
+                                    color: '#18181B',
+                                    fontSize: '16px',
+                                },
                                 '&>img': {
                                     transform: 'scaleX(-1) scaleY(1)'
                                 },
@@ -149,6 +161,10 @@ const useStyles = makeStyles({
             },
         },
     },
+    date_picker:{
+        height:"56px",
+        backgroundColor: '#F7F7F7',
+    }
 });
 
 const ITEM_HEIGHT = 48;
@@ -162,7 +178,7 @@ const MenuProps = {
     },
 };
 
-const countriesTypes = [
+export const countriesTypes = [
     '한국',
     '미국',
     '일본',
@@ -209,6 +225,9 @@ const validationSchema = yup.object().shape({
     //   .required('Password is required'),
 });
 
+type ValuePiece = Date | null;
+
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export const AuditionStep2 = () => {
     const classes = useStyles()
@@ -216,8 +235,10 @@ export const AuditionStep2 = () => {
     const location = useLocation()
     const dispatch = useAppDispatch();
     const theme = useTheme();
-    const [countries, setCountries] = React.useState<string[]>([]);
+    const [countries, setCountries] = useState<string[]>([]);
     const { data, setData } = useAuditionContext();
+
+    const [datePicker, SetDatePicker] = useState<Value>(new Date())
 
     console.log('dataContext child 2', data);
 
@@ -237,7 +258,19 @@ export const AuditionStep2 = () => {
         console.log('handleClickSave');
         setData({ ...data, curentStepSave: 2, })
         if (formik.values.gender || formik.values.name || formik.values.dob || formik.values.countries.length > 0 || formik.values.phoneNumber || formik.values.email) {
-            localStorage.setItem('dataSaveStep2', JSON.stringify(formik.values));
+            console.log('formik.values', formik.values);
+            const delimiter = ', '; // You can use any delimiter you prefer
+
+            const stringCountries = formik.values.countries.join(delimiter);
+            console.log('stringCountries', stringCountries);
+
+            const dataSave = {
+                ...formik.values,
+                countries: stringCountries,
+            }
+            console.log('dataSave', dataSave);
+
+            localStorage.setItem('dataSaveStep2', JSON.stringify(dataSave));
             dispatch(snackBarActions.setStateSnackBar({
                 content: '성공',
                 type: 'success',
@@ -283,6 +316,7 @@ export const AuditionStep2 = () => {
             // alert(JSON.stringify(values, null, 2));
             console.log('values formik', values);
             console.log('handleClickNext');
+            handleClickSave();
             setData({ ...data, step: 3, dataStep2: values })
         },
     });
@@ -292,7 +326,7 @@ export const AuditionStep2 = () => {
     }, [location.pathname])
 
     useLayoutEffect(() => {
-        if(data.dataStep2?.countries){
+        if (data.dataStep2?.countries) {
             setCountries(data.dataStep2?.countries)
         }
         if (savedDataStep2Local) {
@@ -307,8 +341,12 @@ export const AuditionStep2 = () => {
                 formik.setFieldValue('dob', dataStep2Local.dob);
             }
             if (dataStep2Local.countries) {
-                setCountries(dataStep2Local.countries);
-                formik.setFieldValue('countries', dataStep2Local.countries);
+                console.log('local countries', dataStep2Local.countries);
+                const delimiter = ", "; // This should match the delimiter used in your input string
+
+                const resultArray = dataStep2Local.countries.split(delimiter);
+                setCountries(resultArray);
+                formik.setFieldValue('countries', resultArray);
             }
             if (dataStep2Local.phoneNumber) {
                 formik.setFieldValue('phoneNumber', dataStep2Local.phoneNumber);
@@ -447,6 +485,13 @@ export const AuditionStep2 = () => {
                                 error={formik.touched.dob && Boolean(formik.errors.dob)}
                                 helperText={formik.touched.dob && formik.errors.dob}
                             />
+                            {/* <DatePicker
+                                id="dob"
+                                name="dob"
+                                value={datePicker}
+                                onChange={SetDatePicker}
+                                className={classes.date_picker}
+                            /> */}
                         </div>
 
                         {/* <div>
@@ -579,15 +624,30 @@ export const AuditionStep2 = () => {
                                     이전 단계
                                 </div>
                                 <button type="submit">
-                                    다음 단계
+                                    <p>다음 단계</p>
                                     <img src={arrowBack} alt='' />
                                 </button>
                             </div>
                             <Button
+                                disabled={!(formik.values.gender || formik.values.name || formik.values.dob || formik.values.countries.length > 0 || formik.values.phoneNumber || formik.values.email)}
+                                variant="contained"
+                                // type="submit"
+                                color='primary'
+                                sx={{
+                                    padding: '12px 60px',
+                                    marginRight: '24px',
+                                }}
+                                // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
+                                onClick={handleClickSave}
+
+                            >
+                                다음
+                            </Button>
+                            <Button
                                 // disabled={!formik.values}
                                 type="submit"
                                 sx={{
-                                    marginRight: '24px',
+
                                     padding: '12px 60px',
                                     backgroundColor: '#fff',
                                     color: '#0063F7',
@@ -596,20 +656,6 @@ export const AuditionStep2 = () => {
                             // onClick={handleClickNext}
                             >
                                 다음 단계
-                            </Button>
-                            <Button
-                                disabled={!(formik.values.gender || formik.values.name || formik.values.dob || formik.values.countries.length > 0 || formik.values.phoneNumber || formik.values.email)}
-                                variant="contained"
-                                // type="submit"
-                                color='primary'
-                                sx={{
-                                    padding: '12px 60px'
-                                }}
-                                // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
-                                onClick={handleClickSave}
-
-                            >
-                                지원서 저장
                             </Button>
                         </div>
                     </form>

@@ -147,7 +147,21 @@ const useStyles = makeStyles({
                 gap: '8px',
                 cursor: 'pointer',
             },
-            '&>div:nth-of-type(2)': {
+            '&>button': {
+                backgroundColor: 'transparent',
+                border: 'none',
+                padding: '12px',
+                fontSize: '16px',
+                display: 'flex',
+                gap: '8px',
+                cursor: 'pointer',
+                alignItems: 'center',
+                '&>p': {
+                    margin: '0',
+                    padding: '0',
+                    color: '#18181B',
+                    fontSize: '16px',
+                },
                 '&>img': {
                     transform: 'scaleX(-1) scaleY(1)'
                 },
@@ -189,9 +203,9 @@ const validationSchema = yup.object().shape({
     image: yup
         .string()
         .required('Required'),
-    // video: yup
-    //     .string()
-    //     .required('Required'),
+    video: yup
+        .string()
+        .required('Required'),
 
 });
 
@@ -206,7 +220,7 @@ export const AuditionStep4 = () => {
     const savedDataStep4Local = localStorage.getItem('dataSaveStep4');
 
     console.log('GET savedDataStep4Local', savedDataStep4Local);
-    
+
 
 
     const [image, setImage] = React.useState<File | null>(null);
@@ -227,7 +241,7 @@ export const AuditionStep4 = () => {
     const handleClickSave = () => {
         console.log('handleClickSave');
         setData({ ...data, curentStepSave: 4 })
-        if (formik.values.image || formik.values.imageOptional || formik.values.video || formik.values.videoOptional ) {
+        if (formik.values.image || formik.values.imageOptional || formik.values.video || formik.values.videoOptional) {
             const dataStep4 = {
                 image: image,
                 imageOptional: imageOptional,
@@ -235,7 +249,7 @@ export const AuditionStep4 = () => {
                 videoOptional: videoOptional,
             }
             console.log('dataStep411111', dataStep4);
-            
+
             localStorage.setItem('dataSaveStep4', JSON.stringify(dataStep4));
             dispatch(snackBarActions.setStateSnackBar({
                 content: '성공',
@@ -340,25 +354,25 @@ export const AuditionStep4 = () => {
     useEffect(() => {
         if (data.dataStep4) {
             if (data.dataStep4.image) {
-              setImage(data.dataStep4.image);
-              formik.setFieldValue('image', data.dataStep4.image.name);
+                setImage(data.dataStep4.image);
+                formik.setFieldValue('image', data.dataStep4.image.name);
             }
-            
+
             if (data.dataStep4.imageOptional) {
-              setImageOptional(data.dataStep4.imageOptional);
-              formik.setFieldValue('imageOptional', data.dataStep4.imageOptional.name);
+                setImageOptional(data.dataStep4.imageOptional);
+                formik.setFieldValue('imageOptional', data.dataStep4.imageOptional.name);
             }
-            
+
             if (data.dataStep4.video) {
-              setVideo(data.dataStep4.video);
-              formik.setFieldValue('video', data.dataStep4.video.name);
+                setVideo(data.dataStep4.video);
+                formik.setFieldValue('video', data.dataStep4.video.name);
             }
-            
+
             if (data.dataStep4.videoOptional) {
-              setVideoOptional(data.dataStep4.videoOptional);
-              formik.setFieldValue('videoOptional', data.dataStep4.videoOptional.name);
+                setVideoOptional(data.dataStep4.videoOptional);
+                formik.setFieldValue('videoOptional', data.dataStep4.videoOptional.name);
             }
-          }
+        }
 
     }, [])
 
@@ -670,11 +684,25 @@ export const AuditionStep4 = () => {
                                     <img src={arrowBack} alt='' />
                                     이전 단계
                                 </div>
-                                <div onClick={handleClickNext}>
-                                    다음 단계
+                                <button type="submit">
+                                    <p>다음 단계</p>
                                     <img src={arrowBack} alt='' />
-                                </div>
+                                </button>
                             </div>
+                            <Button
+                                disabled={!formik.values}
+                                variant="contained"
+                                color='primary'
+                                sx={{
+                                    padding: '12px 60px',
+                                    marginRight: '24px',
+                                }}
+                                onClick={handleClickSave}
+
+                            // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
+                            >
+                                지원
+                            </Button>
                             <Button
                                 disabled={!formik.values}
                                 type="submit"
@@ -687,19 +715,6 @@ export const AuditionStep4 = () => {
                             // onClick={handleClickNext}
                             >
                                 다음 단계
-                            </Button>
-                            <Button
-                                disabled={!formik.values}
-                                variant="contained"
-                                color='primary'
-                                sx={{
-                                    padding: '12px 60px'
-                                }}
-                                onClick={handleClickSave}
-
-                            // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
-                            >
-                                지원서 저장
                             </Button>
                         </div>
 

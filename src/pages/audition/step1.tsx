@@ -443,7 +443,7 @@ export const AuditionStep1 = () => {
               sx={{ padding: '12px 60px', backgroundColor: '#0063F7', color: '#fff', marginTop: '12px', }}
               onClick={handleClickNext}
             >
-              다음 단계
+              다음
             </Button>
           </div>
         </div>

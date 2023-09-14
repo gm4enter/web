@@ -1,16 +1,17 @@
 import { makeStyles } from '@mui/styles'
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
 import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
 import background from '../../asset/images/Audition.png'
 import lineStep from '../../asset/images/lineStep.png'
+import succcess from '../../asset/images/success.png'
 import { ROUTE } from '../../router/routes'
 import { Input } from '../../components/base/input/Input'
 import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import * as yup from 'yup';
-import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl, OutlinedInput, Select, useTheme, SelectChangeEvent, Theme } from '@mui/material'
+import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl, OutlinedInput, Select, useTheme, SelectChangeEvent, Theme, Modal } from '@mui/material'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
@@ -156,7 +157,34 @@ const useStyles = makeStyles({
                 },
             },
         },
-    }
+    },
+    modal: {
+        position: 'absolute',
+        left: '40%',
+        top: '30%',
+        width: '308px',
+        padding: '16px 20px',
+        backgroundColor: '#fff',
+        borderRadius: '10px',
+        boxShadow: '0px 2px 16px rgba(0, 0, 0, 0.25)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '16px',
+        '&>p': {
+            margin: '0',
+            padding: '0',
+        },
+        '&>p:nth-of-type(1)': {
+            color: '#18181B',
+            fontSize: '36px',
+            fontWeight: 'bold',
+        },
+
+        '@media (max-width: 768px)': {
+            right: '16px',
+        },
+    },
 });
 
 const validationSchema = yup.object().shape({
@@ -184,7 +212,12 @@ export const AuditionStep5 = () => {
     const dispatch = useAppDispatch();
     const { data, setData } = useAuditionContext();
 
+    const [isSuccess, setIsSuccess] = useState(false)
+    const [openModal, setOpenModal] = useState(false)
+
     console.log('dataContext child 5', data);
+
+    const handleCloseModal = () => setOpenModal(false);
 
     const handleClickNext = () => {
         console.log('handleClickNext');
@@ -288,6 +321,8 @@ export const AuditionStep5 = () => {
                     localStorage.removeItem('dataSaveStep2');
                     localStorage.removeItem('dataSaveStep3');
                     localStorage.removeItem('dataSaveStep4');
+                    setIsSuccess(true)
+                    setOpenModal(true)
                 })
                 .catch(err => {
                     console.log('err', err);
@@ -295,6 +330,8 @@ export const AuditionStep5 = () => {
                         content: '실패',
                         type: 'error',
                     }))
+                    setIsSuccess(false)
+                    setOpenModal(true)
                 })
                 .finally(() => {
                     dispatch(loadingActions.loadingSuccess())
@@ -303,7 +340,7 @@ export const AuditionStep5 = () => {
         } catch (error) {
             console.log('error:', error)
         }
-        
+
     }
 
     const formik = useFormik({
@@ -511,36 +548,62 @@ export const AuditionStep5 = () => {
                                     이전 단계
                                 </div>
                             </div>
-                            {/* <Button
-                                // disabled={!formik.values}
+                            <Button
+                                variant="contained"
+                                color='primary'
                                 sx={{
                                     padding: '12px 60px',
-                                    backgroundColor: '#fff',
-                                    color: '#0063F7',
-                                    border: '1px solid #0063F7',
+                                    marginRight: '24px',
                                 }}
-                                onClick={handleClickNext}
+                            // onClick={handleClickNext}
                             >
                                 다음 단계
-                            </Button> */}
+                            </Button>
                             <Button
                                 // disabled={!formik.values}
                                 variant="contained"
                                 // type="submit"
-                                color='primary'
                                 sx={{
-                                    padding: '12px 60px'
+                                    padding: '12px 60px',
+                                    background: '#00AB07'
                                 }}
                                 onClick={handleClickSave}
                             // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
                             >
-                                지원서 저장
+                                제출
                             </Button>
                         </div>
 
                     </form>
                 </div>
             </div>
+            <Modal
+                open={openModal}
+                onClose={handleCloseModal}
+                disableAutoFocus
+            // sx={
+            //     {
+            //         '.MuiModal-backdrop': {
+            //             backgroundColor: 'transparent',
+            //         },
+            //     }
+            // }
+            >
+                <div className={classes.modal}>
+                    <img src={isSuccess ? succcess : succcess} alt='' />
+                    <p>{isSuccess ? 'Success' : 'Failure'}</p>
+                    <p>{isSuccess ? 'Your request has been sent successfully' : 'Your request has failed to send'}</p>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            padding: '12px 60px',
+                        }}
+                        onClick={handleCloseModal}
+                    >
+                        Okey
+                    </Button>
+                </div>
+            </Modal>
         </div>
     )
 }

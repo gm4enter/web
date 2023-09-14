@@ -19,6 +19,7 @@ import { useAuditionContext } from '../../context/auditionContext'
 import DaumPostcode, { useDaumPostcodePopup } from 'react-daum-postcode';
 import { useAppDispatch } from '../../app/hooks'
 import { snackBarActions } from '../../components/snackbar/snackbarSlice'
+import { countriesTypes } from './step2'
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
@@ -148,7 +149,21 @@ const useStyles = makeStyles({
                 gap: '8px',
                 cursor: 'pointer',
             },
-            '&>div:nth-of-type(2)': {
+            '&>button': {
+                backgroundColor: 'transparent',
+                border: 'none',
+                padding: '12px',
+                fontSize: '16px',
+                display: 'flex',
+                gap: '8px',
+                cursor: 'pointer',
+                alignItems: 'center',
+                '&>p': {
+                    margin: '0',
+                    padding: '0',
+                    color: '#18181B',
+                    fontSize: '16px',
+                },
                 '&>img': {
                     transform: 'scaleX(-1) scaleY(1)'
                 },
@@ -169,13 +184,13 @@ const MenuProps = {
 };
 
 const supportTypes = [
-    // '선택',
-    '(Singing)',
-    '(Rapping)',
-    '(Dancing)',
+    '보컬 (Singing)',
+    '랩 (Rapping)',
+    '댄스 (Dancing)',
     '연기 (Acting)',
     '모델 (Model)'
 ]
+
 
 function getStyles(name: string, personName: readonly string[], theme: Theme) {
     return {
@@ -248,7 +263,19 @@ export const AuditionStep3 = () => {
             formik.values.supportType.length > 0 || formik.values.address || formik.values.bloodGroup ||
             formik.values.height || formik.values.hobby || formik.values.job || formik.values.language ||
             formik.values.postalCode || formik.values.weight || formik.values.supportType.length > 0) {
-            localStorage.setItem('dataSaveStep3', JSON.stringify(formik.values));
+            console.log('formik.values', formik.values);
+            const delimiter = ', '; // You can use any delimiter you prefer
+
+            const stringSupportType = formik.values.supportType.join(delimiter);
+            console.log('stringSupportType', stringSupportType);
+
+            const dataSave = {
+                ...formik.values,
+                supportType: stringSupportType,
+            }
+            console.log('dataSave', dataSave);
+
+            localStorage.setItem('dataSaveStep3', JSON.stringify(dataSave));
             dispatch(snackBarActions.setStateSnackBar({
                 content: '성공',
                 type: 'success',
@@ -273,6 +300,7 @@ export const AuditionStep3 = () => {
         onSubmit: (values) => {
             console.log('values formik', values);
             console.log('handleClickSubmit');
+            handleClickSave();
             setData({ ...data, step: 4, dataStep3: values })
         },
     });
@@ -337,8 +365,12 @@ export const AuditionStep3 = () => {
         if (savedDataStep3Local) {
             const dataStep3Local = JSON.parse(savedDataStep3Local);
             if (dataStep3Local.supportType) {
-                setSupportType(dataStep3Local.supportType);
-                formik.setFieldValue('supportType', dataStep3Local.supportType);
+                console.log('local countries', dataStep3Local.supportType);
+                const delimiter = ", "; // This should match the delimiter used in your input string
+
+                const resultArray = dataStep3Local.supportType.split(delimiter);
+                setSupportType(resultArray);
+                formik.setFieldValue('supportType', resultArray);
             }
             if (dataStep3Local.height) {
                 formik.setFieldValue('height', dataStep3Local.height);
@@ -525,16 +557,15 @@ export const AuditionStep3 = () => {
 
                         <div>
                             <label>주소</label>
-                            {/* <DaumPostcode onComplete={handleComplete} />
-                            <p>Selected Address:{address}</p> */}
-
-                            <div style={{ display: 'flex', gap: '12px' }}>
-                                <TextField
+                            <div>
+                                <div style={{ display: 'flex', gap: '12px' }}>
+                                    {/* <TextField
                                     // fullWidth
                                     id="postalCode"
                                     name="postalCode"
                                     variant="outlined"
                                     placeholder='우편번호'
+                                    // disabled
                                     sx={{
                                         flex: 1,
                                         // backgroundColor: '#F7F7F7',
@@ -550,21 +581,39 @@ export const AuditionStep3 = () => {
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.postalCode && Boolean(formik.errors.postalCode)}
                                     helperText={formik.touched.postalCode && formik.errors.postalCode}
-                                />
-                                <Button
-                                    disabled={!formik.values}
-                                    variant="contained"
-                                    color='primary'
-                                    sx={{
-                                        padding: '12px 16px',
-                                        backgroundColor: '#000',
-                                        color: '#fff',
-                                        height: '56px'
-                                    }}
-                                    onClick={handleClickPostalCode}
-                                >
-                                    우편번호 찾기 (대한민국 한정)
-                                </Button>
+                                /> */}
+                                    <div
+                                        onClick={handleClickPostalCode}
+                                        style={{
+                                            flex: 1,
+                                            backgroundColor: '#F7F7F7',
+                                            zIndex: 1,
+                                            cursor: 'pointer', // Add this style to indicate that it's clickable
+                                            display: 'flex',
+                                            alignItems: 'center', // Center text vertically
+                                            padding: '0 12px', // Add padding to match TextField
+                                            border: '1px solid #ccc', // Add border to make it look like a TextField
+                                        }}
+                                        onBlur={formik.handleBlur}
+                                    >
+                                        {formik.values.postalCode}
+                                    </div>
+                                    <Button
+                                        disabled={!formik.values}
+                                        variant="contained"
+                                        color='primary'
+                                        sx={{
+                                            padding: '12px 16px',
+                                            backgroundColor: '#000',
+                                            color: '#fff',
+                                            height: '56px'
+                                        }}
+                                        onClick={handleClickPostalCode}
+                                    >
+                                        우편번호 찾기 (대한민국 한정)
+                                    </Button>
+                                </div>
+                                {/* <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.supportType && formik.errors.supportType}</p> */}
                             </div>
                         </div>
 
@@ -679,8 +728,16 @@ export const AuditionStep3 = () => {
                                         backgroundColor: '#F7F7F7',
                                     }}
                                 >
-                                    <MenuItem key={1} value={1}> 1 </MenuItem>
-                                    <MenuItem key={2} value={2}> 2 </MenuItem>
+                                    {countriesTypes.map((type) => (
+                                        <MenuItem
+                                            key={type}
+                                            value={type}
+                                        // style={getStyles(type, countries, theme)}
+                                        // disabled={countries.length >= 2 && !countries.includes(type)}
+                                        >
+                                            {type}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                                 <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.language && formik.errors.language}</p>
                             </div>
@@ -719,11 +776,26 @@ export const AuditionStep3 = () => {
                                     <img src={arrowBack} alt='' />
                                     이전 단계
                                 </div>
-                                <div onClick={handleClickNext}>
-                                    다음 단계
+                                <button type="submit">
+                                    <p>다음 단계</p>
                                     <img src={arrowBack} alt='' />
-                                </div>
+                                </button>
                             </div>
+                            <Button
+                                disabled={!(formik.values.supportType.length > 0 || formik.values.address || formik.values.bloodGroup ||
+                                    formik.values.height || formik.values.hobby || formik.values.job || formik.values.language ||
+                                    formik.values.postalCode || formik.values.weight)}
+                                variant="contained"
+                                color='primary'
+                                sx={{
+                                    padding: '12px 60px',
+                                    marginRight: '24px',
+                                }}
+                                onClick={handleClickSave}
+                            // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
+                            >
+                                저장
+                            </Button>
                             <Button
                                 // disabled={!formik.values}
                                 type="submit"
@@ -735,20 +807,6 @@ export const AuditionStep3 = () => {
                                 }}
                             >
                                 다음 단계
-                            </Button>
-                            <Button
-                                disabled={!(formik.values.supportType.length > 0 || formik.values.address || formik.values.bloodGroup ||
-                                    formik.values.height || formik.values.hobby || formik.values.job || formik.values.language ||
-                                    formik.values.postalCode || formik.values.weight)}
-                                variant="contained"
-                                color='primary'
-                                sx={{
-                                    padding: '12px 60px'
-                                }}
-                                onClick={handleClickSave}
-                            // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
-                            >
-                                지원서 저장
                             </Button>
                         </div>
 
