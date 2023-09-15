@@ -1,19 +1,11 @@
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
+import { Button, Checkbox, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import React, { useLayoutEffect, useContext } from 'react'
+import React, { useLayoutEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import arowIconLandingPage from '../../asset/images/arowIconLandingPage.png'
-import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
-import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
 import background from '../../asset/images/Audition.png'
 import lineStep from '../../asset/images/lineStep.png'
-import { ROUTE } from '../../router/routes'
-import { Input } from '../../components/base/input/Input'
-import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
-import * as yup from 'yup';
-import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl } from '@mui/material'
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { dataSteps } from '../../constants'
 import { useAuditionContext } from '../../context/auditionContext'
 //Mobile: width < 768px
@@ -216,8 +208,8 @@ export const AuditionStep1 = () => {
   const handleClickNext = () => {
     console.log('handleClickNext');
     setData({
-      ...data, 
-      step: 2, 
+      ...data,
+      step: 2,
       curentStepSave: 2,
       dataStep1: {
         isConfirm: value

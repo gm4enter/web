@@ -1,27 +1,14 @@
 import { makeStyles } from '@mui/styles'
-import React, { useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import arowIconLandingPage from '../../asset/images/arowIconLandingPage.png'
-import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
-import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
 import background from '../../asset/images/Audition.png'
-import lineStep from '../../asset/images/lineStep.png'
-import { ROUTE } from '../../router/routes'
-import { Input } from '../../components/base/input/Input'
-import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
-import * as yup from 'yup';
-import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl } from '@mui/material'
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import { dataSteps } from '../../constants'
-import { AuditionContext, AuditionContextProvider } from '../../context/auditionContext'
+import { AuditionContext } from '../../context/auditionContext'
+import { DataAuditionContextType } from '../../types/dataAuditionContext'
 import { AuditionStep1 } from './step1'
 import { AuditionStep2 } from './step2'
 import { AuditionStep3 } from './step3'
 import { AuditionStep4 } from './step4'
 import { AuditionStep5 } from './step5'
-import { DataAuditionContextType } from '../../types/dataAuditionContext'
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px

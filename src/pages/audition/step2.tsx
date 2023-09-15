@@ -1,29 +1,24 @@
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
+import { Button, Checkbox, FormControlLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, SelectChangeEvent, TextField, Theme, useTheme } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker'
+import dayjs, { Dayjs } from 'dayjs'
+import { useFormik } from 'formik'
+import { useLayoutEffect, useState } from 'react'
+import PhoneInput from "react-phone-input-2"
+import 'react-phone-input-2/lib/style.css'
 import { useLocation, useNavigate } from 'react-router-dom'
+import * as yup from 'yup'
+import { useAppDispatch } from '../../app/hooks'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
-import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
-import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
 import background from '../../asset/images/Audition.png'
 import lineStep from '../../asset/images/lineStep.png'
-import { ROUTE } from '../../router/routes'
-import { Input } from '../../components/base/input/Input'
-import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
-import * as yup from 'yup';
-import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl, Select, OutlinedInput, useTheme, SelectChangeEvent, Theme } from '@mui/material'
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 import { dataSteps } from '../../constants'
 import { useAuditionContext } from '../../context/auditionContext'
-import PhoneInput from "react-phone-input-2";
-import 'react-phone-input-2/lib/style.css'
-import { snackBarActions } from '../../components/snackbar/snackbarSlice'
-import { useAppDispatch } from '../../app/hooks'
-import DatePicker from 'react-date-picker'
-
-import 'react-date-picker/dist/DatePicker.css';
-import 'react-calendar/dist/Calendar.css';
 
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
@@ -161,8 +156,8 @@ const useStyles = makeStyles({
             },
         },
     },
-    date_picker:{
-        height:"56px",
+    date_picker: {
+        height: "56px",
         backgroundColor: '#F7F7F7',
     }
 });
@@ -204,8 +199,14 @@ const validationSchema = yup.object().shape({
         .string()
         .required('Required'),
     dob: yup
-        .string()
-        .required('Required'),
+        .date()
+        .required('Required')
+        // .test(
+        //     'not-today',
+        //     'Required',
+        //     (value) => !dayjs(value).isSame(dayjs(), 'day')
+        //   )
+        .max(dayjs().subtract(1, 'day').toDate(), 'Birthday cannot be today or in the future'),
     countries: yup
         .array()
         .min(1, 'At least one support type is required')
@@ -225,10 +226,6 @@ const validationSchema = yup.object().shape({
     //   .required('Password is required'),
 });
 
-type ValuePiece = Date | null;
-
-type Value = ValuePiece | [ValuePiece, ValuePiece];
-
 export const AuditionStep2 = () => {
     const classes = useStyles()
     const navigate = useNavigate()
@@ -238,7 +235,15 @@ export const AuditionStep2 = () => {
     const [countries, setCountries] = useState<string[]>([]);
     const { data, setData } = useAuditionContext();
 
-    const [datePicker, SetDatePicker] = useState<Value>(new Date())
+    const handleChangeDatePicker = (newValue: Dayjs | null) => {
+        if (newValue !== null) {
+            console.log('newValue', newValue.format('YYYY-MM-DD'));
+            const formattedDate = formatDate(newValue.format('YYYY-MM-DD'));
+            formik.setFieldValue('dob', formattedDate);
+        } else {
+            formik.setFieldValue('dob', dayjs().format('YYYY-MM-DD'));
+        }
+    };
 
     console.log('dataContext child 2', data);
 
@@ -295,6 +300,8 @@ export const AuditionStep2 = () => {
 
     // Function to convert the selected date format
     const formatDate = (dateValue: string) => {
+        console.log('dateValue', dateValue);
+
         const dateObject = new Date(dateValue);
         const year = dateObject.getFullYear();
         const month = String(dateObject.getMonth() + 1).padStart(2, '0');
@@ -450,6 +457,7 @@ export const AuditionStep2 = () => {
                                 inputProps={{
                                     style: {
                                         backgroundColor: '#F7F7F7',
+                                        borderColor: '#F7F7F7',
                                     }
                                 }}
                                 value={formik.values.name}
@@ -458,11 +466,12 @@ export const AuditionStep2 = () => {
                                 error={formik.touched.name && Boolean(formik.errors.name)}
                                 helperText={formik.touched.name && formik.errors.name}
                             />
+
                         </div>
 
                         <div>
                             <label>생년월일</label>
-                            <TextField
+                            {/* <TextField
                                 fullWidth
                                 id="dob"
                                 name="dob"
@@ -484,36 +493,21 @@ export const AuditionStep2 = () => {
                                 onBlur={formik.handleBlur}
                                 error={formik.touched.dob && Boolean(formik.errors.dob)}
                                 helperText={formik.touched.dob && formik.errors.dob}
-                            />
-                            {/* <DatePicker
-                                id="dob"
-                                name="dob"
-                                value={datePicker}
-                                onChange={SetDatePicker}
-                                className={classes.date_picker}
                             /> */}
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <MobileDatePicker
+                                        value={formik.values.dob == '' ? null : (dayjs(formik.values.dob) || null)}
+                                        onChange={handleChangeDatePicker}
+                                        sx={{
+                                            backgroundColor: '#F7F7F7',
+                                        }}
+                                    />
+                                </LocalizationProvider>
+                                {(formik.touched.dob && Boolean(formik.errors.dob)) && <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.dob && formik.errors.dob}</p>}
+                            </div>
                         </div>
 
-                        {/* <div>
-                            <label>국적</label>
-                            <TextField
-                                fullWidth
-                                id="countries"
-                                name="countries"
-                                variant="outlined"
-                                placeholder='Please enter your contact information'
-                                inputProps={{
-                                    style: {
-                                        backgroundColor: '#F7F7F7',
-                                    }
-                                }}
-                                value={formik.values.countries}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.countries && Boolean(formik.errors.countries)}
-                                helperText={formik.touched.countries && formik.errors.countries}
-                            />
-                        </div> */}
                         <div>
                             <label>국적</label>
                             <div>

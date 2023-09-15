@@ -1,24 +1,19 @@
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
+import { Button, Checkbox, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, Theme, useTheme } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import React, { useLayoutEffect, useState } from 'react'
+import { useFormik } from 'formik'
+import React, { useLayoutEffect } from 'react'
+import { useDaumPostcodePopup } from 'react-daum-postcode'
 import { useLocation, useNavigate } from 'react-router-dom'
+import * as yup from 'yup'
+import { useAppDispatch } from '../../app/hooks'
 import arrowBack from '../../asset/images/ArrowBendUpLeft.png'
-import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
-import gmaLogoLandingPage from '../../asset/images/gmaLogoLandingPage.png'
 import background from '../../asset/images/Audition.png'
 import lineStep from '../../asset/images/lineStep.png'
-import { ROUTE } from '../../router/routes'
-import { Input } from '../../components/base/input/Input'
-import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
-import * as yup from 'yup';
-import { Button, MenuItem, TextField, Checkbox, Radio, FormLabel, RadioGroup, FormControlLabel, FormControl, OutlinedInput, Select, useTheme, SelectChangeEvent, Theme } from '@mui/material'
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 import { dataSteps } from '../../constants'
 import { useAuditionContext } from '../../context/auditionContext'
-import DaumPostcode, { useDaumPostcodePopup } from 'react-daum-postcode';
-import { useAppDispatch } from '../../app/hooks'
-import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 import { countriesTypes } from './step2'
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
