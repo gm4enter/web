@@ -130,6 +130,19 @@ const useStyles = makeStyles({
                                 display: 'flex',
                                 gap: '8px',
                                 cursor: 'pointer',
+                                '&>p': {
+                                    margin: '0',
+                                    padding: '0',
+                                    color: '#18181B',
+                                    fontSize: '16px',
+                                    '@media (max-width: 768px)': {
+                                        display: 'none',
+                                    }
+                                },
+                                '@media (max-width: 768px)': {
+                                    border: '1px solid #D4D4D8',
+                                    padding: '10px',
+                                }
                             },
                             '&>button': {
                                 backgroundColor: 'transparent',
@@ -145,13 +158,72 @@ const useStyles = makeStyles({
                                     padding: '0',
                                     color: '#18181B',
                                     fontSize: '16px',
+                                    '@media (max-width: 768px)': {
+                                        display: 'none',
+                                    }
                                 },
                                 '&>img': {
                                     transform: 'scaleX(-1) scaleY(1)'
                                 },
+                                '@media (max-width: 768px)': {
+                                    border: '1px solid #D4D4D8',
+                                    padding: '10px',
+                                }
                             },
                         },
                     },
+                },
+            },
+        },
+    },
+    '@media (max-width: 768px)': {
+        home_container: {
+            padding: '16px 16px 64px 16px',
+            '&>div:nth-of-type(1)': {
+                flexDirection: 'column',
+                gap: '16px',
+                '&>div:nth-of-type(1)': {
+                    '&>div:nth-of-type(1)': {
+                        height: '64px',
+                        backgroundImage: `url("${background}")`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        '&>p': {
+                            marginTop: '0',
+                            color: '#18181B',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            marginBottom: '32px',
+                        },
+                    },
+                    '&>div:nth-of-type(2)': {
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: '16px',
+                        padding: '16px 0',
+                        overflowX: 'auto', /* Enable horizontal scrolling */
+                        whiteSpace: 'nowrap', /* Prevent items from wrapping to the next line */
+                        '&>div': {
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            '&>p': {
+                                margin: '0',
+                                padding: '0',
+                                color: '#18181B',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                            },
+                        },
+                        '&>img': {
+                            display: 'none',
+                        },
+                    },
+                },
+                '&>div:nth-of-type(2)': {
+                    padding: '16px',
+                    margin: '0 -16px',
                 },
             },
         },
@@ -397,7 +469,7 @@ export const AuditionStep2 = () => {
                                         defaultChecked={index <= 1 ? true : false}
                                         disabled
                                     />
-                                    <label htmlFor="policy" style={index <= 1 ? (index == 1 ? { color: '#0063F7', fontSize: '20px', fontWeight: 'bold' } : { fontSize: '20px', fontWeight: 'bold' }) : {}}>{item.title}</label>
+                                    <label htmlFor="policy" style={index <= 1 ? (index == 1 ? { color: '#0063F7', fontWeight: 'bold' } : { fontWeight: 'bold' }) : {}}>{item.title}</label>
                                 </div>
                                 <img src={lineStep} alt='' />
                             </>
@@ -615,7 +687,7 @@ export const AuditionStep2 = () => {
                             <div>
                                 <div onClick={handleClickBack}>
                                     <img src={arrowBack} alt='' />
-                                    이전 단계
+                                    <p>이전 단계</p>
                                 </div>
                                 <button type="submit">
                                     <p>다음 단계</p>
@@ -630,6 +702,10 @@ export const AuditionStep2 = () => {
                                 sx={{
                                     padding: '12px 60px',
                                     marginRight: '24px',
+                                    '@media (max-width: 768px)': {
+                                        padding: '6px 12px', // Adjust padding for screens with a maximum width of 768px (typical mobile devices)
+                                        marginRight: '8px',
+                                    },
                                 }}
                                 // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
                                 onClick={handleClickSave}
@@ -641,11 +717,13 @@ export const AuditionStep2 = () => {
                                 // disabled={!formik.values}
                                 type="submit"
                                 sx={{
-
                                     padding: '12px 60px',
                                     backgroundColor: '#fff',
                                     color: '#0063F7',
                                     border: '1px solid #0063F7',
+                                    '@media (max-width: 768px)': {
+                                        padding: '6px 12px',
+                                    },
                                 }}
                             // onClick={handleClickNext}
                             >

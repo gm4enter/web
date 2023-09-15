@@ -54,7 +54,8 @@ const useStyles = makeStyles({
     },
     '&>div:nth-of-type(2)': {
       display: 'flex',
-      gap: '44px',
+      flexWrap: 'wrap',
+      gap: '24px',
       '&>div:nth-of-type(1)': {
         flex: 1,
         display: 'flex',
@@ -100,7 +101,7 @@ const useStyles = makeStyles({
     '&>div:nth-of-type(3)': {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
+      // justifyContent: 'center',
       alignItems: 'center',
       marginTop: '12px',
       gap: '32px',
@@ -158,6 +159,56 @@ const useStyles = makeStyles({
           },
         },
       },
+    },
+  },
+  '@media (max-width: 768px)': {
+    home_container: {
+      padding: '16px 16px 64px 16px',
+      '&>div:nth-of-type(1)': {
+        gap: '24px',
+        '&>div': {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '8px',
+          cursor: 'pointer',
+          '&>p': {
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: '#A1A1AA',
+            margin: '0',
+            padding: '0',
+          },
+          '&>div': {
+            width: '100%',
+            height: '1px',
+            backgroundColor: '#18181B',
+          },
+        },
+      },
+      '&>div:nth-of-type(2)': {
+        flexDirection: 'column',
+        '&>div:nth-of-type(1)': {
+          order: 2,
+          '&>div': {
+            '&>div': {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              gap: '4px',
+            }
+          },
+
+        },
+        '&>div:nth-of-type(2)': {
+        },
+      },
+      '&>div:nth-of-type(3)': {
+        padding: '0 16px',
+        '&>div:nth-of-type(2)': {
+          width: '100%',
+        },
+      }
     },
   },
 });

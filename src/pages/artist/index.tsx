@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import arowIconLandingPage from '../../asset/images/arowIconLandingPage.png'
 import businessGlobalLandingPage from '../../asset/images/businessGlobalLandingPage.png'
@@ -59,7 +59,6 @@ const useStyles = makeStyles({
             flexWrap: 'wrap',
             gap: '32px',
             justifyContent: 'space-between',
-
             overflow: 'auto',
             scrollbarWidth: 'none', // Firefox
             '-ms-overflow-style': 'none', // Internet Explorer and Microsoft Edge
@@ -73,7 +72,6 @@ const useStyles = makeStyles({
                 width: 'calc(100% / 3 - 22px)',
                 display: 'flex',
                 flexDirection: 'column',
-                // justifyContent: 'space-between',
                 gap: '32px',
                 cursor: 'pointer',
                 '&>div': {
@@ -108,6 +106,31 @@ const useStyles = makeStyles({
             },
         },
     },
+    '@media (max-width: 768px)': {
+        home_container: {
+            padding: '16px 16px 64px 16px',
+
+            '&>div:nth-of-type(2)': {
+                gap: '12px',
+                '&>div': {
+                    width: 'calc(100% / 2 - 6px)',
+                    gap: '12px',
+                    '&>div': {
+                        '&>p': {
+                            fontSize: '24px',
+                        },
+                        '&>img': {
+                            borderRadius: '20px',
+                            width: '100%',
+                        },
+                    }
+                },
+                '&>div:nth-of-type(3)': {
+                    display: 'none',
+                },
+            },
+        },
+    },
 });
 
 const validationSchema = yup.object().shape({
@@ -130,64 +153,15 @@ const validationSchema = yup.object().shape({
     //   .required('Password is required'),
 });
 
-const originalArray = [
-    {
-        id: 1,
-        name: 'Nguyễn Văn A',
-        img: 'https://media-cdn-v2.laodong.vn/storage/newsportal/2023/7/27/1221944/Blackpink-1690252632.jpeg'
-    },
-    {
-        id: 2,
-        name: 'Nguyễn Văn B',
-        img: 'https://dosi-in.com/images/news_content/507/2021/04/06/bigbang-khong-bao-gio-loi-thoi_2021_04_06_1.jpg'
-    },
-    {
-        id: 3,
-        name: 'Nguyễn Văn C',
-        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Justin_Bieber_in_2015.jpg/250px-Justin_Bieber_in_2015.jpg'
-    },
-    {
-        id: 4,
-        name: 'Nguyễn Văn D',
-        img: 'https://www.nautiljon.com/images/people/00/67/psy_21376.webp?1603796587'
-    },
-    {
-        id: 5,
-        name: 'Nguyễn Văn E',
-        img: 'https://revelogue.com/wp-content/uploads/2021/01/jay-park-hiphop-e1609749976522.jpg'
-
-    },
-    {
-        id: 6,
-        name: 'Nguyễn Văn F',
-        img: 'https://cdn.tuoitre.vn/thumb_w/730/471584752817336320/2023/7/18/2023-06-28t203848z1561707552rc2js1ah62cfrtrmadp3awards-oscars-members-16896402608731065824850.jpg'
-    },
-    {
-        id: 7,
-        name: 'Nguyễn Văn G',
-        img: 'https://media-cdn-v2.laodong.vn/storage/newsportal/2023/7/27/1221944/Blackpink-1690252632.jpeg'
-
-    },
-    {
-        id: 8,
-        name: 'Nguyễn Văn H',
-        img: 'https://www.azcentral.com/gcdn/-mm-/634fdea703cf498c5806705dd5e2670d62daa854/c=0-126-3450-4726/local/-/media/2017/08/31/Phoenix/Phoenix/636397812339590457--resizeLuis-Fonsi-1376-Final-Photo-Omar-Cruz.jpg?width=660&height=880&fit=crop&format=pjpg&auto=webp'
-
-    },
-    {
-        id: 9,
-        name: 'Nguyễn Văn H',
-        img: 'https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2022/8/5/1077292/E5b493d7-06C4-4B3f-A.jpg'
-    },
-
-]
-
 const Artist = () => {
     const classes = useStyles()
     const navigate = useNavigate()
     const dispatch = useAppDispatch();
     const location = useLocation()
     const listArtist = useAppSelector(selectListData)
+
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
 
     const handleClickContact = () => {
         navigate(ROUTE.CONTACT)
@@ -210,29 +184,31 @@ const Artist = () => {
         },
     });
 
-    // Tạo ba mảng con
+    // create 3 child array
     const array1: ArtistType[] = [];
     const array2: ArtistType[] = [];
     const array3: ArtistType[] = [];
 
 
-    // // Lặp qua mảng gốc và lần lượt chia vào ba mảng con theo thứ tự
-    // for (let i = 0; i < originalArray.length; i += 3) {
-    //     array1.push(originalArray[i]);
-    //     array2.push(originalArray[i + 1]);
-    //     array3.push(originalArray[i + 2]);
-    // }
 
 
-    // Lặp qua mảng gốc và lần lượt chia vào ba mảng con theo thứ tự
+    // loop origin array and share to 3 child array
     if (listArtist.length > 0) {
         console.log('listArtist', listArtist);
-
-        for (let i = 0; i < listArtist.length; i += 3) {
-            array1.push(listArtist[i]);
-            array2.push(listArtist[i + 1]);
-            array3.push(listArtist[i + 2]);
+        if (isMobile) {
+            for (let i = 0; i < listArtist.length; i += 2) {
+                array1.push(listArtist[i]);
+                array2.push(listArtist[i + 1]);
+            }
         }
+        else {
+            for (let i = 0; i < listArtist.length; i += 3) {
+                array1.push(listArtist[i]);
+                array2.push(listArtist[i + 1]);
+                array3.push(listArtist[i + 2]);
+            }
+        }
+
     }
 
     console.log('array1', array1);
@@ -244,6 +220,22 @@ const Artist = () => {
         navigate(`${ROUTE.ARTISTDETAIL}/${id}`)
     }
 
+
+
+    useEffect(() => {
+        // Function to update isMobile state based on window width
+        function handleResize() {
+            setIsMobile(window.innerWidth < 768);
+        }
+
+        // Add event listener for window resize
+        window.addEventListener('resize', handleResize);
+
+        // Remove the event listener when the component unmounts
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
     useEffect(() => {
         dispatch(homeActions.getList({ params: undefined }))
     }, []);

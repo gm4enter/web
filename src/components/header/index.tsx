@@ -95,7 +95,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     // alignItems: 'center',
     padding: '0',
-    '&>div:nth-of-type(1)': {
+    '&>div:nth-of-type(2)': {
       listStyle: 'none',
       fontSize: '28px',
       fontWeight: 700,
@@ -113,39 +113,14 @@ const useStyles = makeStyles({
           fontWeight: 400,
         },
       }
-    },
-    '&>div:nth-of-type(2)': {
-      height: '1px',
-      margin: '20px 10px',
-      width: '180px',
-      backgroundColor: '#999',
     },
     '&>div:nth-of-type(3)': {
-      listStyle: 'none',
-      fontSize: '28px',
-      fontWeight: 700,
-      cursor: 'pointer',
-      color: '#fff',
-      '&>div': {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-        marginTop: '20px',
-        '&>p': {
-          padding: 0,
-          margin: 0,
-          fontSize: '18px',
-          fontWeight: 400,
-        },
-      }
-    },
-    '&>div:nth-of-type(4)': {
       height: '1px',
       margin: '20px 10px',
       width: '180px',
       backgroundColor: '#999',
     },
-    '&>div:nth-of-type(5)': {
+    '&>div:nth-of-type(4)': {
       listStyle: 'none',
       fontSize: '28px',
       fontWeight: 700,
@@ -164,6 +139,37 @@ const useStyles = makeStyles({
         },
       }
     },
+    '&>div:nth-of-type(5)': {
+      height: '1px',
+      margin: '20px 10px',
+      width: '180px',
+      backgroundColor: '#999',
+    },
+    '&>div:nth-of-type(6)': {
+      listStyle: 'none',
+      fontSize: '28px',
+      fontWeight: 700,
+      cursor: 'pointer',
+      color: '#fff',
+      '&>div': {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+        marginTop: '20px',
+        '&>p': {
+          padding: 0,
+          margin: 0,
+          fontSize: '18px',
+          fontWeight: 400,
+        },
+      }
+    },
+  },
+  header_modal_mobile: {
+    display: 'none',
+  },
+  botom_modal_mobile: {
+    display: 'none',
   },
   captcha: {
     position: 'absolute' as 'absolute',
@@ -173,98 +179,84 @@ const useStyles = makeStyles({
 
   '@media (max-width: 768px)': {
     container_header: {
-      padding: '16px',
-      borderBottom: '1px solid #D0D5DD',
-      '&>div:nth-of-type(1)': {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: '8px',
-        '&>img:nth-of-type(1)': {
-          display: 'block',
-          width: '24px',
-          height: '24px',
-        },
+      padding: '12px 16px',
+      '&>div:nth-of-type(2)': {
         '&>div:nth-of-type(1)': {
-          display: 'flex',
-          // height: '56px',
-          gap: '4px',
-          alignItems: 'center',
-          '&img': {
-            width: '36px',
-            height: '36px',
-          },
-          '&>div': {
-            fontWeight: 700,
-            fontSize: '16px',
-            '&>p': {
-              color: 'blue',
-              fontWeight: 500,
-              fontSize: '12px',
-              padding: 0,
-              margin: 0
-            },
-          },
+          display: 'none',
         },
-      },
-      '&>ul': {
-        display: 'none',
-      },
-      '&>:nth-child(3)': {
-        '&>div': {
-          border: 'none',
-          padding: '0',
-          '&>img:nth-child(1)': {
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-          },
-          '&>img:nth-child(2)': {
-            display: 'none'
-          },
-        },
-        '&>button': {
-          backgroundColor: '#fff',
-          border: '1px solid #D0D5DD',
-          borderRadius: '100px',
-          alignItems: 'center',
-          fontSize: '18px',
-          fontWeight: 500,
-          padding: '4px 12px'
-        },
+        '&>div:nth-of-type(2)': {
+          display: 'none',
+        }
       },
 
     },
     modalSidebar: {
       position: 'absolute' as 'absolute',
-      top: '40%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
+      top: '12px',
+      left: '16px',
+      right: '16px',
+      transform: 'translate(0, 0)',
       backgroundColor: 'transparent',
       border: 'none',
-      '&>ul': {
+      display: 'flex',
+      flexDirection: 'column',
+      '&>div': {
+        width: '100%',
+      },
+      '&>div:nth-of-type(3)': {
+        width: '100%',
+        margin: '20px 0',
+
+      },
+      '&>div:nth-of-type(5)': {
+        height: '1px',
+        width: '100%',
+        margin: '20px 0',
+      },
+    },
+    header_modal_mobile: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginBottom: '32px',
+      '&>div:nth-of-type(1)': {
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        '&>li': {
-          listStyle: 'none',
-          padding: '16px 0px',
-          fontSize: '28px',
-          fontWeight: 700,
+        gap: '16px',
+        '&>div': {
           cursor: 'pointer',
           color: '#fff',
-          '&:hover': {
-            color: '#00FFC2',
-          }
-        },
-        '&>div': {
-          height: '1px',
-          width: '180px',
-          backgroundColor: '#999',
-          marginTop: '3px',
-        },
-
+        }
       }
+    },
+    botom_modal_mobile: {
+      marginTop: '32px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '32px',
+      alignItems: 'center',
+      '&>div:nth-of-type(1)': {
+        display: 'flex',
+        gap: '16px',
+        '&>div': {
+          cursor: 'pointer',
+          backgroundColor: '#000',
+          padding: '8px',
+          borderRadius: '50%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          '&>svg': {
+            width: '24px',
+            height: '24px',
+          },
+        },
+      },
+      '&>p': {
+        margin: '0',
+        padding: '0',
+        color: '#A1A1AA',
+        fontSize: '14px',
+      },
+
     },
   },
 })
@@ -281,6 +273,8 @@ const Header = (props: IProps) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const userProfile = useAppSelector(selectUserData)
+  const today = new Date()
+  const date = today.getFullYear()
 
   const [isShowSideBar, setIsShowSideBar] = useState(false)
   const [tokenFirebase, setTokenFirebase] = useState('')
@@ -548,10 +542,17 @@ const Header = (props: IProps) => {
 
   //enter-web
   const [lang, setLang] = useState(i18n.language);
+  console.log('lang: ', lang);
+  
 
   const handleChangeSelect = (event: SelectChangeEvent) => {
     setLang(event.target.value as string);
     i18n.changeLanguage(event.target.value as string);
+  }
+
+  const handleClickLangMobile = (lang: string) => {
+    setLang(lang);
+    i18n.changeLanguage(lang);
   }
 
   const handleCloseModalMenu = () => {
@@ -577,10 +578,30 @@ const Header = (props: IProps) => {
     setOpenModalMenu(false)
     navigate(ROUTE.AUDITION)
   }
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    // Function to update isMobile state based on window width
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   return (
     <div
       className={classes.container_header}
-      style={{ background: isHome ? 'rgba(0, 0, 0, 0.32)' : 'white' }}
+      style={{
+        background: isHome ? 'rgba(0, 0, 0, 0.32)' : 'white',
+        display: (openModalMenu && isMobile) ? 'none' : 'flex',
+      }}
     >
       <div onClick={() => navigate(ROUTE.HOME)} style={{ color: isHome ? 'white' : '#000' }}>
         {/* <img src={logo} alt="logo" /> */}
@@ -639,6 +660,16 @@ const Header = (props: IProps) => {
         }}
       >
         <div className={classes.modalSidebar}>
+          <div className={classes.header_modal_mobile}>
+            <div>
+              <div style={{ color: lang === 'ko' ? '#00FFC2' : '#fff' }} onClick={() => handleClickLangMobile('ko')}>KOR</div>
+              <div style={{ color: lang === 'en' ? '#00FFC2' : '#fff' }} onClick={() => handleClickLangMobile('en')}>EN</div>
+              <div style={{ color: lang === 'zh' ? '#00FFC2' : '#fff' }} onClick={() => handleClickLangMobile('zh')}>CS</div>
+              <div style={{ color: lang === 'ja' ? '#00FFC2' : '#fff' }} onClick={() => handleClickLangMobile('ja')}>JP</div>
+              <div style={{ color: lang === 'es' ? '#00FFC2' : '#fff' }} onClick={() => handleClickLangMobile('es')}>ES</div>
+            </div>
+            <img src={cancelWhite} alt='' onClick={handleCloseModalMenu} />
+          </div>
           <div>
             {t(`header:myIdolyMenu`)}
             <div>
@@ -653,7 +684,8 @@ const Header = (props: IProps) => {
             {t(`header:artistMenu`)}
             <div style={location.pathname === ROUTE.ARTIST ? { color: '#00FFC2' } : {}} onClick={handleClickArtist}>
               <p>{t(`header:artist`)}</p>
-            </div></div>
+            </div>
+          </div>
 
           <div></div>
 
@@ -662,6 +694,30 @@ const Header = (props: IProps) => {
             <div style={location.pathname === ROUTE.AUDITION ? { color: '#00FFC2' } : {}} onClick={handleClickAudition}>
               <p>{t(`header:auditionDetail`)}</p>
             </div>
+          </div>
+
+          <div className={classes.botom_modal_mobile}>
+            <div>
+              <div>
+                <FbIcon onClick={() => { window.open('https://www.facebook.com/', '_blank') }} />
+              </div>
+
+              <div>
+                <InsIcon onClick={() => { window.open('https://www.instagram.com/', '_blank') }} />
+              </div>
+
+              <div>
+                <YtIcon onClick={() => { window.open('https://www.youtube.com/', '_blank') }} />
+              </div>
+
+              <div>
+                <TwitterIcon onClick={() => { window.open('https://www.twitter.com/', '_blank') }} />
+              </div>
+            </div>
+            <LogoIcon width='44' height='44' />
+            <p>
+              © {date} {t(`footer:allRightReserved`)}
+            </p>
           </div>
         </div>
       </Modal>

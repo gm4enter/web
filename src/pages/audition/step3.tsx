@@ -143,6 +143,19 @@ const useStyles = makeStyles({
                 display: 'flex',
                 gap: '8px',
                 cursor: 'pointer',
+                '&>p': {
+                    margin: '0',
+                    padding: '0',
+                    color: '#18181B',
+                    fontSize: '16px',
+                    '@media (max-width: 768px)': {
+                        display: 'none',
+                    }
+                },
+                '@media (max-width: 768px)': {
+                    border: '1px solid #D4D4D8',
+                    padding: '10px',
+                }
             },
             '&>button': {
                 backgroundColor: 'transparent',
@@ -164,7 +177,112 @@ const useStyles = makeStyles({
                 },
             },
         },
-    }
+        // '&>div:nth-of-type(7)': {
+        //     display: 'flex',
+        //     justifyContent: 'space-between',
+        //     '&>div:nth-of-type(1)': {
+        //         display: 'flex',
+        //         alignItems: 'center',
+        //         '&>div': {
+        //             padding: '12px',
+        //             display: 'flex',
+        //             gap: '8px',
+        //             cursor: 'pointer',
+        //             '&>p': {
+        //                 margin: '0',
+        //                 padding: '0',
+        //                 color: '#18181B',
+        //                 fontSize: '16px',
+        //                 '@media (max-width: 768px)': {
+        //                     display: 'none',
+        //                 }
+        //             },
+        //             '@media (max-width: 768px)': {
+        //                 border: '1px solid #D4D4D8',
+        //                 padding: '10px',
+        //             }
+        //         },
+        //         '&>button': {
+        //             backgroundColor: 'transparent',
+        //             border: 'none',
+        //             padding: '12px',
+        //             fontSize: '16px',
+        //             display: 'flex',
+        //             gap: '8px',
+        //             cursor: 'pointer',
+        //             alignItems: 'center',
+        //             '&>p': {
+        //                 margin: '0',
+        //                 padding: '0',
+        //                 color: '#18181B',
+        //                 fontSize: '16px',
+        //                 '@media (max-width: 768px)': {
+        //                     display: 'none',
+        //                 }
+        //             },
+        //             '&>img': {
+        //                 transform: 'scaleX(-1) scaleY(1)'
+        //             },
+        //             '@media (max-width: 768px)': {
+        //                 border: '1px solid #D4D4D8',
+        //                 padding: '10px',
+        //             }
+        //         },
+        //     },
+        // },
+    },
+    '@media (max-width: 768px)': {
+        home_container: {
+            padding: '16px 16px 64px 16px',
+            '&>div:nth-of-type(1)': {
+                flexDirection: 'column',
+                gap: '16px',
+                '&>div:nth-of-type(1)': {
+                    '&>div:nth-of-type(1)': {
+                        height: '64px',
+                        backgroundImage: `url("${background}")`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        '&>p': {
+                            marginTop: '0',
+                            color: '#18181B',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            marginBottom: '32px',
+                        },
+                    },
+                    '&>div:nth-of-type(2)': {
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: '16px',
+                        padding: '16px 0',
+                        overflowX: 'auto', /* Enable horizontal scrolling */
+                        whiteSpace: 'nowrap', /* Prevent items from wrapping to the next line */
+                        '&>div': {
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            '&>p': {
+                                margin: '0',
+                                padding: '0',
+                                color: '#18181B',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                            },
+                        },
+                        '&>img': {
+                            display: 'none',
+                        },
+                    },
+                },
+                '&>div:nth-of-type(2)': {
+                    padding: '16px',
+                    margin: '0 -16px',
+                },
+            },
+        },
+    },
 });
 
 const ITEM_HEIGHT = 48;

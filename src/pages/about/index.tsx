@@ -87,12 +87,16 @@ const useStyles = makeStyles({
               }
             },
           },
+
           '&>img': {
             width: '318px',
             height: '240px',
             borderRadius: '12px',
             marginTop: '-16px'
           },
+        },
+        '&>div:nth-of-type(2)': {
+          marginLeft: 'auto',
         },
       },
       '&>div:nth-of-type(2)': {
@@ -120,6 +124,96 @@ const useStyles = makeStyles({
           },
         },
       },
+    },
+  },
+  '@media (max-width: 768px)': {
+    home_container: {
+      padding: '16px 16px 64px 16px',
+      '&>div:nth-of-type(1)': {
+        gap: '24px',
+        '&>div': {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '8px',
+          cursor: 'pointer',
+          '&>p': {
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: '#A1A1AA',
+            margin: '0',
+            padding: '0',
+          },
+          '&>div': {
+            width: '100%',
+            height: '1px',
+            backgroundColor: '#18181B',
+          },
+        },
+      },
+      '&>div:nth-of-type(2)': {
+        flexDirection: 'column',
+        '&>div:nth-of-type(1)': {
+          order: 2,
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+          '&>div': {
+            display: 'flex',
+            flexDirection: 'column',
+            '&>div:nth-of-type(1)': {
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              fontSize: '80px',
+              color: '#18181B',
+              fontWeight: 'bold',
+              padding: '0 8px',
+              '&>div:nth-of-type(1)': {
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                '&>p': {
+                  margin: '0',
+                  padding: '0',
+                },
+                '&>p:nth-of-type(1)': {
+                  fontSize: '20px',
+                  color: "#18181B",
+                  fontWeight: 'bold',
+                },
+                '&>p:nth-of-type(2)': {
+                  fontSize: '14px',
+                  color: '#71717A',
+                  fontWeight: '400',
+
+                }
+              },
+            },
+            '&>img': {
+              width: '100%',
+              height: '240px',
+              borderRadius: '12px',
+              marginTop: '-16px'
+            },
+          },
+          '&>div:nth-of-type(2)': {
+            marginLeft: '0',
+          },
+        },
+        '&>div:nth-of-type(2)': {
+          fontSize: '36px',
+        },
+      },
+      '&>div:nth-of-type(3)': {
+        padding: '0 16px',
+        '&>div:nth-of-type(2)': {
+          width: '100%',
+        },
+      }
     },
   },
 });
@@ -162,7 +256,7 @@ const About = () => {
             <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUDM7dr5bsXNMYlR3qayHNHMWqiZkdzB8RVw&usqp=CAU' alt='' />
           </div>
 
-          <div style={{ marginLeft: 'auto' }}>
+          <div>
             <div>
               <div>
                 <p>Jaypark</p>

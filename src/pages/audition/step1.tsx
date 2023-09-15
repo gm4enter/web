@@ -174,19 +174,113 @@ const useStyles = makeStyles({
         },
 
         '&>div:nth-of-type(4)': {
-          '&>div': {
-            '&>label': {
-              margin: '0',
-              padding: '0',
-              color: '#18181B',
-              fontSize: '20px',
-              fontWeight: 'bold',
-            },
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          '&>p': {
+            flex: 1,
           },
-
+          '&>div': {
+            flex: 1,
+            alignItems: 'center',
+            float: 'right',
+            '&>div': {
+              flex: 1,
+              display: 'flex',
+              justifyContent: 'flex-end',
+              '&>label': {
+                margin: '0',
+                padding: '0',
+                color: '#18181B',
+                fontSize: '20px',
+                fontWeight: 'bold',
+              },
+            }
+          },
         },
         '&>div:nth-of-type(5)': {
           marginLeft: 'auto',
+        },
+      },
+    },
+  },
+  '@media (max-width: 768px)': {
+    home_container: {
+      padding: '16px 16px 64px 16px',
+      '&>div:nth-of-type(1)': {
+        flexDirection: 'column',
+        gap: '16px',
+        '&>div:nth-of-type(1)': {
+          '&>div:nth-of-type(1)': {
+            height: '64px',
+            backgroundImage: `url("${background}")`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            '&>p': {
+              marginTop: '0',
+              color: '#18181B',
+              fontSize: '24px',
+              fontWeight: 'bold',
+              marginBottom: '32px',
+            },
+          },
+          '&>div:nth-of-type(2)': {
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '16px',
+            padding: '16px 0',
+            overflowX: 'auto', /* Enable horizontal scrolling */
+            whiteSpace: 'nowrap', /* Prevent items from wrapping to the next line */
+            '&>div': {
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              '&>p': {
+                margin: '0',
+                padding: '0',
+                color: '#18181B',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              },
+            },
+            '&>img': {
+              display: 'none',
+            },
+          },
+        },
+        '&>div:nth-of-type(2)': {
+          padding: '16px',
+          margin: '0 -16px',
+          '&>div:nth-of-type(4)': {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            '&>p': {
+              flex: 1,
+              margin: '0',
+              padding: '0',
+            },
+            '&>div': {
+              flex: 1,
+              alignItems: 'center',
+              float: 'right',
+              '&>div': {
+                flex: 1,
+                display: 'flex',
+                justifyContent: 'flex-end',
+                '&>label': {
+                  margin: '0',
+                  padding: '0',
+                  color: '#18181B',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                },
+              }
+            },
+          },
         },
       },
     },
@@ -411,20 +505,24 @@ export const AuditionStep1 = () => {
             </div>
           </div>
 
-          <FormControl>
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="row-radio-buttons-group"
-              sx={{ flex: 1, justifyContent: 'space-between', alignItem: 'center' }}
-              value={value}
-              onChange={handleChange}
-            >
-              <label>모든 약관 및 정책에 동의</label>
-              <FormControlLabel value={'1'} control={<Radio />} label="동의합니다" />
-              <FormControlLabel value={'2'} control={<Radio />} label="동의하지 않습 LI 다" />
-            </RadioGroup>
-          </FormControl>
+          <div>
+            <p>모든 약관 및 정책에 동의</p>
+            <div>
+              <FormControl>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  sx={{ flex: 1, justifyContent: 'space-between', alignItem: 'center' }}
+                  value={value}
+                  onChange={handleChange}
+                >
+                  <FormControlLabel value={'1'} control={<Radio />} label="동의합니다" />
+                  <FormControlLabel value={'2'} control={<Radio />} label="동의하지 않습 LI 다" />
+                </RadioGroup>
+              </FormControl>
+            </div>
+          </div>
 
           <div>
             <Button
