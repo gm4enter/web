@@ -3,7 +3,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import { Button, Checkbox, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, Theme, useTheme } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useFormik } from 'formik'
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import { useDaumPostcodePopup } from 'react-daum-postcode'
 import { useLocation, useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
@@ -96,7 +96,7 @@ const useStyles = makeStyles({
                     // background: '#ffccff',
                     '&>div': {
                         display: 'flex',
-                        gap: '32px',
+                        // gap: '32px',
                         '&>label': {
                             minWidth: '70px',
                             flex: 1,
@@ -113,7 +113,76 @@ const useStyles = makeStyles({
                             flex: 5,
                             minWidth: '180px',
                         },
+
                     },
+                    '&>div:nth-of-type(4)': {
+                        '&>div': {
+                            '&>div': {
+                                display: 'flex', gap: '12px',
+                                '@media (max-width: 768px)': {
+                                    flexDirection: 'column',
+                                    height: '124px',
+                                },
+                                '&>div': {
+                                    height: '56px',
+                                },
+                            },
+                        },
+                    },
+                    // '&>div:nth-of-type(11)': {
+                    //     display: 'flex',
+                    //     justifyContent: 'space-between',
+                    //     '&>div:nth-of-type(1)': {
+                    //         display: 'flex',
+                    //         alignItems: 'center',
+                    //         gap: '8px',
+                    //         '&>div': {
+                    //             padding: '12px',
+                    //             display: 'flex',
+                    //             gap: '8px',
+                    //             cursor: 'pointer',
+                    //             '&>p': {
+                    //                 margin: '0',
+                    //                 padding: '0',
+                    //                 color: '#18181B',
+                    //                 fontSize: '16px',
+                    //                 '@media (max-width: 768px)': {
+                    //                     display: 'none',
+                    //                 }
+                    //             },
+                    //             '@media (max-width: 768px)': {
+                    //                 border: '1px solid #D4D4D8',
+                    //                 padding: '10px',
+                    //             }
+                    //         },
+                    //         '&>button': {
+                    //             backgroundColor: 'transparent',
+                    //             border: 'none',
+                    //             padding: '12px',
+                    //             fontSize: '16px',
+                    //             display: 'flex',
+                    //             gap: '8px',
+                    //             cursor: 'pointer',
+                    //             alignItems: 'center',
+                    //             '&>p': {
+                    //                 margin: '0',
+                    //                 padding: '0',
+                    //                 color: '#18181B',
+                    //                 fontSize: '16px',
+                    //                 '@media (max-width: 768px)': {
+                    //                     display: 'none',
+                    //                 }
+                    //             },
+                    //             '&>img': {
+                    //                 transform: 'scaleX(-1) scaleY(1)'
+                    //             },
+                    //             '@media (max-width: 768px)': {
+                    //                 border: '1px solid #D4D4D8',
+                    //                 padding: '10px',
+                    //             }
+                    //         },
+                    //     },
+                    // },
                 },
             },
         },
@@ -134,10 +203,12 @@ const useStyles = makeStyles({
         },
     },
     buttom_area: {
-        marginTop: '28px',
+        display: 'flex',
+        justifyContent: 'space-between',
         '&>div:nth-of-type(1)': {
             display: 'flex',
             alignItems: 'center',
+            gap: '8px',
             '&>div': {
                 padding: '12px',
                 display: 'flex',
@@ -171,66 +242,21 @@ const useStyles = makeStyles({
                     padding: '0',
                     color: '#18181B',
                     fontSize: '16px',
+                    '@media (max-width: 768px)': {
+                        display: 'none',
+                    }
                 },
                 '&>img': {
                     transform: 'scaleX(-1) scaleY(1)'
                 },
+                '@media (max-width: 768px)': {
+                    border: '1px solid #D4D4D8',
+                    padding: '10px',
+                }
             },
         },
-        // '&>div:nth-of-type(7)': {
-        //     display: 'flex',
-        //     justifyContent: 'space-between',
-        //     '&>div:nth-of-type(1)': {
-        //         display: 'flex',
-        //         alignItems: 'center',
-        //         '&>div': {
-        //             padding: '12px',
-        //             display: 'flex',
-        //             gap: '8px',
-        //             cursor: 'pointer',
-        //             '&>p': {
-        //                 margin: '0',
-        //                 padding: '0',
-        //                 color: '#18181B',
-        //                 fontSize: '16px',
-        //                 '@media (max-width: 768px)': {
-        //                     display: 'none',
-        //                 }
-        //             },
-        //             '@media (max-width: 768px)': {
-        //                 border: '1px solid #D4D4D8',
-        //                 padding: '10px',
-        //             }
-        //         },
-        //         '&>button': {
-        //             backgroundColor: 'transparent',
-        //             border: 'none',
-        //             padding: '12px',
-        //             fontSize: '16px',
-        //             display: 'flex',
-        //             gap: '8px',
-        //             cursor: 'pointer',
-        //             alignItems: 'center',
-        //             '&>p': {
-        //                 margin: '0',
-        //                 padding: '0',
-        //                 color: '#18181B',
-        //                 fontSize: '16px',
-        //                 '@media (max-width: 768px)': {
-        //                     display: 'none',
-        //                 }
-        //             },
-        //             '&>img': {
-        //                 transform: 'scaleX(-1) scaleY(1)'
-        //             },
-        //             '@media (max-width: 768px)': {
-        //                 border: '1px solid #D4D4D8',
-        //                 padding: '10px',
-        //             }
-        //         },
-        //     },
-        // },
     },
+
     '@media (max-width: 768px)': {
         home_container: {
             padding: '16px 16px 64px 16px',
@@ -256,6 +282,7 @@ const useStyles = makeStyles({
                         display: 'flex',
                         flexDirection: 'row',
                         gap: '16px',
+                        width: '100%',
                         padding: '16px 0',
                         overflowX: 'auto', /* Enable horizontal scrolling */
                         whiteSpace: 'nowrap', /* Prevent items from wrapping to the next line */
@@ -352,6 +379,8 @@ export const AuditionStep3 = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useAppDispatch();
+
+    const scrollableDivRef = useRef<HTMLDivElement | null>(null);
 
     const { data, setData } = useAuditionContext();
 
@@ -467,6 +496,48 @@ export const AuditionStep3 = () => {
     };
     //end
 
+    // useEffect(() => {
+    //     const scrollableDiv = scrollableDivRef.current;
+
+    //     if (scrollableDiv) {
+    //         // Calculate the scroll distance as 50% of the scrollable width
+    //         const scrollDistance = scrollableDiv.scrollWidth / 2;
+
+    //         // Check if the screen width is less than or equal to 768px
+    //         const isMobile = window.innerWidth <= 768;
+
+    //         if (isMobile) {
+    //             // Scroll to the right by 50% of the scrollable width on mobile
+    //             if (scrollableDiv.scrollLeft !== undefined) {
+    //                 scrollableDiv.scrollLeft = scrollDistance;
+    //             }
+    //         }
+    //     }
+    // }, []);
+
+
+    useEffect(() => {
+        const scrollableDiv = scrollableDivRef.current;
+
+        if (scrollableDiv) {
+            // Calculate the scroll distance as half of the visible width
+            const scrollDistance = scrollableDiv.clientWidth / 2;
+
+            // Check if the screen width is less than or equal to 768px
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                // Scroll to the right by the calculated scroll distance on mobile
+                if (scrollableDiv.scrollBy !== undefined) {
+                    scrollableDiv.scrollBy({
+                        left: scrollDistance,
+                        behavior: 'smooth', // You can use 'auto' for immediate scrolling
+                    });
+                }
+            }
+        }
+    }, []);
+
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
     }, [location.pathname])
@@ -520,7 +591,7 @@ export const AuditionStep3 = () => {
                         <p>Apply for an audition</p>
                     </div>
 
-                    <div>
+                    <div ref={scrollableDivRef}>
                         {dataSteps.map((item, index) => (
                             <>
                                 <div>
@@ -671,30 +742,7 @@ export const AuditionStep3 = () => {
                         <div>
                             <label>주소</label>
                             <div>
-                                <div style={{ display: 'flex', gap: '12px' }}>
-                                    {/* <TextField
-                                    // fullWidth
-                                    id="postalCode"
-                                    name="postalCode"
-                                    variant="outlined"
-                                    placeholder='우편번호'
-                                    // disabled
-                                    sx={{
-                                        flex: 1,
-                                        // backgroundColor: '#F7F7F7',
-
-                                    }}
-                                    inputProps={{
-                                        style: {
-                                            backgroundColor: '#F7F7F7',
-                                        }
-                                    }}
-                                    value={formik.values.postalCode}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.postalCode && Boolean(formik.errors.postalCode)}
-                                    helperText={formik.touched.postalCode && formik.errors.postalCode}
-                                /> */}
+                                <div>
                                     <div
                                         onClick={handleClickPostalCode}
                                         style={{
@@ -887,7 +935,7 @@ export const AuditionStep3 = () => {
                             <div>
                                 <div onClick={handleClickBack}>
                                     <img src={arrowBack} alt='' />
-                                    이전 단계
+                                    <p> 이전 단계</p>
                                 </div>
                                 <button type="submit">
                                     <p>다음 단계</p>
@@ -903,6 +951,12 @@ export const AuditionStep3 = () => {
                                 sx={{
                                     padding: '12px 60px',
                                     marginRight: '24px',
+                                    '@media (max-width: 768px)': {
+                                        padding: '6px 12px', // Adjust padding for screens with a maximum width of 768px (typical mobile devices)
+                                        marginRight: '8px',
+                                        fontSize: '12px',
+
+                                    },
                                 }}
                                 onClick={handleClickSave}
                             // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
@@ -917,6 +971,11 @@ export const AuditionStep3 = () => {
                                     backgroundColor: '#fff',
                                     color: '#0063F7',
                                     border: '1px solid #0063F7',
+                                    '@media (max-width: 768px)': {
+                                        padding: '6px 12px',
+                                        fontSize: '12px',
+
+                                    },
                                 }}
                             >
                                 다음 단계

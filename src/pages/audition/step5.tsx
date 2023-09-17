@@ -3,7 +3,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import { Button, Checkbox, Modal } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useFormik } from 'formik'
-import { useLayoutEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 import axiosClient from '../../apis/axiosClient'
@@ -99,6 +99,9 @@ const useStyles = makeStyles({
                     '&>div': {
                         display: 'flex',
                         gap: '32px',
+                        '@media (max-width: 768px)': {
+                            gap: '8px',
+                        },
                         '&>label': {
                             minWidth: '70px',
                             flex: 1,
@@ -145,11 +148,45 @@ const useStyles = makeStyles({
                 display: 'flex',
                 gap: '8px',
                 cursor: 'pointer',
+                '&>p': {
+                    margin: '0',
+                    padding: '0',
+                    color: '#18181B',
+                    fontSize: '16px',
+                    '@media (max-width: 768px)': {
+                        display: 'none',
+                    }
+                },
+                '@media (max-width: 768px)': {
+                    border: '1px solid #D4D4D8',
+                    padding: '10px',
+                }
             },
-            '&>div:nth-of-type(2)': {
+            '&>button': {
+                backgroundColor: 'transparent',
+                border: 'none',
+                padding: '12px',
+                fontSize: '16px',
+                display: 'flex',
+                gap: '8px',
+                cursor: 'pointer',
+                alignItems: 'center',
+                '&>p': {
+                    margin: '0',
+                    padding: '0',
+                    color: '#18181B',
+                    fontSize: '16px',
+                    '@media (max-width: 768px)': {
+                        display: 'none',
+                    }
+                },
                 '&>img': {
                     transform: 'scaleX(-1) scaleY(1)'
                 },
+                '@media (max-width: 768px)': {
+                    border: '1px solid #D4D4D8',
+                    padding: '10px',
+                }
             },
         },
     },
@@ -175,9 +212,64 @@ const useStyles = makeStyles({
             fontSize: '36px',
             fontWeight: 'bold',
         },
-
         '@media (max-width: 768px)': {
-            right: '16px',
+            left: '0',
+            top: '30%',
+            margin: '0 20px',
+            width: 'calc(100vw - 80px)',
+        },
+    },
+
+    '@media (max-width: 768px)': {
+        home_container: {
+            padding: '16px 16px 64px 16px',
+            '&>div:nth-of-type(1)': {
+                flexDirection: 'column',
+                gap: '16px',
+                '&>div:nth-of-type(1)': {
+                    '&>div:nth-of-type(1)': {
+                        height: '64px',
+                        backgroundImage: `url("${background}")`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        '&>p': {
+                            marginTop: '0',
+                            color: '#18181B',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            marginBottom: '32px',
+                        },
+                    },
+                    '&>div:nth-of-type(2)': {
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: '16px',
+                        padding: '16px 0',
+                        overflowX: 'auto', /* Enable horizontal scrolling */
+                        whiteSpace: 'nowrap', /* Prevent items from wrapping to the next line */
+                        '&>div': {
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            '&>p': {
+                                margin: '0',
+                                padding: '0',
+                                color: '#18181B',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                            },
+                        },
+                        '&>img': {
+                            display: 'none',
+                        },
+                    },
+                },
+                '&>div:nth-of-type(2)': {
+                    padding: '16px',
+                    margin: '0 -16px',
+                },
+            },
         },
     },
 });
@@ -206,6 +298,8 @@ export const AuditionStep5 = () => {
     const location = useLocation()
     const dispatch = useAppDispatch();
     const { data, setData } = useAuditionContext();
+
+    const scrollableDivRef = useRef<HTMLDivElement | null>(null);
 
     const [isSuccess, setIsSuccess] = useState(false)
     const [openModal, setOpenModal] = useState(false)
@@ -397,6 +491,22 @@ export const AuditionStep5 = () => {
         )
     };
 
+    useEffect(() => {
+        const scrollableDiv = scrollableDivRef.current;
+
+        if (scrollableDiv) {
+            // Check if the screen width is less than or equal to 768px
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                // Scroll to the end of the div on mobile
+                if (scrollableDiv.scrollLeft !== undefined) {
+                    scrollableDiv.scrollLeft = scrollableDiv.scrollWidth;
+                }
+            }
+        }
+    }, []);
+
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
     }, [location.pathname])
@@ -409,7 +519,9 @@ export const AuditionStep5 = () => {
                         <p>Apply for an audition</p>
                     </div>
 
-                    <div>
+                    <div
+                        ref={scrollableDivRef}
+                    >
                         {dataSteps.map((item, index) => (
                             <>
                                 <div>
@@ -540,7 +652,9 @@ export const AuditionStep5 = () => {
                             <div>
                                 <div onClick={handleClickBack}>
                                     <img src={arrowBack} alt='' />
-                                    이전 단계
+                                    <p>
+                                        이전 단계
+                                    </p>
                                 </div>
                             </div>
                             <Button
@@ -549,6 +663,11 @@ export const AuditionStep5 = () => {
                                 sx={{
                                     padding: '12px 60px',
                                     marginRight: '24px',
+                                    '@media (max-width: 768px)': {
+                                        padding: '6px 12px', // Adjust padding for screens with a maximum width of 768px (typical mobile devices)
+                                        marginRight: '8px',
+                                        fontSize: '12px',
+                                    },
                                 }}
                             // onClick={handleClickNext}
                             >
@@ -560,7 +679,12 @@ export const AuditionStep5 = () => {
                                 // type="submit"
                                 sx={{
                                     padding: '12px 60px',
-                                    background: '#00AB07'
+                                    background: '#00AB07',
+                                    '@media (max-width: 768px)': {
+                                        padding: '6px 12px',
+                                        fontSize: '12px',
+                                    },
+
                                 }}
                                 onClick={handleClickSave}
                             // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}

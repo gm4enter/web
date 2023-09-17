@@ -95,7 +95,7 @@ const useStyles = makeStyles({
                     // background: '#ffccff',
                     '&>div': {
                         display: 'flex',
-                        gap: '32px',
+                        // gap: '32px',
                         '&>label': {
                             minWidth: '70px',
                             flex: 1,
@@ -132,16 +132,63 @@ const useStyles = makeStyles({
             },
         },
     },
+    // buttom_area: {
+    //     marginTop: '28px',
+    //     '&>div:nth-of-type(1)': {
+    //         display: 'flex',
+    //         alignItems: 'center',
+    //         '&>div': {
+    //             padding: '12px',
+    //             display: 'flex',
+    //             gap: '8px',
+    //             cursor: 'pointer',
+    //         },
+    //         '&>button': {
+    //             backgroundColor: 'transparent',
+    //             border: 'none',
+    //             padding: '12px',
+    //             fontSize: '16px',
+    //             display: 'flex',
+    //             gap: '8px',
+    //             cursor: 'pointer',
+    //             alignItems: 'center',
+    //             '&>p': {
+    //                 margin: '0',
+    //                 padding: '0',
+    //                 color: '#18181B',
+    //                 fontSize: '16px',
+    //             },
+    //             '&>img': {
+    //                 transform: 'scaleX(-1) scaleY(1)'
+    //             },
+    //         },
+    //     },
+    // },
     buttom_area: {
-        marginTop: '28px',
+        display: 'flex',
+        justifyContent: 'space-between',
         '&>div:nth-of-type(1)': {
             display: 'flex',
             alignItems: 'center',
+            gap: '8px',
             '&>div': {
                 padding: '12px',
                 display: 'flex',
                 gap: '8px',
                 cursor: 'pointer',
+                '&>p': {
+                    margin: '0',
+                    padding: '0',
+                    color: '#18181B',
+                    fontSize: '16px',
+                    '@media (max-width: 768px)': {
+                        display: 'none',
+                    }
+                },
+                '@media (max-width: 768px)': {
+                    border: '1px solid #D4D4D8',
+                    padding: '10px',
+                }
             },
             '&>button': {
                 backgroundColor: 'transparent',
@@ -157,13 +204,80 @@ const useStyles = makeStyles({
                     padding: '0',
                     color: '#18181B',
                     fontSize: '16px',
+                    '@media (max-width: 768px)': {
+                        display: 'none',
+                    }
                 },
                 '&>img': {
                     transform: 'scaleX(-1) scaleY(1)'
                 },
+                '@media (max-width: 768px)': {
+                    border: '1px solid #D4D4D8',
+                    padding: '10px',
+                }
             },
         },
-    }
+    },
+    label_Btn: {
+        margin: '0',
+        padding: '0',
+        color: '#fff',
+        '@media (max-width: 768px)': {
+            display: 'none',
+        }
+    },
+    '@media (max-width: 768px)': {
+        home_container: {
+            padding: '16px 16px 64px 16px',
+            '&>div:nth-of-type(1)': {
+                flexDirection: 'column',
+                gap: '16px',
+                '&>div:nth-of-type(1)': {
+                    '&>div:nth-of-type(1)': {
+                        height: '64px',
+                        backgroundImage: `url("${background}")`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        '&>p': {
+                            marginTop: '0',
+                            color: '#18181B',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            marginBottom: '32px',
+                        },
+                    },
+                    '&>div:nth-of-type(2)': {
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: '16px',
+                        padding: '16px 0',
+                        overflowX: 'auto', /* Enable horizontal scrolling */
+                        whiteSpace: 'nowrap', /* Prevent items from wrapping to the next line */
+                        '&>div': {
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            '&>p': {
+                                margin: '0',
+                                padding: '0',
+                                color: '#18181B',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                            },
+                        },
+                        '&>img': {
+                            display: 'none',
+                        },
+                    },
+                },
+                '&>div:nth-of-type(2)': {
+                    padding: '16px',
+                    margin: '0 -16px',
+                },
+            },
+        },
+    },
 });
 
 const ITEM_HEIGHT = 48;
@@ -211,6 +325,8 @@ export const AuditionStep4 = () => {
     const location = useLocation()
     const dispatch = useAppDispatch();
     const { data, setData } = useAuditionContext();
+
+    const scrollableDivRef = useRef<HTMLDivElement | null>(null);
 
     console.log('dataContext child 4', data);
     const savedDataStep4Local = localStorage.getItem('dataSaveStep4');
@@ -342,6 +458,21 @@ export const AuditionStep4 = () => {
         },
     });
 
+    useEffect(() => {
+        const scrollableDiv = scrollableDivRef.current;
+
+        if (scrollableDiv) {
+            // Check if the screen width is less than or equal to 768px
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                // Scroll to the end of the div on mobile
+                if (scrollableDiv.scrollLeft !== undefined) {
+                    scrollableDiv.scrollLeft = scrollableDiv.scrollWidth;
+                }
+            }
+        }
+    }, []);
 
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
@@ -380,7 +511,9 @@ export const AuditionStep4 = () => {
                         <p>Apply for an audition</p>
                     </div>
 
-                    <div>
+                    <div
+                    ref={scrollableDivRef}
+                    >
                         {dataSteps.map((item, index) => (
                             <>
                                 <div>
@@ -466,7 +599,9 @@ export const AuditionStep4 = () => {
                                                         onClick={handleImageClick}
                                                     >
                                                         <img src={UploadFileIcon} alt='' />
-                                                        파일첨부
+                                                        <p className={classes.label_Btn}>
+                                                            파일첨부
+                                                        </p>
                                                     </div>
                                                 </InputAdornment>
                                             ),
@@ -527,7 +662,9 @@ export const AuditionStep4 = () => {
                                                         onClick={handleImageOptionalClick}
                                                     >
                                                         <img src={UploadFileIcon} alt='' />
-                                                        파일첨부
+                                                        <p className={classes.label_Btn}>
+                                                            파일첨부
+                                                        </p>
                                                     </div>
                                                 </InputAdornment>
                                             ),
@@ -585,7 +722,9 @@ export const AuditionStep4 = () => {
                                                         onClick={handleVideoClick}
                                                     >
                                                         <img src={UploadFileIcon} alt='' />
-                                                        파일 첨부 (필수)
+                                                        <p className={classes.label_Btn}>
+                                                            파일 첨부 (필수)
+                                                        </p>
                                                     </div>
                                                 </InputAdornment>
                                             ),
@@ -632,7 +771,6 @@ export const AuditionStep4 = () => {
                                                             padding: '12px 16px',
                                                             marginRight: '-8px',
                                                             backgroundColor: '#000',
-                                                            color: '#fff',
                                                             cursor: 'pointer',
                                                             display: 'flex',
                                                             alignItems: 'center',
@@ -641,7 +779,9 @@ export const AuditionStep4 = () => {
                                                         onClick={handleVideoOptionalClick}
                                                     >
                                                         <img src={UploadFileIcon} alt='' />
-                                                        파일 첨부 (선택)
+                                                        <p className={classes.label_Btn}>
+                                                            파일 첨부 (선택)
+                                                        </p>
                                                     </div>
                                                 </InputAdornment>
                                             ),
@@ -678,7 +818,7 @@ export const AuditionStep4 = () => {
                             <div>
                                 <div onClick={handleClickBack}>
                                     <img src={arrowBack} alt='' />
-                                    이전 단계
+                                    <p>이전 단계</p>
                                 </div>
                                 <button type="submit">
                                     <p>다음 단계</p>
@@ -692,6 +832,11 @@ export const AuditionStep4 = () => {
                                 sx={{
                                     padding: '12px 60px',
                                     marginRight: '24px',
+                                    '@media (max-width: 768px)': {
+                                        padding: '6px 12px', // Adjust padding for screens with a maximum width of 768px (typical mobile devices)
+                                        marginRight: '8px',
+                                        fontSize: '12px',
+                                    },
                                 }}
                                 onClick={handleClickSave}
 
@@ -707,6 +852,10 @@ export const AuditionStep4 = () => {
                                     backgroundColor: '#fff',
                                     color: '#0063F7',
                                     border: '1px solid #0063F7',
+                                    '@media (max-width: 768px)': {
+                                        padding: '6px 12px',
+                                        fontSize: '12px',
+                                    },
                                 }}
                             // onClick={handleClickNext}
                             >

@@ -101,6 +101,7 @@ const useStyles = makeStyles({
       fontWeight: 700,
       cursor: 'pointer',
       color: '#fff',
+      minWidth: '128px',
       '&>div': {
         display: 'flex',
         flexDirection: 'column',
@@ -151,6 +152,7 @@ const useStyles = makeStyles({
       fontWeight: 700,
       cursor: 'pointer',
       color: '#fff',
+      minWidth: '128px',
       '&>div': {
         display: 'flex',
         flexDirection: 'column',
@@ -192,14 +194,17 @@ const useStyles = makeStyles({
     },
     modalSidebar: {
       position: 'absolute' as 'absolute',
-      top: '12px',
-      left: '16px',
-      right: '16px',
+      top: '0',
+      left: '0',
+      right: '0',
+      height: '100vh',
+      padding: '12px 16px',
       transform: 'translate(0, 0)',
-      backgroundColor: 'transparent',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
       border: 'none',
       display: 'flex',
       flexDirection: 'column',
+      justifyContent: 'flex-start',
       '&>div': {
         width: '100%',
       },
@@ -543,7 +548,7 @@ const Header = (props: IProps) => {
   //enter-web
   const [lang, setLang] = useState(i18n.language);
   console.log('lang: ', lang);
-  
+
 
   const handleChangeSelect = (event: SelectChangeEvent) => {
     setLang(event.target.value as string);

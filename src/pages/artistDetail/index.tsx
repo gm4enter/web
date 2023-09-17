@@ -79,6 +79,37 @@ const useStyles = makeStyles({
       },
     },
   },
+  '@media (max-width: 768px)': {
+    detail_container: {
+      padding: '100px 16px',
+      '&>div:nth-of-type(1)': {
+        marginBottom: '32px',
+        fontSize: '16px',
+        '&>img': {
+          width: '24px',
+          height: '24px',
+        },
+      },
+      '&>div:nth-of-type(2)': {
+        '&>div:nth-of-type(1)': {
+          width: '100%',
+          fontSize: '32px',
+          '&>p': {
+            fontSize: '12px',
+          },
+        },
+        '&>div:nth-of-type(2)': {
+          '&>div:nth-of-type(1)': {
+            fontSize: '12px',
+            width: '100%',
+            '&>p': {
+              fontSize: '12px',
+            },
+          },
+        },
+      },
+    },
+  },
 });
 
 const ActistDetail: React.FC = () => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Paper, List, ListItem, ListItemIcon, ListItemText, Button } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles'
 import bgHome1 from '../../asset/images/bgHome1.png'
 import bgHome2 from '../../asset/images/bgHome2.png'
 import { ROUTE } from '../../router/routes';
@@ -20,15 +21,35 @@ const images: string[] = [
   // Add more image URLs here
 ];
 
+
+const useStyles = makeStyles({
+  title: {
+    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px',
+    padding: '0px 80px 88px 80px',
+    width: '100%',
+    textAlign: 'center',
+    '&>h1': {
+      position: 'relative',
+      color: '#fff',
+      fontSize: '80px',
+      fontWeight: 'bold',
+      margin: 0,
+      '@media (max-width: 768px)': {
+        fontSize: '36px',
+      },
+    },
+  },
+});
+
 const ImageList = () => {
-  // const classes = useStyles()
+  const classes = useStyles()
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
   const location = useLocation()
   const listArtist = useAppSelector(selectListData)
 
   console.log('listArtist', listArtist);
-  
+
 
   const listRef = useRef<HTMLUListElement>(null);
   const [scrollIndex, setScrollIndex] = useState(0);
@@ -38,6 +59,22 @@ const ImageList = () => {
     // navigate(ROUTE.ARTISTDETAIL)
     navigate(`${ROUTE.ARTISTDETAIL}/${id}`)
   };
+
+  const capitalizeWords = (inputString: string) => {
+    // Split the input string into an array of words
+    const words = inputString.split(" ");
+
+    // Capitalize the first letter of each word and join them back together
+    const capitalizedWords = words.map((word) => {
+      if (word.length > 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      } else {
+        return word; // Preserve empty words (e.g., multiple spaces)
+      }
+    });
+
+    return capitalizedWords.join(" ");
+  }
 
   useEffect(() => {
     dispatch(homeActions.getList({ params: undefined }))
@@ -72,20 +109,23 @@ const ImageList = () => {
         {listArtist.map((artist, index) => (
           <ListItem key={artist.id} disableGutters sx={{ margin: 0, padding: 0 }}>
             <div style={{
-              width: '100%',
+              minWidth: '100%',
               height: '100vh',
-              backgroundImage: `url("https://server.gm4ent.com/static/image/${artist.thumbnail}")`,
-              backgroundSize: 'cover',
-              backgroundRepeat: 'no-repeat',
-              boxSizing: 'border-box',
-              padding: '0px 80px 88px 80px',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'flex-end',
             }}>
-              {/* <img src={image} alt={`Image ${index + 1}`} style={{ }} /> */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px' }}>
-                <h1 style={{ color: 'white', fontSize: '80px', fontWeight: 'bold', margin: 0 }}>{artist.nickname}</h1>
+              <img
+                src={`https://server.gm4ent.com/static/image/${artist.thumbnail}`}
+                alt={''}
+                style={{
+                  minWidth: '100%',
+                  height: '100vh',
+                  position: 'absolute',
+                  backgroundSize: 'cover',
+                }} />
+              <div className={classes.title}>
+                <h1>{capitalizeWords(artist.nickname)}</h1>
                 <Button
                   variant="outlined"
                   sx={{
@@ -102,6 +142,10 @@ const ImageList = () => {
                       padding: '12px 80px',
                       fontSize: '18px',
                       background: "#000",
+                    },
+                    '@media (max-width: 768px)': {
+                      padding: '12px 40px',
+                      fontSize: '14px',
                     }
                   }}
                   onClick={() => handleClickDetail(artist.id)}

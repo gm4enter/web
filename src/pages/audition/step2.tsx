@@ -125,6 +125,7 @@ const useStyles = makeStyles({
                         '&>div:nth-of-type(1)': {
                             display: 'flex',
                             alignItems: 'center',
+                            gap: '8px',
                             '&>div': {
                                 padding: '12px',
                                 display: 'flex',
@@ -705,6 +706,7 @@ export const AuditionStep2 = () => {
                                     '@media (max-width: 768px)': {
                                         padding: '6px 12px', // Adjust padding for screens with a maximum width of 768px (typical mobile devices)
                                         marginRight: '8px',
+                                        fontSize: '12px',
                                     },
                                 }}
                                 // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
@@ -723,6 +725,7 @@ export const AuditionStep2 = () => {
                                     border: '1px solid #0063F7',
                                     '@media (max-width: 768px)': {
                                         padding: '6px 12px',
+                                        fontSize: '12px',
                                     },
                                 }}
                             // onClick={handleClickNext}
