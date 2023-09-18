@@ -713,7 +713,7 @@ export const AuditionStep2 = () => {
                                 onClick={handleClickSave}
 
                             >
-                                다음
+                                저장
                             </Button>
                             <Button
                                 // disabled={!formik.values}

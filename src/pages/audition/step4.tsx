@@ -842,7 +842,7 @@ export const AuditionStep4 = () => {
 
                             // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
                             >
-                                지원
+                                저장
                             </Button>
                             <Button
                                 disabled={!formik.values}
