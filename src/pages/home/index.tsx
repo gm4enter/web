@@ -85,7 +85,7 @@ const useStyles = makeStyles({
       }
     },
     '@media (max-width: 768px)': {
-      display: 'none',
+      display: 'none !important',
     }
   },
   put_to_top: {
@@ -278,6 +278,10 @@ const ImageList = () => {
                     '@media (max-width: 768px)': {
                       padding: '12px 40px',
                       fontSize: '14px',
+                      '&:hover': {
+                        padding: '12px 40px',
+                        fontSize: '14px',
+                      },
                     }
                   }}
                   onClick={() => handleClickDetail(artist.id)}
