@@ -1,6 +1,6 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
-import { Button, Checkbox, FormControlLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, SelectChangeEvent, TextField, Theme, useTheme } from '@mui/material'
+import { Button, Checkbox, FormControlLabel, MenuItem, Modal, OutlinedInput, Radio, RadioGroup, Select, SelectChangeEvent, TextField, Theme, useTheme } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -19,6 +19,8 @@ import lineStep from '../../asset/images/lineStep.png'
 import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 import { dataSteps } from '../../constants'
 import { useAuditionContext } from '../../context/auditionContext'
+import { loadingActions } from '../../components/loading/loadingSlice'
+import axiosClient from '../../apis/axiosClient'
 
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
@@ -232,7 +234,37 @@ const useStyles = makeStyles({
     date_picker: {
         height: "56px",
         backgroundColor: '#F7F7F7',
-    }
+    },
+    modal: {
+        position: 'absolute',
+        left: '40%',
+        top: '30%',
+        width: '308px',
+        padding: '16px 20px',
+        backgroundColor: '#fff',
+        borderRadius: '10px',
+        boxShadow: '0px 2px 16px rgba(0, 0, 0, 0.25)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '16px',
+        '&>p': {
+            margin: '0',
+            padding: '0',
+            color: '#28293D',
+            fontSize: '16px',
+            fontWeight: '500',
+            textAlign: 'center',
+        },
+        '@media (max-width: 768px)': {
+            left: '0',
+            top: '30%',
+            margin: '0 20px',
+            width: 'calc(100vw - 80px)',
+        },
+    },
+
 });
 
 const ITEM_HEIGHT = 48;
@@ -307,6 +339,9 @@ export const AuditionStep2 = () => {
     const theme = useTheme();
     const [countries, setCountries] = useState<string[]>([]);
     const { data, setData } = useAuditionContext();
+    const [openModal, setOpenModal] = useState(false)
+
+    const handleCloseModal = () => setOpenModal(false);
 
     const handleChangeDatePicker = (newValue: Dayjs | null) => {
         if (newValue !== null) {
@@ -393,11 +428,44 @@ export const AuditionStep2 = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            // alert(JSON.stringify(values, null, 2));
-            console.log('values formik', values);
-            console.log('handleClickNext');
-            handleClickSave();
-            setData({ ...data, step: 3, dataStep2: values })
+            try {
+                dispatch(loadingActions.openLoading())
+                console.log('values formik', values);
+                console.log('handleClickNext');
+                const checkExisted = {
+                    name: values.name.trim(),
+                    birthday: values.dob,
+                    phone_number: values.phoneNumber,
+                }
+                console.log('checkExistedDataaaaa', checkExisted);
+
+
+                console.log('checkExisted', checkExisted);
+
+                axiosClient.post('/apply/check-existed', checkExisted)
+                    .then(res => {
+                        console.log('res apply check existed :::::', res);
+                        // dispatch(snackBarActions.setStateSnackBar({
+                        //     content: '성공',
+                        //     type: 'success',
+                        // }))
+                        handleClickSave();
+                        setData({ ...data, step: 3, dataStep2: values })
+                    })
+                    .catch(err => {
+                        console.log('err', err);
+                        dispatch(snackBarActions.setStateSnackBar({
+                            content: '실패',
+                            type: 'error',
+                        }))
+                        setOpenModal(true)
+                    })
+                    .finally(() => {
+                        dispatch(loadingActions.loadingSuccess())
+                    })
+            } catch (error) {
+                console.log('error:', error)
+            }
         },
     });
 
@@ -728,7 +796,6 @@ export const AuditionStep2 = () => {
                                         fontSize: '12px',
                                     },
                                 }}
-                            // onClick={handleClickNext}
                             >
                                 다음 단계
                             </Button>
@@ -736,6 +803,41 @@ export const AuditionStep2 = () => {
                     </form>
                 </div>
             </div >
+            <Modal
+                open={openModal}
+                onClose={handleCloseModal}
+                disableAutoFocus
+            // sx={
+            //     {
+            //         '.MuiModal-backdrop': {
+            //             backgroundColor: 'transparent',
+            //         },
+            //     }
+            // }
+            >
+                <div className={classes.modal}>
+                    <p>이미 신청한 내역이 있습니다.
+                        더 신청 할 수 없습니다</p>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            padding: '12px 60px',
+                            backgroundColor: '#18181B',
+                            borderRadius: '12px',
+                            '@media (max-width: 768px)': {
+                                padding: '6px 12px', // Adjust padding for screens with a maximum width of 768px (typical mobile devices)
+                                marginRight: '8px',
+                                fontSize: '12px',
+                                borderRadius: '8px',
+
+                            },
+                        }}
+                        onClick={handleCloseModal}
+                    >
+                        닫기
+                    </Button>
+                </div>
+            </Modal>
         </div >
     )
 }

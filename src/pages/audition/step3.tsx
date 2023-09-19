@@ -981,7 +981,6 @@ export const AuditionStep3 = () => {
                                 다음 단계
                             </Button>
                         </div>
-
                     </form>
                 </div>
             </div>
