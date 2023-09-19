@@ -110,7 +110,7 @@ const useStyles = makeStyles({
                         },
                         '&>div': {
                             flex: 5,
-                            minWidth: '180px',
+                            // minWidth: '180px',
                         },
                     },
                 },
@@ -225,6 +225,38 @@ const useStyles = makeStyles({
         '@media (max-width: 768px)': {
             display: 'none',
         }
+    },
+    input_pick_file: {
+        flex: 1,
+        backgroundColor: '#F7F7F7',
+        zIndex: 1,
+        cursor: 'pointer', // Add this style to indicate that it's clickable
+        display: 'flex',
+        alignItems: 'center', // Center text vertically
+        padding: '0 12px', // Add padding to match TextField
+        border: '1px solid #ccc', // Add border to make it look like a TextField
+        justifyContent: 'space-between',
+        gap: '8px',
+        '&>p': {
+            '@media (max-width: 768px)': {
+                fontSize: '14px',
+            },
+        },
+        '&>div': {
+            float: 'right',
+            padding: '12px 16px',
+            marginRight: '-8px',
+            backgroundColor: '#000',
+            color: '#fff',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            '@media (max-width: 768px)': {
+                padding: '8px 8px',
+            },
+        },
+
     },
     '@media (max-width: 768px)': {
         home_container: {
@@ -406,13 +438,20 @@ export const AuditionStep4 = () => {
             const file: File = e.target.files[0];
             setImage(file);
             formik.setFieldValue('image', file.name);
+        } else {
+            setImage(null);
+            formik.setFieldValue('image', '');
         }
     }
+
     const handleChangeImageOptional = (e: any) => {
         if (e.target.files && e.target.files.length > 0) {
             const file: File = e.target.files[0];
             setImageOptional(file);
             formik.setFieldValue('imageOptional', file.name);
+        } else {
+            setImageOptional(null);
+            formik.setFieldValue('imageOptional', '');
         }
     }
     const handleChangeVideo = (e: any) => {
@@ -420,6 +459,9 @@ export const AuditionStep4 = () => {
             const file: File = e.target.files[0];
             setVideo(file);
             formik.setFieldValue('video', file.name);
+        } else {
+            setVideo(null);
+            formik.setFieldValue('video', '');
         }
     }
 
@@ -428,16 +470,19 @@ export const AuditionStep4 = () => {
             const file: File = e.target.files[0];
             setVideoOptional(file);
             formik.setFieldValue('videoOptional', file.name);
+        } else {
+            setVideoOptional(null);
+            formik.setFieldValue('videoOptional', '');
         }
     }
 
 
     const formik = useFormik({
         initialValues: {
-            image: data.dataStep4?.image,
-            imageOptional: data.dataStep4?.imageOptional,
-            video: data.dataStep4?.video,
-            videoOptional: data.dataStep4?.videoOptional,
+            image: data.dataStep4?.image?.name || '',
+            imageOptional: data.dataStep4?.imageOptional?.name || '',
+            video: data.dataStep4?.video?.name || '',
+            videoOptional: data.dataStep4?.videoOptional?.name || '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -474,10 +519,6 @@ export const AuditionStep4 = () => {
         }
     }, []);
 
-    useLayoutEffect(() => {
-        window.scrollTo(0, 0)
-    }, [location.pathname])
-
     useEffect(() => {
         if (data.dataStep4) {
             if (data.dataStep4.image) {
@@ -503,6 +544,10 @@ export const AuditionStep4 = () => {
 
     }, [])
 
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    }, [location.pathname])
+
     return (
         <div className={classes.home_container}>
             <div>
@@ -512,7 +557,7 @@ export const AuditionStep4 = () => {
                     </div>
 
                     <div
-                    ref={scrollableDivRef}
+                        ref={scrollableDivRef}
                     >
                         {dataSteps.map((item, index) => (
                             <>
@@ -573,50 +618,25 @@ export const AuditionStep4 = () => {
                             <label>프로필 사진(필수)</label>
                             <div>
                                 <div style={{ display: 'flex', gap: '12px' }}>
-                                    <TextField
-                                        fullWidth
-                                        id="image"
-                                        name="image"
-                                        variant="outlined"
-                                        placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
-                                        InputProps={{
-                                            style: {
-                                                backgroundColor: '#F7F7F7',
-                                            },
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <div
-                                                        style={{
-                                                            padding: '12px 16px',
-                                                            marginRight: '-8px',
-                                                            backgroundColor: '#000',
-                                                            color: '#fff',
-                                                            cursor: 'pointer',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: '4px',
-                                                        }}
-                                                        onClick={handleImageClick}
-                                                    >
-                                                        <img src={UploadFileIcon} alt='' />
-                                                        <p className={classes.label_Btn}>
-                                                            파일첨부
-                                                        </p>
-                                                    </div>
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{
-                                            flex: 1,
-                                            // backgroundColor: '#F7F7F7',
-                                        }}
-                                        value={formik.values.image}
-                                        disabled
-                                        // onChange={formik.handleChange}
+                                    <div
+                                        className={classes.input_pick_file}
+                                        onClick={handleImageClick}
                                         onBlur={formik.handleBlur}
-                                        error={formik.touched.image && Boolean(formik.errors.image)}
-                                        helperText={formik.touched.image && formik.errors.image}
-                                    />
+                                    >
+                                        {formik.values.image
+                                            ?
+                                            <p style={{ color: '#000' }}>{formik.values.image}</p>
+                                            :
+                                            <p style={{ color: '#ccc' }}>업로드할 파일을 선택하세요</p>
+
+                                        }
+                                        <div>
+                                            <img src={UploadFileIcon} alt='' />
+                                            <p className={classes.label_Btn}>
+                                                파일첨부
+                                            </p>
+                                        </div>
+                                    </div>
                                     <input
                                         id="image"
                                         name="image"
@@ -628,6 +648,7 @@ export const AuditionStep4 = () => {
                                         ref={fileInputRef}
                                     />
                                 </div>
+                                <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.image && formik.errors.image}</p>
                                 <p>과도한 보정이나 어클로 찍은 사진이 아닌 정면 사진 원본으로 첨부 (10MB 아하) 파일</p>
                             </div>
                         </div>
@@ -636,49 +657,25 @@ export const AuditionStep4 = () => {
                             <label>사진 첨부(선택)</label>
                             <div>
                                 <div style={{ display: 'flex', gap: '12px' }}>
-                                    <TextField
-                                        fullWidth
-                                        id="imageOptional"
-                                        name="imageOptional"
-                                        variant="outlined"
-                                        placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
-                                        InputProps={{
-                                            style: {
-                                                backgroundColor: '#F7F7F7',
-                                            },
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <div
-                                                        style={{
-                                                            padding: '12px 16px',
-                                                            marginRight: '-8px',
-                                                            backgroundColor: '#000',
-                                                            color: '#fff',
-                                                            cursor: 'pointer',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: '4px',
-                                                        }}
-                                                        onClick={handleImageOptionalClick}
-                                                    >
-                                                        <img src={UploadFileIcon} alt='' />
-                                                        <p className={classes.label_Btn}>
-                                                            파일첨부
-                                                        </p>
-                                                    </div>
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{
-                                            flex: 1,
-                                            // backgroundColor: '#F7F7F7',
-                                        }}
-                                        value={formik.values.imageOptional}
-                                        disabled
+                                    <div
+                                        className={classes.input_pick_file}
+                                        onClick={handleImageOptionalClick}
                                         onBlur={formik.handleBlur}
-                                        error={formik.touched.imageOptional && Boolean(formik.errors.imageOptional)}
-                                        helperText={formik.touched.imageOptional && formik.errors.imageOptional}
-                                    />
+                                    >
+                                        {formik.values.imageOptional
+                                            ?
+                                            <p style={{ color: '#000' }}>{formik.values.imageOptional}</p>
+                                            :
+                                            <p style={{ color: '#ccc' }}>업로드할 파일을 선택하세요</p>
+
+                                        }
+                                        <div>
+                                            <img src={UploadFileIcon} alt='' />
+                                            <p className={classes.label_Btn}>
+                                                파일첨부
+                                            </p>
+                                        </div>
+                                    </div>
                                     <input
                                         id="imageOptional"
                                         name="imageOptional"
@@ -699,46 +696,25 @@ export const AuditionStep4 = () => {
                             <label>영상 첨부</label>
                             <div>
                                 <div style={{ display: 'flex', gap: '12px' }}>
-                                    <TextField
-                                        fullWidth
-                                        id="video"
-                                        name="video"
-                                        variant="outlined"
-                                        placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <div
-                                                        style={{
-                                                            padding: '12px 16px',
-                                                            marginRight: '-8px',
-                                                            backgroundColor: '#000',
-                                                            color: '#fff',
-                                                            cursor: 'pointer',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: '4px',
-                                                        }}
-                                                        onClick={handleVideoClick}
-                                                    >
-                                                        <img src={UploadFileIcon} alt='' />
-                                                        <p className={classes.label_Btn}>
-                                                            파일 첨부 (필수)
-                                                        </p>
-                                                    </div>
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{
-                                            flex: 1,
-                                            backgroundColor: '#F7F7F7',
-                                        }}
-                                        value={formik.values.video}
-                                        disabled
+                                    <div
+                                        className={classes.input_pick_file}
+                                        onClick={handleVideoClick}
                                         onBlur={formik.handleBlur}
-                                        error={formik.touched.video && Boolean(formik.errors.video)}
-                                        helperText={formik.touched.video && formik.errors.video}
-                                    />
+                                    >
+                                        {formik.values.video
+                                            ?
+                                            <p style={{ color: '#000' }}>{formik.values.video}</p>
+                                            :
+                                            <p style={{ color: '#ccc' }}>업로드할 파일을 선택하세요</p>
+
+                                        }
+                                        <div>
+                                            <img src={UploadFileIcon} alt='' />
+                                            <p className={classes.label_Btn}>
+                                                파일 첨부 (필수)
+                                            </p>
+                                        </div>
+                                    </div>
                                     <input
                                         id="video"
                                         name="video"
@@ -750,6 +726,7 @@ export const AuditionStep4 = () => {
                                         ref={fileInputRef3}
                                     />
                                 </div>
+                                <p style={{ margin: '3px 14px 0px', padding: 0, fontSize: '12px', color: '#d32f2f' }}>{formik.touched.video && formik.errors.video}</p>
                             </div>
                         </div>
 
@@ -757,45 +734,24 @@ export const AuditionStep4 = () => {
                             <label></label>
                             <div>
                                 <div style={{ display: 'flex', gap: '12px' }}>
-                                    <TextField
-                                        fullWidth
-                                        id="videoOptional"
-                                        name="videoOptional"
-                                        variant="outlined"
-                                        placeholder='지원하고자 하는 분야를 선택하세요 (최대 2개) '
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <div
-                                                        style={{
-                                                            padding: '12px 16px',
-                                                            marginRight: '-8px',
-                                                            backgroundColor: '#000',
-                                                            cursor: 'pointer',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: '4px',
-                                                        }}
-                                                        onClick={handleVideoOptionalClick}
-                                                    >
-                                                        <img src={UploadFileIcon} alt='' />
-                                                        <p className={classes.label_Btn}>
-                                                            파일 첨부 (선택)
-                                                        </p>
-                                                    </div>
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{
-                                            flex: 1,
-                                            backgroundColor: '#F7F7F7',
-                                        }}
-                                        value={formik.values.videoOptional}
-                                        disabled
+                                    <div
+                                        className={classes.input_pick_file}
+                                        onClick={handleVideoOptionalClick}
                                         onBlur={formik.handleBlur}
-                                        error={formik.touched.videoOptional && Boolean(formik.errors.videoOptional)}
-                                        helperText={formik.touched.videoOptional && formik.errors.videoOptional}
-                                    />
+                                    >
+                                        {formik.values.videoOptional
+                                            ?
+                                            <p style={{ color: '#000' }}>{formik.values.videoOptional}</p>
+                                            :
+                                            <p style={{ color: '#ccc' }}>업로드할 파일을 선택하세요</p>
+                                        }
+                                        <div>
+                                            <img src={UploadFileIcon} alt='' />
+                                            <p className={classes.label_Btn}>
+                                                파일 첨부 (선택)
+                                            </p>
+                                        </div>
+                                    </div>
                                     <input
                                         id="videoOptional"
                                         name="videoOptional"

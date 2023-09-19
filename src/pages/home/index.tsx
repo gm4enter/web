@@ -195,7 +195,8 @@ const ImageList = () => {
     // Xác định vị trí cuộn và trang tương ứng
     const scrollY = window.scrollY;
     console.log('scrollY', scrollY);
-    const page = Math.floor(scrollY / window.innerHeight) + 1;
+    console.log('window.innerHeight', window.innerHeight);
+    const page = Math.round(scrollY / (window.innerHeight));
     console.log('page', page);
     setScrollIndex(page);
     if (!scrollY){

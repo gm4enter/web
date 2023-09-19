@@ -116,7 +116,7 @@ const useStyles = makeStyles({
                         },
                         '&>div': {
                             flex: 5,
-                            minWidth: '180px',
+                            // minWidth: '180px',
                         },
                     },
                 },
@@ -140,6 +140,8 @@ const useStyles = makeStyles({
     },
     buttom_area: {
         marginTop: '28px',
+        display: 'flex',
+        justifyContent: 'space-between',
         '&>div:nth-of-type(1)': {
             display: 'flex',
             alignItems: 'center',
@@ -187,6 +189,17 @@ const useStyles = makeStyles({
                     border: '1px solid #D4D4D8',
                     padding: '10px',
                 }
+            },
+        },
+        '&>div:nth-of-type(2)': {
+            display: 'flex',
+            gap: '8px',
+            justifyContent: 'flex-end',
+            '&>button:nth-of-type(1)': {
+                minWidth: '88px',
+            },
+            '&>button:nth-of-type(2)': {
+                minWidth: '88px',
             },
         },
     },
@@ -657,40 +670,42 @@ export const AuditionStep5 = () => {
                                     </p>
                                 </div>
                             </div>
-                            <Button
-                                variant="contained"
-                                color='primary'
-                                sx={{
-                                    padding: '12px 60px',
-                                    marginRight: '24px',
-                                    '@media (max-width: 768px)': {
-                                        padding: '6px 12px', // Adjust padding for screens with a maximum width of 768px (typical mobile devices)
-                                        marginRight: '8px',
-                                        fontSize: '12px',
-                                    },
-                                }}
-                            // onClick={handleClickNext}
-                            >
-                                다음 단계
-                            </Button>
-                            <Button
-                                // disabled={!formik.values}
-                                variant="contained"
-                                // type="submit"
-                                sx={{
-                                    padding: '12px 60px',
-                                    background: '#00AB07',
-                                    '@media (max-width: 768px)': {
-                                        padding: '6px 12px',
-                                        fontSize: '12px',
-                                    },
+                            <div>
+                                <Button
+                                    variant="contained"
+                                    color='primary'
+                                    sx={{
+                                        padding: '12px 40px',
+                                        marginRight: '24px',
+                                        '@media (max-width: 768px)': {
+                                            padding: '6px 12px', // Adjust padding for screens with a maximum width of 768px (typical mobile devices)
+                                            marginRight: '0',
+                                            fontSize: '12px',
+                                        },
+                                    }}
+                                // onClick={handleClickNext}
+                                >
+                                    지원서 저장
+                                </Button>
+                                <Button
+                                    // disabled={!formik.values}
+                                    variant="contained"
+                                    // type="submit"
+                                    sx={{
+                                        padding: '12px 60px',
+                                        background: '#00AB07',
+                                        '@media (max-width: 768px)': {
+                                            padding: '6px 12px',
+                                            fontSize: '12px',
+                                        },
 
-                                }}
-                                onClick={handleClickSave}
-                            // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
-                            >
-                                제출
-                            </Button>
+                                    }}
+                                    onClick={handleClickSave}
+                                // style={(!formik.values) ? { backgroundColor: '#E4E4E7', color: '#fff' } : { backgroundColor: '#000', color: '#fff' }}
+                                >
+                                    제출
+                                </Button>
+                            </div>
                         </div>
 
                     </form>
