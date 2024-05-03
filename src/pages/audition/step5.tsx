@@ -17,6 +17,7 @@ import { snackBarActions } from '../../components/snackbar/snackbarSlice'
 import { dataSteps } from '../../constants'
 import { useAuditionContext } from '../../context/auditionContext'
 import { DataApplyArtist } from '../../types/dataAuditionContext'
+import { ROUTE } from '../../router/routes'
 //Mobile: width < 768px
 //Tablet: 768px < width < 1024px
 //Desktop: width >=1024px
@@ -732,7 +733,10 @@ export const AuditionStep5 = () => {
                         sx={{
                             padding: '12px 60px',
                         }}
-                        onClick={handleCloseModal}
+                        onClick={() =>{
+                            handleCloseModal()
+                            navigate(ROUTE.HOME)
+                        }}
                     >
                         Okey
                     </Button>

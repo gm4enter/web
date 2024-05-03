@@ -262,9 +262,9 @@ const Contact = () => {
         content: '성공',
         type: 'success',
       }))
-      // setTimeout(() => {
-      //   navigate(ROUTE.HOME)
-      // }, 2000)
+      setTimeout(() => {
+        navigate(ROUTE.HOME)
+      }, 2000)
     },
   });
 

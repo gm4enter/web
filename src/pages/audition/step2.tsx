@@ -340,8 +340,17 @@ export const AuditionStep2 = () => {
     const [countries, setCountries] = useState<string[]>([]);
     const { data, setData } = useAuditionContext();
     const [openModal, setOpenModal] = useState(false)
+    const [isOpenSelectCountries, setIsOpenSelectCountries] = useState(false)
 
     const handleCloseModal = () => setOpenModal(false);
+
+    const handleOpenSelectCountries = () => {
+        setIsOpenSelectCountries(true)
+    }
+
+    const handleCloseSelectCountries = () => {
+        setIsOpenSelectCountries(false)
+    }
 
     const handleChangeDatePicker = (newValue: Dayjs | null) => {
         if (newValue !== null) {
@@ -403,6 +412,9 @@ export const AuditionStep2 = () => {
         if (countriesTypes.length <= 2) {
             setCountries(countriesTypes);
             formik.setFieldValue('countries', countriesTypes);
+        }
+        if (countriesTypes.length >= 2) {
+            setIsOpenSelectCountries(false);
         }
     };
 
@@ -659,6 +671,9 @@ export const AuditionStep2 = () => {
                                     multiple
                                     displayEmpty
                                     fullWidth
+                                    open={isOpenSelectCountries}
+                                    onOpen={handleOpenSelectCountries}
+                                    onClose={handleCloseSelectCountries}
                                     value={countries}
                                     onChange={handleChangeContries}
                                     input={<OutlinedInput />}

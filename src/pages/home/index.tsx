@@ -190,13 +190,10 @@ const ImageList = () => {
 
 
 
-  // Lắng nghe sự kiện cuộn trang
   const handleScroll = () => {
-    // Xác định vị trí cuộn và trang tương ứng
     const scrollY = window.scrollY;
     console.log('scrollY', scrollY);
-    console.log('window.innerHeight', window.innerHeight);
-    const page = Math.round(scrollY / (window.innerHeight));
+    const page = Math.round(scrollY / window.innerHeight);
     console.log('page', page);
     setScrollIndex(page);
     if (!scrollY){

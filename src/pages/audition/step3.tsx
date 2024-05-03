@@ -3,7 +3,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import { Button, Checkbox, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, Theme, useTheme } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useFormik } from 'formik'
-import React, { useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useDaumPostcodePopup } from 'react-daum-postcode'
 import { useLocation, useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
@@ -387,6 +387,16 @@ export const AuditionStep3 = () => {
     console.log('dataContext child 3', data);
     const savedDataStep3Local = localStorage.getItem('dataSaveStep3');
 
+    const [isOpenSelect, setIsOpenSelect] = useState(false)
+
+    const handleOpenSelect = () => {
+        setIsOpenSelect(true)
+    }
+
+    const handleCloseSelect = () => {
+        setIsOpenSelect(false)
+    }
+
 
     const handleClickNext = () => {
         console.log('handleClickNext');
@@ -461,6 +471,9 @@ export const AuditionStep3 = () => {
         if (supportTypes.length <= 2) {
             setSupportType(supportTypes);
             formik.setFieldValue('supportType', supportTypes);
+        }
+        if (supportTypes.length >= 2) {
+            setIsOpenSelect(false);
         }
     };
 
@@ -657,6 +670,9 @@ export const AuditionStep3 = () => {
                                     multiple
                                     displayEmpty
                                     fullWidth
+                                    open={isOpenSelect}
+                                    onOpen={handleOpenSelect}
+                                    onClose={handleCloseSelect}
                                     value={supportType}
                                     onChange={handleChange}
                                     input={<OutlinedInput />}
